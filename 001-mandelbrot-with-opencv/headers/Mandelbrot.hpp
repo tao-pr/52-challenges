@@ -15,7 +15,7 @@ class Mandelbrot
 {
 private:
   Mandelbrot(){};
-  int convergence(Complex<double>& z, Complex<double>& c) const;
+  int convergence(Complex<double>& z, Complex<double>& c, int nIter=0) const;
 
 protected:
   int nMaxIters;
