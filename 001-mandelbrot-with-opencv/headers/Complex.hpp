@@ -8,6 +8,8 @@ using namespace cv;
 
 namespace Cx
 {
+  Complex<double> zero = Complex<double>(0,0);
+
   Complex<double> sqr(Complex<double>& z)
   {
     return Complex<double>(z.re*z.re - z.im*z.im, 2*z.re*z.im);
