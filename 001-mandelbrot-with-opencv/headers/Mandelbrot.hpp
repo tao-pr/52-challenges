@@ -14,14 +14,16 @@ using namespace std;
 class Mandelbrot
 {
 private:
-  bool isConverge(Complex<double>& z) const;
+  Mandelbrot(){};
+  int convergence(Complex<double>& z, Complex<double>& c) const;
 
 protected:
   int nMaxIters;
+  double bound;
 
 public:
-  Mandelbrot(int nMaxIters=10);
+  Mandelbrot(int nMaxIters=10, double bound=2);
   ~Mandelbrot() {};
 
-  void render(Size& size, Rect range=Rect(-5,-5,10,10)) const;
+  void render(double reMin, double reMax, double imMin, double imMax, double resolution) const;
 };
