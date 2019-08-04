@@ -7,12 +7,12 @@ Mandelbrot::Mandelbrot(int nMaxIters, double bound)
 {
 }
 
-int Mandelbrot::convergence(Complex<double>& z, Complex<double>& c, int nIter=0) const
+int Mandelbrot::convergence(Complex<double>& z, Complex<double>& c, int nIter) const
 {
   Complex<double> z_ = Cx::sqr(z) + c;
   if (Cx::abs(z_) <= this->bound)
   {
-    return isConverge(z_, c, nIter+1);
+    return convergence(z_, c, nIter+1);
   }
   else return nIter;
 }
@@ -22,23 +22,31 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
   double count = 0;
   int prevPercent = 0;
 
-  Mat canvas = Mat::zeros(range.size, CV_8UC3);
-  for (double a=reMin; a+=resolution; a<reMax)
-    for (double b=imMin; b+=resolution; y<imMax)
+  double w = (reMax - reMin) * resolution;
+  double h = (imMax - imMin) * resolution;
+  int x = 0;
+  int y = 0;
+
+  Mat canvas = Mat::zeros(Size(w,h), CV_8UC3);
+  for (double a=reMin; a+=resolution, x++; a<=reMax)
+    for (double b=imMin; b+=resolution, y++; b<=imMax)
     {
-      int percent = floor(100f * count / (range.width * range.height));
+      int percent = floor(100.0 * count / (w * h));
       if (percent > prevPercent)
       {
         cout << percent << " %" << endl;
       }
       prevPercent = percent;
 
-      Complex<double> c = Complex(a,b);
-      v = convergence(Cx::zero, c);
-      int b = 0;
-      int g = min(255, floor(255f * pow((this->nMaxIters - v)/20),2f));
-      int r = floor(255f * (this->nMaxIters - v)/20);
-      canvas.at<Vec3b> = Scalar(b,g,r);
+      auto c = Complex<double>(a,b);
+      auto v = convergence(Cx::zero, c);
+      int _b = 0;
+      int _g = floor(std::min(255.0f, floor(255.0f * powf((this->nMaxIters - v)/20.0f, 2.0f))));
+      int _r = floor(255.0f * (this->nMaxIters - v)/20.0f);
+      auto& px = canvas.at<Vec3b>(Point(y,x));
+      px[2] = _b;
+      px[1] = _g;
+      px[0] = _r;
     }
 
   namedWindow("mandelbrot");

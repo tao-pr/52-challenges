@@ -1,8 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
 
-# Fmt library, assumes installation via Homebrew
-set(FMT_LIB_DIR /usr/local/Cellar/fmt/4.0.0)
-
 # Dependencies
 include_directories(/usr/local/include)
 include_directories("$ENV{OPENCV_INCLUDE_DIR}")
@@ -15,7 +12,6 @@ project("001-mandelbrot" CXX C)
 set(TARGET_APP "mandelbrot")
 
 # Source files
-# file(GLOB SOURCES src/*.cpp)
 file(GLOB SOURCES 
   "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.hpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
@@ -37,7 +33,7 @@ set(BUILD_DEPENDENCIES
 
 
 # Targets to build
-add_executable(${TARGET_APP} ${APP_SRC})
+add_executable(${TARGET_APP} ${SOURCES})
 set_target_properties(${TARGET_APP} PROPERTIES 
   OUTPUT_NAME "mandelbrot"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
@@ -46,4 +42,3 @@ set_target_properties(${TARGET_APP} PROPERTIES
 target_link_libraries( ${TARGET_APP} ${BUILD_DEPENDENCIES})
 
 message(STATUS "OUTPUT binary objects  : ${CMAKE_BINARY_DIR}")
-message(STATUS "Target project : ${TEST_SRC}")
