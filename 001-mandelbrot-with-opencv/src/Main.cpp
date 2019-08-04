@@ -10,11 +10,11 @@ int main(int argc, char** argv)
   cout << "Mandelbrot generator" << endl;
   cout << "Please enter the range of Z" << endl;
   cout << endl;
-  cout << "Real component from : "; cin >> reMin; cout << endl;
-  cout << "Real component to   : "; cin >> reMax; cout << endl;
-  cout << "Imaginary component from : "; cin >> imMin; cout << endl;
-  cout << "Imaginary component from : "; cin >> imMax; cout << endl;
-  cout << "Resolution : "; cin >> resolution; cout << endl;
+  cout << "Real component from : "; cin >> reMin;
+  cout << "Real component to   : "; cin >> reMax;
+  cout << "Imaginary component from : "; cin >> imMin;
+  cout << "Imaginary component to   : "; cin >> imMax;
+  cout << "Resolution : "; cin >> resolution;
 
   cout << endl;
   cout << "Generating ..." << endl;

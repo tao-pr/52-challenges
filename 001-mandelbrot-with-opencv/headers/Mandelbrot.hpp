@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MANDELBROT_HPP
+#define MANDELBROT_HPP
 
 #include <string>
 #include <vector>
@@ -27,3 +28,5 @@ public:
 
   void render(double reMin, double reMax, double imMin, double imMax, double resolution) const;
 };
+
+#endif
