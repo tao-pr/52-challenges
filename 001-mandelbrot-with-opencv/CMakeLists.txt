@@ -12,16 +12,15 @@ link_directories("$ENV{OPENCV_LIB_DIR}")
 
 project("001-mandelbrot" CXX C)
 
-# TAOTODO: Set targets
 set(TARGET_APP "mandelbrot")
 
 # Source files
 # file(GLOB SOURCES src/*.cpp)
 file(GLOB SOURCES 
-  "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.hpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
-set(APP_SRC app/src/app.cpp)
+set(APP_SRC src/Main.cpp)
 
 # Third-party dependencies
 set(BUILD_DEPENDENCIES 
