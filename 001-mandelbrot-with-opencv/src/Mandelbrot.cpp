@@ -12,7 +12,10 @@ int Mandelbrot::convergence(Complex<double>& z, Complex<double>& c, int nIter) c
   Complex<double> z_ = Cx::sqr(z) + c;
   if (Cx::abs(z_) <= this->bound)
   {
-    return convergence(z_, c, nIter+1);
+    if (nIter + 1 < this->nMaxIters)
+      return convergence(z_, c, nIter+1);
+    else 
+      return nIter+1;
   }
   else return nIter;
 }
@@ -21,24 +24,18 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
 {
   int prevPercent = -1;
 
-  int w = ceil((reMax - reMin) / resolution);
-  int h = ceil((imMax - imMin) / resolution);
-  int x = 0;
-  int y = 0;
+  int w = ceil((reMax - reMin) / resolution)+1;
+  int h = ceil((imMax - imMin) / resolution)+1;
 
   cout << "Size : " << w << " x " << h << endl;
 
-  Mat canvas = Mat::zeros(Size(w,h), CV_8UC3);
-  for (double a=reMin; a<=reMax; a+=resolution, x++)
-    for (double b=imMin; b<=imMax; b+=resolution, y++)
+  Mat canvas = Mat::zeros(Size(h,w), CV_8UC3);
+  for (double a=reMin; a<=reMax; a+=resolution)
+    for (double b=imMin; b<=imMax; b+=resolution)
     {
-      int percent = floor(100.0f * (x+y) / (float)(w * h));
-      if (percent > prevPercent)
-      {
-        cout << percent << " %" << endl;
-      }
-      prevPercent = percent;
-
+      int x = floor((a-reMin)/resolution);
+      int y = floor((b-imMin)/resolution);
+      int percent = (int)floor(100.0f * (x+y) / (float)(w * h));
       auto c = Complex<double>(a,b);
       auto v = convergence(Cx::zero, c);
       int _b = 0;
@@ -48,8 +45,10 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
       px[2] = _b;
       px[1] = _g;
       px[0] = _r;
+      cout << percent << "% : convergence (" << x << ", " << y <<") = " << v << endl; // TAODEBUG:
     }
 
+  cout << "Displaying the results" << endl;
   namedWindow("mandelbrot");
   imshow("mandelbrot", canvas);
   waitKey(0);
