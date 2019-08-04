@@ -19,19 +19,20 @@ int Mandelbrot::convergence(Complex<double>& z, Complex<double>& c, int nIter) c
 
 void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, double resolution) const
 {
-  double count = 0;
-  int prevPercent = 0;
+  int prevPercent = -1;
 
   double w = (reMax - reMin) * resolution;
   double h = (imMax - imMin) * resolution;
   int x = 0;
   int y = 0;
 
+  cout << "Size : " << w << " x " << h << endl;
+
   Mat canvas = Mat::zeros(Size(w,h), CV_8UC3);
-  for (double a=reMin; a+=resolution, x++; a<=reMax)
-    for (double b=imMin; b+=resolution, y++; b<=imMax)
+  for (double a=reMin; a<=reMax; a+=resolution, x++)
+    for (double b=imMin; b<=imMax; b+=resolution, y++)
     {
-      int percent = floor(100.0 * count / (w * h));
+      int percent = floor(100.0f * (x+y) / (w * h));
       if (percent > prevPercent)
       {
         cout << percent << " %" << endl;
