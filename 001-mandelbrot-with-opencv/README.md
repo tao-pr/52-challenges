@@ -6,3 +6,20 @@ Make a program which visualises Mandelbrot set with OpenCV
 
 - Use C++11 style
 - Customisable range of visualisation
+
+## Prerequisites
+
+C++11 compatible gcc compiler with OpenCV3 library.
+
+## Build and run
+
+```
+$ ./make.sh
+```
+
+Then
+
+```
+$ build/mandelbrot
+```
+
