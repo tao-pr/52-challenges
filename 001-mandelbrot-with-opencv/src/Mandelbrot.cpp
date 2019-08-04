@@ -21,8 +21,8 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
 {
   int prevPercent = -1;
 
-  double w = (reMax - reMin) * resolution;
-  double h = (imMax - imMin) * resolution;
+  int w = ceil((reMax - reMin) / resolution);
+  int h = ceil((imMax - imMin) / resolution);
   int x = 0;
   int y = 0;
 
@@ -32,7 +32,7 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
   for (double a=reMin; a<=reMax; a+=resolution, x++)
     for (double b=imMin; b<=imMax; b+=resolution, y++)
     {
-      int percent = floor(100.0f * (x+y) / (w * h));
+      int percent = floor(100.0f * (x+y) / (float)(w * h));
       if (percent > prevPercent)
       {
         cout << percent << " %" << endl;
