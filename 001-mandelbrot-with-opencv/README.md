@@ -23,6 +23,7 @@ Then
 $ build/mandelbrot
 ```
 
+![screenshot 0](00.jpg)
 ![screenshot 1](01.jpg)
 ![screenshot 2](02.jpg)
 
