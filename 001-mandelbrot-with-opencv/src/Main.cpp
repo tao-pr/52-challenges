@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 {
   signal(SIGSEGV, exceptionHandle);
 
-  int nMaxIters = 30;
+  int nMaxIters;
   double bound = 1.6;
   double reMin, reMax, imMin, imMax;
   double resolution;
@@ -37,6 +37,7 @@ int main(int argc, char** argv)
   cout << "Imaginary component from : "; cin >> imMin;
   cout << "Imaginary component to   : "; cin >> imMax;
   cout << "Resolution : "; cin >> resolution;
+  cout << "Num iterations : "; cin >> nMaxIters;
 
   cout << endl;
   cout << "Generating ..." << endl;
