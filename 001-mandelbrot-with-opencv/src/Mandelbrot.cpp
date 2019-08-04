@@ -29,13 +29,15 @@ void Mandelbrot::render(double reMin, double reMax, double imMin, double imMax, 
 
   cout << "Size : " << w << " x " << h << endl;
 
+  long tot = w*h;
+
   Mat canvas = Mat::zeros(Size(h,w), CV_8UC3);
   for (double a=reMin; a<=reMax; a+=resolution)
     for (double b=imMin; b<=imMax; b+=resolution)
     {
       int x = floor((a-reMin)/resolution);
       int y = floor((b-imMin)/resolution);
-      int percent = (int)floor(100.0f * (x+y) / (float)(w * h));
+      int percent = floor(100.0f * (x+y) / (float)(w * h));
       auto c = Complex<double>(a,b);
       auto v = convergence(Cx::zero, c);
       int _b = 0;
