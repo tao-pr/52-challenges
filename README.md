@@ -14,10 +14,10 @@ as solutions to the new challenges.
 
 List of challenges are collected below.
 
-| ID  | Challenge               | Language / Tech  | Time taken |
-|-----|-------------------------|------------------|------------|
-| 001 | Mandelbrot with OpenCV  | C++11 OpenCV     | 1 day      |
-|     |                         |                  |            |
+| ID  | Challenge                | Language / Tech  | Time taken |
+|-----|--------------------------|------------------|------------|
+| 001 | Mandelbrot with OpenCV   | C++11 OpenCV     | 1 day      |
+| 002 | PR Quadtree with Haskell | Haskell          |            |
 
 ## Licence
 

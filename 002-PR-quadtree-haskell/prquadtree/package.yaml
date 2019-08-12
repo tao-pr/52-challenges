@@ -1,0 +1,48 @@
+name:                prquadtree
+version:             0.1.0.0
+github:              "starcolon/52-challenges"
+license:             BSD3
+author:              "Tao Ruangyam"
+maintainer:          "undisclosed@gmail.com"
+copyright:           "2019 Tao Ruangyam"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         A part of 52 programming challenges by Tao PR
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  prquadtree-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - prquadtree
+
+tests:
+  prquadtree-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - prquadtree
