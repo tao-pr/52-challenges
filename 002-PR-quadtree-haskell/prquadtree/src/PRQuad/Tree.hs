@@ -1,23 +1,34 @@
 module PRQuad.Tree where
 
+type Coord = (Int,Int) -- x,y
+type Bound = (Int,Int) -- width,height
+
 -- Quadtree is represented by a composition of
 -- 4 quadrants containing data points.
-data QTree a = QTree (QTree a) (QTree a) (QTree a) (QTree a) 
-  | EmptyTree
+data QTree = EmptyTree
+  | Sole Coord
+  | QTree Bound QTree QTree QTree QTree -- q1 q2 q3 q4
 
-q1 :: QTree a -> QTree a 
-q1 EmptyTree = EmptyTree
-q1 (QTree b _ _ _) = b
 
-q2 :: QTree a -> QTree a 
-q2 EmptyTree = EmptyTree
-q2 (QTree _ b _ _) = b
+-- Locate the best quadrant a coordinate of a Quadtree where it can lie on
+locateQuadrant :: Coord => QTree => Int
+???
 
-q3 :: QTree a -> QTree a 
-q3 EmptyTree = EmptyTree
-q3 (QTree _ _ b _) = b
+getQuadrant :: Int => QTree => QTree
+???
 
-q4 :: QTree a -> QTree a 
-q4 EmptyTree = EmptyTree
-q4 (QTree _ _ _ b) = b
+isEmpty :: QTree => Bool
+isEmpty EmptyTree => True
+isEmpty _ => False
+
+isSole :: QTree => Bool
+isSole (Sole c) => True
+isSole _ => False
+
+insertTo :: Coord => QTree => QTree
+???
+
+count :: QTree => Int
+???
+
 
