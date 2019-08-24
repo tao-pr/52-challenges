@@ -54,7 +54,14 @@ insertTo :: Coord -> QTree -> QTree
 insertTo n (EmptyTree b) = error "TAOTODO"
 
 count :: QTree -> Int
-count _ = error "TAOTODO"
+count (EmptyTree b) = 0
+count (Sole b c) = 1
+count (QTree b q1 q2 q3 q4) = 
+  let sumq = map count [q1,q2,q3,q4]
+    in foldl (+) 0 sumq
+
+query :: Bound -> QTree -> [Coord]
+query _ _ = error "TAOTODO"
 
 findClosest :: Coord -> QTree -> Maybe Coord
 findClosest _ _ = error "TAOTODO"
