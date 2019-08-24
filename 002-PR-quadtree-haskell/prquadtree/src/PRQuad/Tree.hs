@@ -26,9 +26,21 @@ locateQuadrantBound (x,y) (a,b,c,d) =
       else if x>=cx && y>=cy then 1
       else 3
 
+-- Get the subtree at the i-th quadrant of the tree
 getQuadrant :: Int -> QTree -> QTree
-getQuadrant _ _ = error "TAOTODO"
-
+getQuadrant _ (EmptyTree b) = (EmptyTree b)
+getQuadrant i (Sole bound c) = 
+  let {(a,b,c,d) = bound;
+    (w,h) = (quot (c-a) 2, quot (d-b) 2)}
+    in if i==3 then (EmptyTree (a,b,a+w,b+w))
+      else if i==4 then (EmptyTree (a+w,b,a+w,b+w))
+      else if i==1 then (EmptyTree (a+w,b+w,c,d))
+      else (EmptyTree (a,b+w,a+w,d))
+getQuadrant i (QTree b q1 q2 q3 q4) = 
+  if i==1 then q1
+  else if i==2 then q2
+  else if i==3 then q3
+  else q4
 
 isEmpty :: QTree -> Bool
 isEmpty (EmptyTree b) = True
@@ -39,7 +51,7 @@ isSole (Sole _ _) = True
 isSole _ = False
 
 insertTo :: Coord -> QTree -> QTree
-insertTo _ _ = error "TAOTODO"
+insertTo n (EmptyTree b) = error "TAOTODO"
 
 count :: QTree -> Int
 count _ = error "TAOTODO"
