@@ -12,11 +12,19 @@ data QTree = EmptyTree Bound
 
 -- Locate the best quadrant of a Quadtree where a coordinate can lie on
 locateQuadrant :: Coord => QTree => Int
-???
+locateQuadrant (x,y) EmptyTree = 1
+locateQuadrant (x,y) (Sole b _) = locateQuadrantBound (x,y) b
+locateQuadrant (x,y) (QTree b q1 q2 q3 q4) = (x,y) b
 
 -- Locate the best quadrant of a rectangular bound where a coordinate can lie on 
 locateQuadrantBound :: Coord => Bound => Int
-locateQuadrant (x,y) (x0,y0,x1,y1) = ???
+locateQuadrantBound (x,y) (a,b,c,d) = 
+  let{cx = quot (c-a) 2;
+      cy = quot (d-b) 2}
+    in if x<cx && y<cy then 4
+      else if x>=cx && y<cy then 2
+      else if x>=cx && y>=cy then 1
+      else 3
 
 getQuadrant :: Int => QTree => QTree
 ???
