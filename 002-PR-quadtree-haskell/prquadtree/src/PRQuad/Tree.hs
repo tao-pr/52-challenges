@@ -88,6 +88,11 @@ count (QTree b q1 q2 q3 q4) =
 query :: Bound -> QTree -> [Coord]
 query _ _ = error "TAOTODO"
 
+contains :: Coord -> QTree -> Bool
+contains _ (EmptyTree b) = False
+contains (x,y) (Sole b (v,w)) = x==v && w==w
+contains (x,y) q = error "TAOTODO"
+
 findClosest :: Coord -> QTree -> Maybe Coord
 findClosest _ _ = error "TAOTODO"
 
