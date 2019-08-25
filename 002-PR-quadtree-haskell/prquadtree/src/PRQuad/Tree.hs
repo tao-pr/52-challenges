@@ -55,7 +55,7 @@ splitQuadrant (a,b,c,d) =
   let{w = quot (c-a) 2;
       h = quot (d-b) 2;
       b3 = (a,b,a+w,b+w);
-      b4 = (a+w,b,a+w,b+w);
+      b4 = (a+w,b,c,b+w);
       b1 = (a+w,b+w,c,d);
       b2 = (a,b+w,a+w,d)}
     in (b1, b2, b3, b4)
