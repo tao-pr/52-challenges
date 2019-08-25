@@ -10,6 +10,7 @@ data QTree = EmptyTree Bound
   | QTree Bound QTree QTree QTree QTree -- q1 q2 q3 q4
 
 
+
 -- Locate the best quadrant of a Quadtree where a coordinate can lie on
 locateQuadrant :: Coord -> QTree -> Int
 locateQuadrant (x,y) (EmptyTree b) = locateQuadrantBound (x,y) b
@@ -30,12 +31,11 @@ locateQuadrantBound (x,y) (a,b,c,d) =
 getQuadrant :: Int -> QTree -> QTree
 getQuadrant _ (EmptyTree b) = (EmptyTree b)
 getQuadrant i (Sole bound c) = 
-  let {(a,b,c,d) = bound;
-    (w,h) = (quot (c-a) 2, quot (d-b) 2)}
-    in if i==3 then (EmptyTree (a,b,a+w,b+w))
-      else if i==4 then (EmptyTree (a+w,b,a+w,b+w))
-      else if i==1 then (EmptyTree (a+w,b+w,c,d))
-      else (EmptyTree (a,b+w,a+w,d))
+  let (b1,b2,b3,b4) = splitQuadrant bound
+    in if i==3 then (EmptyTree b3)
+      else if i==4 then (EmptyTree b4)
+      else if i==1 then (EmptyTree b1)
+      else (EmptyTree b2)
 getQuadrant i (QTree b q1 q2 q3 q4) = 
   if i==1 then q1
   else if i==2 then q2
@@ -50,8 +50,33 @@ isSole :: QTree -> Bool
 isSole (Sole _ _) = True
 isSole _ = False
 
+splitQuadrant :: Bound -> (Bound,Bound,Bound,Bound)
+splitQuadrant (a,b,c,d) = 
+  let{w = quot (c-a) 2;
+      h = quot (d-b) 2;
+      b3 = (a,b,a+w,b+w);
+      b4 = (a+w,b,a+w,b+w);
+      b1 = (a+w,b+w,c,d);
+      b2 = (a,b+w,a+w,d)}
+    in (b1, b2, b3, b4)
+
 insertTo :: Coord -> QTree -> QTree
-insertTo n (EmptyTree b) = error "TAOTODO"
+insertTo n (EmptyTree b) = Sole b n
+insertTo n (Sole b c) = 
+  -- Replace the sole tree with a subdivided quad tree
+  let{(b1,b2,b3,b4) = splitQuadrant b;
+      q = QTree b (EmptyTree b1) (EmptyTree b2) (EmptyTree b3) (EmptyTree b4)}
+    in insertTo c (insertTo n q)
+insertTo n (QTree b q1 q2 q3 q4) = 
+  let i = locateQuadrantBound n b
+    in if i==1 then QTree b (insertTo n q1) q2 q3 q4
+      else if i==2 then QTree b q1 (insertTo n q2) q3 q4
+      else if i==3 then QTree b q1 q2 (insertTo n q3) q4
+      else QTree b q1 q2 q3 (insertTo n q4)
+
+insertMany :: [Coord] -> QTree -> QTree
+insertMany [] q = q
+insertMany (c:cs) q = insertMany cs (insertTo c q)  
 
 count :: QTree -> Int
 count (EmptyTree b) = 0
