@@ -17,7 +17,7 @@ List of challenges are collected below.
 | ID  | Challenge                | Language / Tech  | Time taken | Difficulty |
 |-----|--------------------------|------------------|------------|------------|
 | 001 | Mandelbrot with OpenCV   | C++11 OpenCV     | 4 hrs      | Recall Mandelbrot knowledge |
-| 002 | PR Quadtree with Haskell | Haskell          |            | Learn about PR Quadtree structure |
+| 002 | PR Quadtree with Haskell | Haskell          |            | Fight with Haskell |
 
 
 ## Licence
