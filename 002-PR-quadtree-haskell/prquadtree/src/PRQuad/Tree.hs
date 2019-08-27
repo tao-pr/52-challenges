@@ -1,3 +1,5 @@
+-- NOTE: All coordinates lie on Cartesian coordinate
+
 module PRQuad.Tree where
 
 import Data.List(findIndex)
@@ -22,7 +24,7 @@ locateQuadrant (x,y) (QTree b q1 q2 q3 q4) = locateQuadrantBound(x,y) b
 
 
 isWithinBound :: Coord -> Bound -> Bool
-isWithinBound (x,y) (x0,y0,x1,y1) = x0<=x && y0<=y && x1>x && y1>y
+isWithinBound (x,y) (x0,y0,x1,y1) = x0<=x && y0>=y && x1>x && y1<y
 
 -- Locate the best quadrant of a rectangular bound where a coordinate can lie on 
 locateQuadrantBound :: Coord -> Bound -> Int
@@ -57,11 +59,11 @@ isSole _ = False
 splitQuadrant :: Bound -> [Bound]
 splitQuadrant (a,b,c,d) = 
   let{w = quot (c-a) 2;
-      h = quot (d-b) 2;
-      b3 = (a,b,a+w,b+w);
-      b4 = (a+w,b,c,b+w);
-      b1 = (a+w,b+w,c,d);
-      b2 = (a,b+w,a+w,d)}
+      h = quot (b-d) 2;
+      b3 = (a  ,b  ,a+w,b-h);
+      b4 = (a+w,b  ,c  ,b-h);
+      b1 = (a+w,b-h,c  ,d);
+      b2 = (a  ,b-h,a+w,d)}
     in [b1, b2, b3, b4]
 
 insertTo :: Coord -> QTree -> QTree
