@@ -1,5 +1,8 @@
 module PRQuad.Tree where
 
+import Data.List(findIndex)
+import Data.Maybe(fromMaybe)
+
 type Coord = (Int,Int) -- x,y
 type Bound = (Int,Int,Int,Int) -- x0,y0,x1,y1
 
@@ -17,21 +20,22 @@ locateQuadrant (x,y) (EmptyTree b) = locateQuadrantBound (x,y) b
 locateQuadrant (x,y) (Sole b _) = locateQuadrantBound (x,y) b
 locateQuadrant (x,y) (QTree b q1 q2 q3 q4) = locateQuadrantBound(x,y) b
 
+
+isWithinBound :: Coord -> Bound -> Bool
+isWithinBound (x,y) (x0,y0,x1,y1) = x0<=x && y0<=y && x1>x && y1>y
+
 -- Locate the best quadrant of a rectangular bound where a coordinate can lie on 
 locateQuadrantBound :: Coord -> Bound -> Int
-locateQuadrantBound (x,y) (a,b,c,d) = 
-  let{cx = quot (c-a) 2;
-      cy = quot (d-b) 2}
-    in if x<cx && y<cy then 4
-      else if x>=cx && y<cy then 2
-      else if x>=cx && y>=cy then 1
-      else 3
+locateQuadrantBound c b = 
+  let{bs = splitQuadrant b;
+      index = fromMaybe 0 (findIndex (isWithinBound c) bs)}
+    in 1 + index
 
 -- Get the subtree at the i-th quadrant of the tree
 getQuadrant :: Int -> QTree -> QTree
 getQuadrant _ (EmptyTree b) = (EmptyTree b)
 getQuadrant i (Sole bound c) = 
-  let (b1,b2,b3,b4) = splitQuadrant bound
+  let [b1,b2,b3,b4] = splitQuadrant bound
     in if i==3 then (EmptyTree b3)
       else if i==4 then (EmptyTree b4)
       else if i==1 then (EmptyTree b1)
@@ -50,7 +54,7 @@ isSole :: QTree -> Bool
 isSole (Sole _ _) = True
 isSole _ = False
 
-splitQuadrant :: Bound -> (Bound,Bound,Bound,Bound)
+splitQuadrant :: Bound -> [Bound]
 splitQuadrant (a,b,c,d) = 
   let{w = quot (c-a) 2;
       h = quot (d-b) 2;
@@ -58,13 +62,13 @@ splitQuadrant (a,b,c,d) =
       b4 = (a+w,b,c,b+w);
       b1 = (a+w,b+w,c,d);
       b2 = (a,b+w,a+w,d)}
-    in (b1, b2, b3, b4)
+    in [b1, b2, b3, b4]
 
 insertTo :: Coord -> QTree -> QTree
 insertTo n (EmptyTree b) = Sole b n
 insertTo n (Sole b c) = 
   -- Replace the sole tree with a subdivided quad tree
-  let{(b1,b2,b3,b4) = splitQuadrant b;
+  let{[b1,b2,b3,b4] = splitQuadrant b;
       q = QTree b (EmptyTree b1) (EmptyTree b2) (EmptyTree b3) (EmptyTree b4)}
     in insertTo c (insertTo n q)
 insertTo n (QTree b q1 q2 q3 q4) = 
