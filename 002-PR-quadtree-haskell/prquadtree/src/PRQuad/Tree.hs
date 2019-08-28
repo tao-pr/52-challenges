@@ -15,6 +15,10 @@ data QTree = EmptyTree Bound
   | QTree Bound QTree QTree QTree QTree -- q1 q2 q3 q4
 
 
+-- Get a coordinate if sole, otherwise none
+get :: QTree -> Maybe Coord
+get (Sole b c) = Just c
+get _ = Nothing
 
 -- Locate the best quadrant of a Quadtree where a coordinate can lie on
 locateQuadrant :: Coord -> QTree -> Int
