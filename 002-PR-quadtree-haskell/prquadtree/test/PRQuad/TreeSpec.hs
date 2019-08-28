@@ -34,3 +34,19 @@ spec = do
       let n = count $ Sole _b_ (2,4)
         in n `shouldBe` 1
 
+
+    it "insert a new coord to a sole tree" $ do
+      let{t = Sole _b_ (2,3); -- q4
+          t_ = insertTo (-4,0) t; -- q2
+          q2 = getQuadrant 2 t_;
+          q4 = getQuadrant 4 t_}
+        in [get q2, get q4] `shouldBe` [Just (-4,0), Just (2,3)]
+
+    --it "insert a new coord to a full tree" $ do
+      
+
+
+
+
+
+
