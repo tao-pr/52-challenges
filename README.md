@@ -14,10 +14,11 @@ as solutions to the new challenges.
 
 List of challenges are collected below.
 
-| ID  | Challenge               | Language / Tech  | Time taken |
-|-----|-------------------------|------------------|------------|
-| 001 | Mandelbrot with OpenCV  | C++11 OpenCV     | 1 day      |
-|     |                         |                  |            |
+| ID  | Challenge                | Language / Tech  | Time taken | Difficulty |
+|-----|--------------------------|------------------|------------|------------|
+| 001 | Mandelbrot with OpenCV   | C++11 OpenCV     | 4 hrs      | Recall Mandelbrot knowledge |
+| 002 | PR Quadtree with Haskell | Haskell          | 15 hrs     | Fight with Haskell |
+
 
 ## Licence
 

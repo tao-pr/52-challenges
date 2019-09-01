@@ -1,1 +1,2 @@
 001-mandelbrot-with-opencv/build/*
+*.lock
