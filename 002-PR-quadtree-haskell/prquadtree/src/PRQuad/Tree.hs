@@ -20,6 +20,10 @@ get :: QTree -> Maybe Coord
 get (Sole b c) = Just c
 get _ = Nothing
 
+isin :: Coord -> [Coord] -> Bool
+isin _ [] = False
+isin (a,b) ((c,d):ds) = if a==c && b==d then True else isin (a,b) ds
+
 -- Locate the best quadrant of a Quadtree where a coordinate can lie on
 locateQuadrant :: Coord -> QTree -> Int
 locateQuadrant (x,y) (EmptyTree b) = locateQuadrantBound (x,y) b
@@ -29,6 +33,9 @@ locateQuadrant (x,y) (QTree b q1 q2 q3 q4) = locateQuadrantBound(x,y) b
 
 isWithinBound :: Coord -> Bound -> Bool
 isWithinBound (x,y) (x0,y0,x1,y1) = x0<=x && y0>=y && x1>x && y1<y
+
+intersect :: Bound -> Bound -> Bool
+intersect (a,b,c,d) (p,q,r,s) = (a<r && c>p) && (b>s && d<q)
 
 -- Locate the best quadrant of a rectangular bound where a coordinate can lie on 
 locateQuadrantBound :: Coord -> Bound -> Int
@@ -95,8 +102,19 @@ count (QTree b q1 q2 q3 q4) =
   let sumq = map count [q1,q2,q3,q4]
     in foldl (+) 0 sumq
 
+getBound :: QTree -> Bound
+getBound (EmptyTree b) = b
+getBound (Sole b _) = b
+getBound (QTree b _ _ _ _) = b
+
 query :: Bound -> QTree -> [Coord]
-query _ _ = error "TAOTODO"
+query _ (EmptyTree b) = []
+query b (Sole _ c) = 
+  if isWithinBound c b then [c] else []
+query b (QTree _ q1 q2 q3 q4) = 
+  let{points   = map (query b) [q1,q2,q3,q4];
+      concated = foldl (++) [] points}
+    in concated
 
 contains :: Coord -> QTree -> Bool
 contains _ (EmptyTree b) = False
