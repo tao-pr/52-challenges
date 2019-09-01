@@ -42,7 +42,11 @@ spec = do
           q4 = getQuadrant 4 t_}
         in [get q2, get q4] `shouldBe` [Just (-4,0), Just (2,3)]
 
-    --it "insert a new coord to a full tree" $ do
+    it "insert a new coord to a full tree" $ do
+      let{coords = [(0,0),(-1,3),(2,3),(0,5),(-2,3)];
+          new    = EmptyTree _b_;
+          t      = insertMany coords new}
+        in all (\c -> isin c coords) (query _b_ t)
       
 
 

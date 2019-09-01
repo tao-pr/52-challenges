@@ -20,7 +20,7 @@ extra-source-files:
 description:         A part of 52 programming challenges by Tao PR
 
 dependencies:
-- base >= 4.7 && < 5
+- base >= 4.12 && < 5
 
 library:
   source-dirs: src
