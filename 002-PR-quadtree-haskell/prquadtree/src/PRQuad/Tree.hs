@@ -115,12 +115,3 @@ query b (QTree _ q1 q2 q3 q4) =
   let{points   = map (query b) [q1,q2,q3,q4];
       concated = foldl (++) [] points}
     in concated
-
-contains :: Coord -> QTree -> Bool
-contains _ (EmptyTree b) = False
-contains (x,y) (Sole b (v,w)) = x==v && w==w
-contains (x,y) q = error "TAOTODO"
-
-findClosest :: Coord -> QTree -> Maybe Coord
-findClosest _ _ = error "TAOTODO"
-
