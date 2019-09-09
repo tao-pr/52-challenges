@@ -1,4 +1,4 @@
-# Plots of Waste Disposal Density in Schleswig-Holstein, Hamburg over Time
+# Plots of Waste Disposal Density in Schleswig-Holstein over Time
 
 TBA
 
