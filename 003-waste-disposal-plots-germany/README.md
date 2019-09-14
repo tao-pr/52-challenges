@@ -11,7 +11,26 @@ This project uses the opendata of 2015-2017 waste disposal in Schleswig-Holstein
 - 2015 : https://www.govdata.de/web/guest/suchen/-/details/abfallentsorgung-in-schleswig-holstein-2015-anlagen-der-abfallentsorgung-korrektur
 
 
+# Initial preparation
 
+Create and start a virtual environment as follows.
+
+```
+$ virtualenv 003
+$ source 003/bin/activate
+```
+
+Install all required packages as follows
+
+```
+$ pip3 install -r requirements.txt
+```
+
+NOTE: You can deactivate the session later with
+
+```
+$ deacticate
+```
 
 ## Licence
 
