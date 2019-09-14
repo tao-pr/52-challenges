@@ -20,10 +20,11 @@ $ virtualenv 003
 $ source 003/bin/activate
 ```
 
-Install all required packages as follows
+Install all required packages with jupyter notebook kernel as follows
 
 ```
 $ pip3 install -r requirements.txt
+$ ipython kernel install --user --name=003
 ```
 
 NOTE: You can deactivate the session later with
