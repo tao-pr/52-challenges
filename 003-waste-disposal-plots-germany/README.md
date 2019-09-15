@@ -27,6 +27,8 @@ $ pip3 install -r requirements.txt
 $ ipython kernel install --user --name=003
 ```
 
+Then the notebook can be executed with the kernel named `003`.
+
 NOTE: You can deactivate the session later with
 
 ```
