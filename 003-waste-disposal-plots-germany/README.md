@@ -44,6 +44,20 @@ Google API Key, then export it to the local file as follows
 $ echo $GOOGLE_API_KEY > google_api_key
 ```
 
+### Activate GoogleMap plugin on Jupyter
+
+Execute the following command within your active virtual machine.
+
+```
+jupyter nbextension enable --py --sys-prefix widgetsnbextension
+```
+
+Then configure the plugin with 
+
+```
+jupyter nbextension enable --py --sys-prefix gmaps
+```
+
 ## Licence
 
 MIT
