@@ -18,7 +18,7 @@ List of challenges are collected below.
 |-----|--------------------------|------------------|------------|------------|
 | 001 | Mandelbrot with OpenCV   | C++11 OpenCV     | 4 hrs      | Recall Mandelbrot knowledge |
 | 002 | PR Quadtree with Haskell | Haskell          | 15 hrs     | Fight with Haskell |
-| 003 | Geospatial Plots (over Time) of Waste Disposal Density in Germany | Python | ?? | Data Wrangling (RDF) |
+| 003 | Geospatial Plots (over Time) of Waste Disposal Density in Germany | Python | ?? | Data Wrangling (RDF + GoeJSON) |
 
 
 ## Licence
