@@ -35,6 +35,15 @@ NOTE: You can deactivate the session later with
 $ deacticate
 ```
 
+### Setup Google API key
+
+Given you have a system variable `GOOGLE_API_KEY` containing your active 
+Google API Key, then export it to the local file as follows
+
+```
+$ echo $GOOGLE_API_KEY > google_api_key
+```
+
 ## Licence
 
 MIT
