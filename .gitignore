@@ -1,2 +1,5 @@
 001-mandelbrot-with-opencv/build/*
 *.lock
+003-waste-disposal-plots-germany/003/
+003-waste-disposal-plots-germany/google_api_key
+003-waste-disposal-plots-germany/notebooks/.ipynb_checkpoints/
