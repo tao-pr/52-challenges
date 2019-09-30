@@ -5,9 +5,13 @@ sampling techniques and evaluations.
 
 ## Requirements
 
-Following libraries are needed.
+Install the internal package before running the Jupyter notebooks 
 
-TBD
+```
+$ pip install -e libdata
+```
+
+Then you can start the jupyter notebook as usual.
 
 ## Licence
 
