@@ -14,11 +14,11 @@ def split_month_year(df: pd.DataFrame) -> pd.DataFrame:
   df.reset_index(inplace=True, drop=True)
   return df
 
-def take_last_year(city_df: pd.DataFrame) -> pd.DataFrame:
+def take_last_year(city_df: pd.DataFrame, num_years: int = 1) -> pd.DataFrame:
   """
   Filter the last year only
   """
-  df = city_df[city_df['year']==max(city_df['year'])]
+  df = city_df[city_df['year'] >= max(city_df['year']) - num_years + 1]
   df = df[[
     'AverageTemperature','month','City','Country',
     'Latitude','Longitude']]
