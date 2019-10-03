@@ -20,7 +20,7 @@ def take_last_year(city_df: pd.DataFrame, num_years: int = 1) -> pd.DataFrame:
   """
   df = city_df[city_df['year'] >= max(city_df['year']) - num_years + 1]
   df = df[[
-    'AverageTemperature','month','City','Country',
+    'AverageTemperature','year','month','City','Country',
     'Latitude','Longitude']]
   return df
 
@@ -28,7 +28,7 @@ def agg_monthly_climate(city_df: pd.DataFrame) -> pd.DataFrame:
   """
   Collect monthly climate over coordinates
   """
-  agg = city_df.groupby(['Latitude','Longitude']).agg({
+  agg = city_df.groupby(['year','Latitude','Longitude']).agg({
     'AverageTemperature': [min, max, collect]
   }).reset_index(drop=False)
   return agg
