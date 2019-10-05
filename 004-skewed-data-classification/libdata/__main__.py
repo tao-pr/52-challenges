@@ -23,26 +23,35 @@ def get_clean_data(for_train: bool):
   Load raw data from a csv file.
   Polish features and discard unwanted columns.
   """
-  print('Polishing features')
-  df = load_csv('GlobalLandTemperaturesByCity.csv')
-  df = wrangle.split_month_year(df)
-  df = df[['AverageTemperature','City','Country',
-           'Latitude','Longitude',
-           'year','month']]
-  df = df[df['AverageTemperature'].notnull()]
 
-  print('Filtering data')
-  if for_train:
-    df = df[(df['year']>=1900) & (df['year']<=2000)].sample(frac=0.1)
+  if for_train and os.path.isfile('features_train.csv'):
+    print('Loading the precooked feature file')
+    df = pd.read_csv('features_train.csv')
+    print('Feature size : {}'.format(len(df)))
+    return df
   else:
-    df = df[(df['year']>=2001) & (df['year']<=2010)]
+    df = load_csv('GlobalLandTemperaturesByCity.csv')
+    print('Polishing features')
+    df = wrangle.split_month_year(df)
+    df = df[['AverageTemperature','City','Country',
+             'Latitude','Longitude',
+             'year','month']]
+    df = df[df['AverageTemperature'].notnull()]
 
-  print('Raw data size for feature polish : {}'.format(len(df)))
-  features = feature.add_feature_prev_temp(df)
-  features = feature.add_feature_latlng(features)
-  features.drop(['City','Latitude','Longitude'], axis=1, inplace=True)
-  print('Feature size : {}'.format(len(features)))
-  return features
+    print('Filtering data')
+    if for_train:
+      df = df[(df['year']>=1900) & (df['year']<=2000)].sample(frac=0.02)
+    else:
+      df = df[(df['year']>=2001) & (df['year']<=2010)]
+
+    print('Raw data size for feature polish : {}'.format(len(df)))
+    features = feature.add_feature_prev_temp(df)
+    features = feature.add_feature_latlng(features)
+    features.drop(['City','Latitude','Longitude'], axis=1, inplace=True)
+    print('Feature size : {}'.format(len(features)))
+    print('Saving feature file')
+    features.to_csv('features_train.csv', sep=',')
+    return features
 
 def classification():
   df = get_clean_data(for_train=False)
