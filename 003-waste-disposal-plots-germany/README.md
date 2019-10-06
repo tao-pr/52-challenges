@@ -32,7 +32,7 @@ Then the notebook can be executed with the kernel named `003`.
 NOTE: You can deactivate the session later with
 
 ```
-$ deacticate
+$ deactivate
 ```
 
 ### Setup Google API key
