@@ -65,6 +65,8 @@ def training():
   print('Training data size : {}'.format(len(df)))
   print('Training ...')
   df_fitted = pipeline.clf.fit_transform(df)
+  print('Saving model ...')
+  pipeline.clf
 
 if __name__ == '__main__':
   print('Executing libdata ...')
