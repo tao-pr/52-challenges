@@ -49,9 +49,11 @@ class Regressor(BaseEstimator, TransformerMixin):
   def __init__(self, blueprint: BaseEstimator):
     self.model = blueprint
 
-  def fit(self, X, y=None):
-    pass
+  def fit(self, Z, y=None):
+    (X,y) = Z
+    self.model.fit(X, y)
+    return self
 
   def transform(self, X, y=None):
-    pass
+    return self.model.transform(X)
 
