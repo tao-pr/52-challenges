@@ -57,7 +57,8 @@ def classification():
   df = get_clean_data(for_train=False)
   model = pickle.load(open('model.pkl', 'rb'))
   print('Ready for classification ...')
-  pass
+  z = model.transform(df)
+  print(z)
 
 def training():
   df = get_clean_data(for_train=True)
