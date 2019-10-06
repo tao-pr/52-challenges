@@ -3,3 +3,9 @@
 003-waste-disposal-plots-germany/003/
 003-waste-disposal-plots-germany/google_api_key
 003-waste-disposal-plots-germany/notebooks/.ipynb_checkpoints/
+004-skewed-data-classification/.ipynb_checkpoints/
+004-skewed-data-classification/004/
+004-skewed-data-classification/features_train.csv
+004-skewed-data-classification/libdata/__pycache__/
+004-skewed-data-classification/libdata/libdata.egg-info/
+004-skewed-data-classification/model.pkl
