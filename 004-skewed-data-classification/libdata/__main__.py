@@ -66,7 +66,7 @@ def training():
   print('Training ...')
   df_fitted = pipeline.clf.fit_transform(df)
   print('Saving model ...')
-  pipeline.clf
+  pipeline.save_model('model.pkl', pipeline.clf)
 
 if __name__ == '__main__':
   print('Executing libdata ...')

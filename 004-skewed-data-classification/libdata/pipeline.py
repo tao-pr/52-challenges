@@ -1,4 +1,6 @@
 import numpy as np
+import pickle
+import math
 
 from sklearn.pipeline import *
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -7,6 +9,9 @@ from sklearn.linear_model import LinearRegression
 
 def load_model(path):
   return pickle.load(open(path, 'rb'))
+
+def save_model(path, model):
+  pickle.dump(model, open(path, 'wb'))
 
 class ColumnsSelector(BaseEstimator, TransformerMixin):
   """
@@ -66,8 +71,15 @@ class Regressor(BaseEstimator, TransformerMixin):
     y_pred = self.model.predict(X_test)
 
     # Measure mean square error
-    rmse = np.sqrt(np.sum(np.square(y_pred) - np.square(y_test)))/float(len(y_pred))
+    rmse = math.sqrt(np.sum(np.square(y_test - y_pred))[0])/float(len(y_pred))
     print('mean square error : {}'.format(rmse))
+
+    # Report distribution of error
+    diff = np.absolute(y_test - y_pred)['temp_change']
+    ranges = [0,1,3,5,10,np.inf]
+    for a,b in zip(ranges, ranges[1:]):
+      n = len([1 for d in diff if a<=d and b>d])
+      print('.... Error < {} celcius : {}%'.format(b, 100*n/float(len(diff))))
 
     return self
 
