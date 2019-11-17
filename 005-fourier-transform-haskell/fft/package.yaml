@@ -22,6 +22,7 @@ description:         See README
 dependencies:
 - base >= 4.7 && < 5
 - parallel
+- matrix
 
 library:
   source-dirs: src
