@@ -20,7 +20,7 @@ List of challenges are collected below.
 | 002 | PR Quadtree with Haskell | Haskell          | 15 hrs     | Fight with Haskell |
 | 003 | Geospatial Plots (over Time) of Waste Disposal Density in Germany | Python GeoJSON | 6 hrs | Data Wrangling (RDF + GeoJSON) |
 | 004 | Time-Series Geographical data regression | Python         | 7 hrs         | --         |
-| 005 | Fourier Transformation with Haskell | Haskell | -- | -- |
+| 005 | Fast Fourier Transformation with Haskell | Haskell | -- | -- |
 
 
 ## Licence
