@@ -27,9 +27,11 @@ public:
 
   inline vector<Table> extract(Mat& im) const 
   {
+    vector<Line> lines = extractLines(im);
+
     // TAOTODO
     vector<Table> v;
-    
+
 
     return v;
   };
