@@ -4,6 +4,8 @@ export OPENCV_DIR=/usr/local/Cellar/opencv/4.1.0_2/
 export OPENCV_INCLUDE_DIR=$OPENCV_DIR/include/opencv4/
 export OPENCV_LIB_DIR=$OPENCV_DIR/lib/
 
+rm -rf build/*
+
 cd build
 
 echo "================"
