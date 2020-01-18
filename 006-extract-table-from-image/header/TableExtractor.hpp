@@ -28,6 +28,10 @@ public:
   inline vector<Table> extract(Mat& im) const 
   {
     // TAOTODO
+    vector<Table> v;
+    
+
+    return v;
   };
 };
 
