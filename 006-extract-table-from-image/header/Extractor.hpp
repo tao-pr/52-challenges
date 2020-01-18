@@ -36,15 +36,18 @@ public:
 
   inline Mat binarise(Mat& im) const 
   {
-    const double maxValue = 255;
-    const int blockSize = 7;
-    const double C = 0;
-
+    const int maxValue = 255;
     Mat out = Mat::zeros(im.rows, im.cols, CV_8UC1);
     Mat inv = Mat::zeros(im.rows, im.cols, CV_8UC1);
 
-    threshold(im, out, 200, 255, THRESH_BINARY);
+    threshold(im, out, 220, maxValue, THRESH_BINARY);
     bitwise_not(out, inv);
+
+    // Dilate and erode so fragmented shapes are re-connected
+    auto kernel = getStructuringElement(MORPH_RECT, Size(5,5));
+    dilate(inv, inv, kernel);
+    erode(inv, inv, kernel);
+
     return inv;
   }
 
@@ -54,8 +57,8 @@ public:
 
     Mat binImage = binarise(im);
 
-    float hrzSize = im.cols / 100;
-    float verSize = im.rows / 100;
+    float hrzSize = im.cols / 30;
+    float verSize = im.rows / 30;
 
     auto hrzKernel = getStructuringElement(MORPH_RECT, Size(int(hrzSize), 1));
     auto verKernel = getStructuringElement(MORPH_RECT, Size(1, int(verSize)));
@@ -70,6 +73,9 @@ public:
     imshow("binary", binImage);
     imshow("horz", lineHorz);
     imshow("vert", lineVert);
+
+    bitwise_or(lineHorz, lineVert, lineAll);
+    imshow("lines", lineAll);
 
     // TAOTODO
     return v;
