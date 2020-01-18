@@ -1,6 +1,8 @@
 #ifndef EXTRACT_
 #define EXTRACT_
 
+#define DEBUG
+
 #include <stdlib.h>
 #include <unistd.h>
 

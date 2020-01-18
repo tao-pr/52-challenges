@@ -11,6 +11,8 @@
 using namespace cv;
 using namespace std;
 
+typedef Rect2d Boundary;
+
 struct Line 
 {
   tuple<Point2d, Point2d> p; // End points
@@ -51,6 +53,21 @@ public:
     return inv;
   }
 
+  inline vector<Boundary> extractCC(Mat& im) const 
+  {
+    vector<Boundary> v;
+    Mat contours, stats, centroids;
+    const int connectivity = 8;
+
+    int cnt = connectedComponentsWithStats(im, contours, stats, centroids, connectivity);
+    for (int i=0; i<cnt; i++)
+    {
+      // TAOTODO
+    }
+
+    return v;
+  }
+
   inline vector<Line> extractLines(Mat& im) const
   {
     vector<Line> v;
@@ -70,12 +87,23 @@ public:
     erode(binImage, lineHorz, hrzKernel);
     erode(binImage, lineVert, verKernel);
 
+#ifdef DEBUG
     imshow("binary", binImage);
     imshow("horz", lineHorz);
     imshow("vert", lineVert);
+#endif
 
     bitwise_or(lineHorz, lineVert, lineAll);
+#ifdef DEBUG
     imshow("lines", lineAll);
+    imwrite("./bin/lines.jpg", lineAll);
+    imwrite("./bin/horz.jpg", lineHorz);
+    imwrite("./bin/vert.jpg", lineVert);
+#endif
+
+    // Identify all connected components in each alignment separately
+    vector<Boundary> horz = extractCC(lineHorz);
+    vector<Boundary> vert = extractCC(lineVert);
 
     // TAOTODO
     return v;
