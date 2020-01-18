@@ -41,14 +41,18 @@ public:
     const double C = 0;
 
     Mat out = Mat::zeros(im.rows, im.cols, CV_8UC1);
+    Mat inv = Mat::zeros(im.rows, im.cols, CV_8UC1);
 
-    adaptiveThreshold(im, out, maxValue, THRESH_BINARY_INV, ADAPTIVE_THRESH_MEAN_C, blockSize, C);
-    return out;
+    threshold(im, out, 200, 255, THRESH_BINARY);
+    bitwise_not(out, inv);
+    return inv;
   }
 
   inline vector<Line> extractLines(Mat& im) const
   {
     vector<Line> v;
+
+    Mat binImage = binarise(im);
 
     float hrzSize = im.cols / 100;
     float verSize = im.rows / 100;
@@ -60,9 +64,10 @@ public:
     Mat lineVert = Mat::zeros(im.rows, im.cols, CV_8UC1);
     Mat lineAll = Mat::zeros(im.rows, im.cols, CV_8UC1);
 
-    erode(im, lineHorz, hrzKernel);
-    erode(im, lineVert, verKernel);
+    erode(binImage, lineHorz, hrzKernel);
+    erode(binImage, lineVert, verKernel);
 
+    imshow("binary", binImage);
     imshow("horz", lineHorz);
     imshow("vert", lineVert);
 

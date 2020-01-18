@@ -36,7 +36,7 @@ set(BUILD_DEPENDENCIES
 add_executable(${TARGET_APP} ${SOURCES})
 set_target_properties(${TARGET_APP} PROPERTIES 
   OUTPUT_NAME "extract"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
 # Build recipe
 target_link_libraries( ${TARGET_APP} ${BUILD_DEPENDENCIES})
