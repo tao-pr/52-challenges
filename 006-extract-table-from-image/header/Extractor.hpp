@@ -50,8 +50,8 @@ public:
   {
     vector<Line> v;
 
-    float hrzSize = im.cols / 50;
-    float verSize = im.rows / 50;
+    float hrzSize = im.cols / 100;
+    float verSize = im.rows / 100;
 
     auto hrzKernel = getStructuringElement(MORPH_RECT, Size(int(hrzSize), 1));
     auto verKernel = getStructuringElement(MORPH_RECT, Size(1, int(verSize)));
@@ -62,6 +62,9 @@ public:
 
     erode(im, lineHorz, hrzKernel);
     erode(im, lineVert, verKernel);
+
+    imshow("horz", lineHorz);
+    imshow("vert", lineVert);
 
     // TAOTODO
     return v;
