@@ -7,7 +7,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "Extractor.hpp"
+#include "TableExtractor.hpp"
 
 int main(int argc, char** argv)
 {
@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
   // Feed image to extraction process
   // TAOTODO
-  Extract e;
+  TableExtract e;
   vector<Table> tables = e.extract(im);
 
 
