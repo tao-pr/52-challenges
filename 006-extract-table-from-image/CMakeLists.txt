@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 # Dependencies
 include_directories(/usr/local/include)
 include_directories("$ENV{OPENCV_INCLUDE_DIR}")
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/headers")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/header")
 link_directories(/usr/local/lib)
 link_directories("$ENV{OPENCV_LIB_DIR}")
 
@@ -13,7 +13,7 @@ set(TARGET_APP "extract")
 
 # Source files
 file(GLOB SOURCES 
-  "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.hpp"
+  "${CMAKE_CURRENT_SOURCE_DIR}/header/*.hpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 set(APP_SRC src/Main.cpp)
