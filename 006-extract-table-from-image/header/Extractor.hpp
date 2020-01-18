@@ -10,18 +10,17 @@
 using namespace cv;
 using namespace std;
 
-
 /**
  * Generic extractor
  */
-template <A>
+template <class A>
 class Extract
 {
 public:
-  Extract();
-  ~Extract();
+  inline Extract(){};
+  virtual inline ~Extract() {};
 
-  vector<A> extract(Mat& im) const;
+  virtual vector<A> extract(Mat& im) const = 0;
 };
 
 #endif

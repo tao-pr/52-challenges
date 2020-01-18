@@ -9,3 +9,4 @@
 004-time-series-geo-data/libdata/__pycache__/
 004-time-series-geo-data/libdata/libdata.egg-info/
 004-time-series-geo-data/model.pkl
+006-extract-table-from-image/build/
