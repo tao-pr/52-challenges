@@ -10,18 +10,18 @@
 using namespace cv;
 using namespace std;
 
-struct Table {
-  Rect region;
-  vector<Table> children;
-};
 
+/**
+ * Generic extractor
+ */
+template <A>
 class Extract
 {
 public:
   Extract();
   ~Extract();
 
-  vector<Table> extract(Mat& im) const;
+  vector<A> extract(Mat& im) const;
 };
 
 #endif
