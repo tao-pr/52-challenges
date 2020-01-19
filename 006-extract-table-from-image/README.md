@@ -20,10 +20,23 @@ $ ./make.sh
 Then
 
 ```
-$ build/mandelbrot
+$ bin/extract
 ```
 
-![screenshot 0](00.jpg)
-![screenshot 1](01.jpg)
-![screenshot 2](02.jpg)
+## Outputs
 
+Extracted line components from image 
+
+![1](data/lines.jpg)
+
+Clean lines
+
+![2](data/lines-filtered.jpg)
+
+Extended lines 
+
+![3](data/lines-extended.jpg)
+
+Reconstructed tables
+
+![4](data/tables.jpg)

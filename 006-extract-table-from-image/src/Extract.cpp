@@ -27,10 +27,6 @@ int main(int argc, char** argv)
   TableExtract e;
   vector<Table> tables = e.extract(im);
 
-
-  // Show result
-  // TAOTODO
-
   waitKey(0);
 }
 
