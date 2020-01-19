@@ -27,7 +27,10 @@ public:
 
   inline vector<Table> extract(Mat& im) const 
   {
-    vector<Line> lines = extractLines(im);
+    // Extract potential horizontal & vertical lines
+    LineSpatialMap lines = extractLines(im);
+
+    // Try growing each line by 
 
     // TAOTODO
     vector<Table> v;
