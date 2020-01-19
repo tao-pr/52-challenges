@@ -134,6 +134,11 @@ public:
           // Reset!
           // Throw away the beginning of the table we marked earlier
           // This will look for another candidate
+#ifdef DEBUG
+          cout << "Dropping table candidate" << endl;
+          cout << "  vertical lines   : " << tb.verticals.size() << endl;
+          cout << "  horizontal lines : " << tb.horizontals.size() << endl;
+#endif
           x0 = im.cols;
           x1 = 0;
           y0 = im.rows;
