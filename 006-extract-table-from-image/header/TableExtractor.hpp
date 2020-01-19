@@ -105,6 +105,10 @@ public:
 
     for (auto y : profileRow)
     {
+#ifdef DEBUG
+      cout << "Processing profile y = " << y << endl;
+#endif
+
       if (y0 == im.rows)
       {
         // Identify the beginning of a new table (y)
@@ -118,6 +122,9 @@ public:
             y1 = max((int)(l.y + l.height), (int)y1); // We'll also identify the ending of the table (y position)
             x0 = min((int)l.x, (int)x0);
             x1 = max((int)l.x, (int)x1);
+#ifdef DEBUG
+            cout << "added vertical line @ x = " << l.x << ", which stretches to y1 = " << y1 << endl;
+#endif
           }
         }
       }
@@ -139,6 +146,7 @@ public:
           cout << "  vertical lines   : " << tb.verticals.size() << endl;
           cout << "  horizontal lines : " << tb.horizontals.size() << endl;
 #endif
+
           x0 = im.cols;
           x1 = 0;
           y0 = im.rows;
@@ -180,6 +188,7 @@ public:
     for (auto tb : vt)
       tb.drawTo(canvas);
 
+    // Draw projections of all lines
     for (auto x : profileCol)
       line(canvas, Point2d(x,0), Point2d(x,im.rows-1), Scalar(110,110,110));
 
