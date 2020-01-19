@@ -27,6 +27,8 @@ public:
 
   inline vector<Table> extract(Mat& im) const 
   {
+    vector<Table> vt;
+
     // Extract potential horizontal & vertical lines
     LineSpatialMap lines = extractLines(im);
 
@@ -94,10 +96,85 @@ public:
       vert.push_back(b);
     }
 
+    // Extract horizontal boundary of each table (in case of multiple tables per image)
+    Table tb;
+    int x0 = im.cols;
+    int x1 = 0;
+    int y0 = im.rows;
+    int y1 = 0;
+
+    for (auto y : profileRow)
+    {
+      if (y0 == im.rows)
+      {
+        // Identify the beginning of a new table (y)
+        y0 = y;
+        for (auto l : vert)
+        {
+          // List all vertical lines beginning from the beginning y position
+          if (l.y == y0)
+          {
+            tb.verticals.insert(l.y);
+            y1 = max((int)(l.y + l.height), (int)y1); // We'll also identify the ending of the table (y position)
+            x0 = min((int)l.x, (int)x0);
+            x1 = max((int)l.x, (int)x1);
+          }
+        }
+      }
+      else if (y == y1 && y1 != 0) // Reach the end of the table
+      {
+        // To be a table, at least 2 vertical lines are required.
+        if (tb.verticals.size() >= 2)
+        {
+          tb.region = Rect(x0, y0, x1-x0, y1-y0);
+          vt.push_back(tb);
+        }
+        else
+        {
+          // Reset!
+          // Throw away the beginning of the table we marked earlier
+          // This will look for another candidate
+          x0 = im.cols;
+          x1 = 0;
+          y0 = im.rows;
+          y1 = 0;
+          tb.verticals.clear();
+          tb.horizontals.clear();
+        }
+      }
+      else
+      {
+        // Reach another row, not yet the last horizontal line
+        // Also list another vertical row starting from this point (if any)
+        for (auto l : vert)
+        {
+          if (l.y == y)
+          {
+            tb.verticals.insert(l.y);
+          }
+        }
+
+        // Identify horizontal line at this y position
+        for (auto l : horz)
+        {
+          if (l.y == y)
+          {
+            tb.horizontals.insert(l.x);
+            break;
+          }
+        }
+      }
+    }
+
 
 #ifdef DEBUG
     Mat canvas = Mat::ones(im.rows, im.cols, CV_8UC3);
     canvas = Scalar(255, 255, 255);
+
+    // Draw tables
+    for (auto tb : vt)
+      tb.drawTo(canvas);
+
     for (auto x : profileCol)
       line(canvas, Point2d(x,0), Point2d(x,im.rows-1), Scalar(110,110,110));
 
@@ -105,18 +182,16 @@ public:
       line(canvas, Point2d(0,y), Point2d(im.cols-1,y), Scalar(110,110,110));
 
     for (auto h : horz)
-      rectangle(canvas, h.tl(), h.br(), Scalar(0,130,0), 3);
+      rectangle(canvas, h.tl(), h.br(), Scalar(0,130,0), 1);
     
     for (auto v : vert)
-      rectangle(canvas, v.tl(), v.br(), Scalar(0,0,130), 3);
+      rectangle(canvas, v.tl(), v.br(), Scalar(0,0,130), 1);
 
     imshow("extended", canvas);
     imwrite("./bin/lines-extended.jpg", canvas);
 #endif
-    vector<Table> v;
 
-
-    return v;
+    return vt;
   };
 };
 
