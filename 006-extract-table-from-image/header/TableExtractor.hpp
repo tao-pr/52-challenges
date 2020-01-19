@@ -113,12 +113,17 @@ public:
       {
         // Identify the beginning of a new table (y)
         y0 = y;
+#ifdef DEBUG
+        cout << "Beginning table @ y = " << y << endl;
+#endif
+        int numVerticalLines = 0;
         for (auto l : vert)
         {
           // List all vertical lines beginning from the beginning y position
           if (l.y == y0)
           {
-            tb.verticals.insert(l.y);
+            tb.verticals.insert(l.x);
+            numVerticalLines++;
             y1 = max((int)(l.y + l.height), (int)y1); // We'll also identify the ending of the table (y position)
             x0 = min((int)l.x, (int)x0);
             x1 = max((int)l.x, (int)x1);
@@ -126,6 +131,24 @@ public:
             cout << "added vertical line @ x = " << l.x << ", which stretches to y1 = " << y1 << endl;
 #endif
           }
+        }
+
+        // If there is no vertical lines (or even just only one) starting from this line,
+        // then ignore this
+        if (numVerticalLines <= 1)
+        {
+          // Reset!
+          // Throw away the beginning of the table we marked earlier
+          // This will look for another candidate
+#ifdef DEBUG
+          cout << "Skipping horizontal line @ y = " << y << endl;
+#endif
+          x0 = im.cols;
+          x1 = 0;
+          y0 = im.rows;
+          y1 = 0;
+          tb.verticals.clear();
+          tb.horizontals.clear();
         }
       }
       else if (y == y1 && y1 != 0) // Reach the end of the table
@@ -135,6 +158,23 @@ public:
         {
           tb.region = Rect(x0, y0, x1-x0, y1-y0);
           vt.push_back(tb);
+#ifdef DEBUG
+          cout << "End of table @ y = " << y << endl;
+#endif
+          // Reset!
+#ifdef DEBUG
+          cout << "Dropping table candidate" << endl;
+          cout << "  vertical lines   : " << tb.verticals.size() << endl;
+          cout << "  horizontal lines : " << tb.horizontals.size() << endl;
+#endif
+
+          x0 = im.cols;
+          x1 = 0;
+          y0 = im.rows;
+          y1 = 0;
+          tb.verticals.clear();
+          tb.horizontals.clear();
+
         }
         else
         {
@@ -163,7 +203,7 @@ public:
         {
           if (l.y == y)
           {
-            tb.verticals.insert(l.y);
+            tb.verticals.insert(l.x);
           }
         }
 
@@ -172,7 +212,7 @@ public:
         {
           if (l.y == y)
           {
-            tb.horizontals.insert(l.x);
+            tb.horizontals.insert(l.y);
             break;
           }
         }
