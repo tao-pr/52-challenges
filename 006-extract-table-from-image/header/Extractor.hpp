@@ -5,6 +5,7 @@
 #include <vector>
 #include <tuple>
 #include <cstdlib>
+#include <set>
 
 #include <fmt/format.h>
 
@@ -38,6 +39,7 @@ struct LineSpatialMap
   Mat map;
   vector<Boundary> horz;
   vector<Boundary> vert;
+  Size size;
 
   static LineSpatialMap createFromVector(vector<Boundary> horz, vector<Boundary> vert, Size imageSize)
   {
@@ -45,7 +47,21 @@ struct LineSpatialMap
     m.map = Mat::zeros(imageSize.height, imageSize.width, CV_8UC1);
     m.horz = horz;
     m.vert = vert;
+    m.size = imageSize;
     return m;
+  }
+
+  tuple<set<int>, set<int>> profile1D() const
+  {
+    set<int> px;
+    set<int> py;
+
+    for (auto h : horz)
+      py.insert((int)h.y);
+    for (auto v : vert)
+      px.insert((int)v.x);
+
+    return make_tuple(px, py);
   }
 };
 
@@ -112,7 +128,11 @@ public:
   }
 
   // Filter proper lines by orientation
-  inline vector<Boundary> filterLine(vector<Boundary>& v, Orientation how, int pageWidth, int pageHeight) const 
+  inline vector<Boundary> filterLine(
+    vector<Boundary>& v, 
+    Orientation how, 
+    int pageWidth, int pageHeight,
+    bool thinning=true) const 
   {
     vector<Boundary> vOut;
     for (auto b : v)
@@ -128,12 +148,16 @@ public:
         // Width of the line has to be at least 30% of the page width
         if (b.width < pageWidth*0.3)
           continue;
+        if (thinning)
+          b.height = 1;
       }
       else 
       {
         // Height of the line has to be at least 6% of the page height
         if (b.height < pageHeight*0.06)
           continue;
+        if (thinning)
+          b.width = 1;
       }
       vOut.push_back(b);
     }
@@ -173,20 +197,32 @@ public:
     horz = filterLine(horz, HORZ, im.cols, im.rows);
     vert = filterLine(vert, VERT, im.cols, im.rows);
 
+    auto lmap = LineSpatialMap::createFromVector(horz, vert, im.size());
+
+    set<int> profileRow, profileCol;
+    tie(profileCol, profileRow) = lmap.profile1D();
+
 #ifdef DEBUG
     Mat filteredLine = Mat::ones(im.rows, im.cols, CV_8UC3);
     filteredLine = Scalar(255, 255, 255);
+
+    for (auto x : profileCol)
+      line(filteredLine, Point2d(x,0), Point2d(x,im.rows-1), Scalar(110,110,110));
+
+    for (auto y : profileRow)
+      line(filteredLine, Point2d(0,y), Point2d(im.cols-1,y), Scalar(110,110,110));
+
     for (auto h : horz)
-      rectangle(filteredLine, h.tl(), h.br(), Scalar(0,80,0));
+      rectangle(filteredLine, h.tl(), h.br(), Scalar(0,130,0), 3);
     
     for (auto v : vert)
-      rectangle(filteredLine, v.tl(), v.br(), Scalar(0,0,80));
+      rectangle(filteredLine, v.tl(), v.br(), Scalar(0,0,130), 3);
 
     imshow("filtered lines", filteredLine);
     imwrite("./bin/lines-filtered.jpg", filteredLine);
 #endif
 
-    return LineSpatialMap::createFromVector(horz, vert, im.size());
+    return lmap;
   }
 };
 

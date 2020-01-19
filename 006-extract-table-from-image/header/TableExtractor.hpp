@@ -30,7 +30,13 @@ public:
     // Extract potential horizontal & vertical lines
     LineSpatialMap lines = extractLines(im);
 
-    // Try growing each line by 
+    // Expand each line until it reaches the closest profile line in the another orientation
+    set<int> profileRow, profileCol;
+    tie(profileCol, profileRow) = lines.profile1D();
+
+    vector<Boundary> horz = lines.horz;
+    vector<Boundary> vert = lines.vert;
+
 
     // TAOTODO
     vector<Table> v;
