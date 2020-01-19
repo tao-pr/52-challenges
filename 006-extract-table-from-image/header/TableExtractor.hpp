@@ -222,11 +222,13 @@ public:
 
 #ifdef DEBUG
     Mat canvas = Mat::ones(im.rows, im.cols, CV_8UC3);
+    Mat canvas2 = Mat::ones(im.rows, im.cols, CV_8UC3);
     canvas = Scalar(255, 255, 255);
+    canvas2 = Scalar(255, 255, 255);
 
     // Draw tables
     for (auto tb : vt)
-      tb.drawTo(canvas);
+      tb.drawTo(canvas2);
 
     // Draw projections of all lines
     for (auto x : profileCol)
@@ -243,6 +245,9 @@ public:
 
     imshow("extended", canvas);
     imwrite("./bin/lines-extended.jpg", canvas);
+
+    imshow("tables", canvas2);
+    imwrite("./bin/tables.jpg", canvas2);
 #endif
 
     return vt;

@@ -17,6 +17,15 @@ struct Table {
   void drawTo(Mat& im) const 
   {
     rectangle(im, region.tl(), region.br(), Scalar(235,235,235), -1);
+    for (auto v : verticals)
+    {
+      line(im, Point(v, region.y), Point(v, region.y+region.height), Scalar(70,70,70));
+    }
+
+    for (auto h : horizontals)
+    {
+      line(im, Point(region.x, h), Point(region.x+region.width, h), Scalar(70,70,70));
+    }
   };
 };
 
