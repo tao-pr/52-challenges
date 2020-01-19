@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <tuple>
+#include <cstdlib>
+
+#include <fmt/format.h>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -12,6 +15,12 @@ using namespace cv;
 using namespace std;
 
 typedef Rect2d Boundary;
+
+enum Orientation
+{
+  HORZ,
+  VERT
+};
 
 struct Line 
 {
@@ -57,15 +66,62 @@ public:
   {
     vector<Boundary> v;
     Mat contours, stats, centroids;
-    const int connectivity = 8;
+    const int connectivity = 4;
+
+#ifdef DEBUG
+    Mat canvas = Mat::ones(im.rows, im.cols, CV_8UC3);
+    canvas = Scalar(255, 255, 255);
+#endif
 
     int cnt = connectedComponentsWithStats(im, contours, stats, centroids, connectivity);
-    for (int i=0; i<cnt; i++)
+    for (int i=1; i<cnt; i++) // Intentionally skip the first element
     {
-      // TAOTODO
+      int x = stats.at<int>(i, CC_STAT_LEFT);
+      int y = stats.at<int>(i, CC_STAT_TOP);
+      int w = stats.at<int>(i, CC_STAT_WIDTH);
+      int h = stats.at<int>(i, CC_STAT_HEIGHT);
+      int area = stats.at<int>(i, CC_STAT_AREA);
+      
+#ifdef DEBUG
+      rectangle(canvas, Point(x,y), Point(x+w,y+h), Scalar(0,70,0));
+#endif
+      v.push_back(Rect2d(x, y, w, h));
     }
 
+#ifdef DEBUG
+    imshow(fmt::format("cc-{}", rand()), canvas);
+#endif
+
     return v;
+  }
+
+  // Filter proper lines by orientation
+  inline vector<Boundary> filterLine(vector<Boundary>& v, Orientation how, int pageWidth, int pageHeight) const 
+  {
+    vector<Boundary> vOut;
+    for (auto b : v)
+    {
+      // Drop shape which does not look like a long thin line
+      auto p = min(b.width, b.height);
+      auto q = max(b.width, b.height);
+      if (p/q >= 0.05)
+        continue;
+
+      if (how == HORZ)
+      {
+        // Width of the line has to be at least 30% of the page width
+        if (b.width < pageWidth*0.3)
+          continue;
+      }
+      else 
+      {
+        // Height of the line has to be at least 25% of the page height
+        if (b.height < pageHeight*0.25)
+          continue;
+      }
+      vOut.push_back(b);
+    }
+    return vOut;
   }
 
   inline vector<Line> extractLines(Mat& im) const
@@ -104,6 +160,9 @@ public:
     // Identify all connected components in each alignment separately
     vector<Boundary> horz = extractCC(lineHorz);
     vector<Boundary> vert = extractCC(lineVert);
+
+    horz = filterLine(horz, HORZ, im.cols, im.rows);
+    vert = filterLine(vert, VERT, im.cols, im.rows);
 
     // TAOTODO
     return v;
