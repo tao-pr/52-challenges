@@ -1,11 +1,16 @@
 cmake_minimum_required(VERSION 3.8)
 
+# Fmt library, assumes installation via Homebrew
+set(FMT_LIB_DIR /usr/local/Cellar/fmt/5.3.0)
+
 # Dependencies
 include_directories(/usr/local/include)
 include_directories("$ENV{OPENCV_INCLUDE_DIR}")
+include_directories("${FMT_LIB_DIR}/include")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/header")
 link_directories(/usr/local/lib)
 link_directories("$ENV{OPENCV_LIB_DIR}")
+link_directories("${FMT_LIB_DIR}/lib")
 
 project("006-extract" CXX C)
 
@@ -29,7 +34,8 @@ set(BUILD_DEPENDENCIES
   opencv_highgui
   opencv_imgcodecs 
   opencv_objdetect
-  opencv_xfeatures2d)
+  opencv_xfeatures2d
+  libfmt.a)
 
 
 # Targets to build
