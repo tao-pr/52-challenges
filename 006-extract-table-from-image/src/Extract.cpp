@@ -24,7 +24,6 @@ int main(int argc, char** argv)
   moveWindow("original", 0, 0);
 
   // Feed image to extraction process
-  // TAOTODO
   TableExtract e;
   vector<Table> tables = e.extract(im);
 
