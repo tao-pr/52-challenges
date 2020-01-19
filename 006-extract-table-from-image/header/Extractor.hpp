@@ -18,8 +18,8 @@ typedef Rect2d Boundary;
 
 enum Orientation
 {
-  HORZ,
-  VERT
+  HORZ = 1,
+  VERT = 5
 };
 
 struct Line 
@@ -30,6 +30,22 @@ struct Line
     Point2d a,b;
     tie(a, b) = p;
     line(im, a, b, Scalar(255,0,0));
+  }
+};
+
+struct LineSpatialMap
+{
+  Mat map;
+  vector<Boundary> horz;
+  vector<Boundary> vert;
+
+  static LineSpatialMap createFromVector(vector<Boundary> horz, vector<Boundary> vert, Size imageSize)
+  {
+    LineSpatialMap m;
+    m.map = Mat::zeros(imageSize.height, imageSize.width, CV_8UC1);
+    m.horz = horz;
+    m.vert = vert;
+    return m;
   }
 };
 
@@ -124,10 +140,8 @@ public:
     return vOut;
   }
 
-  inline vector<Line> extractLines(Mat& im) const
+  inline LineSpatialMap extractLines(Mat& im) const
   {
-    vector<Line> v;
-
     Mat binImage = binarise(im);
 
     float hrzSize = im.cols / 30;
@@ -172,8 +186,7 @@ public:
     imwrite("./bin/lines-filtered.jpg", filteredLine);
 #endif
 
-    // TAOTODO
-    return v;
+    return LineSpatialMap::createFromVector(horz, vert, im.size());
   }
 };
 
