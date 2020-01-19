@@ -11,7 +11,13 @@ using namespace std;
  */
 struct Table {
   Rect region;
-  vector<Table> children;
+  set<int> verticals;
+  set<int> horizontals;
+
+  void drawTo(Mat& im) const 
+  {
+    rectangle(im, region.tl(), region.br(), Scalar(235,235,235), -1);
+  };
 };
 
 
