@@ -21,6 +21,7 @@ List of challenges are collected below.
 | 003 | Geospatial Plots (over Time) of Waste Disposal Density in Germany | Python GeoJSON | 6 hrs | Data Wrangling (RDF + GeoJSON) |
 | 004 | Time-Series Geographical data regression | Python         | 7 hrs         | --         |
 | 005 | Fast Fourier Transformation with Haskell | Haskell | 4 hrs | Recall FT knowledge + Fight with Haskell |
+| 006 | Extract table from image | C++17 OpenCV | 12 hrs | Experimenting with algorithms |
 
 
 ## Licence
