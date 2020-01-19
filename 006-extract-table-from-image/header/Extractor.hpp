@@ -89,7 +89,7 @@ public:
     }
 
 #ifdef DEBUG
-    imshow(fmt::format("cc-{}", rand()), canvas);
+    imshow(fmt::format("extract-cc-{}", rand()), canvas);
 #endif
 
     return v;
@@ -115,8 +115,8 @@ public:
       }
       else 
       {
-        // Height of the line has to be at least 25% of the page height
-        if (b.height < pageHeight*0.25)
+        // Height of the line has to be at least 6% of the page height
+        if (b.height < pageHeight*0.06)
           continue;
       }
       vOut.push_back(b);
@@ -143,15 +143,10 @@ public:
     erode(binImage, lineHorz, hrzKernel);
     erode(binImage, lineVert, verKernel);
 
-#ifdef DEBUG
-    imshow("binary", binImage);
-    imshow("horz", lineHorz);
-    imshow("vert", lineVert);
-#endif
-
     bitwise_or(lineHorz, lineVert, lineAll);
 #ifdef DEBUG
     imshow("lines", lineAll);
+    imwrite("./bin/bin.jpg", binImage);
     imwrite("./bin/lines.jpg", lineAll);
     imwrite("./bin/horz.jpg", lineHorz);
     imwrite("./bin/vert.jpg", lineVert);
@@ -163,6 +158,19 @@ public:
 
     horz = filterLine(horz, HORZ, im.cols, im.rows);
     vert = filterLine(vert, VERT, im.cols, im.rows);
+
+#ifdef DEBUG
+    Mat filteredLine = Mat::ones(im.rows, im.cols, CV_8UC3);
+    filteredLine = Scalar(255, 255, 255);
+    for (auto h : horz)
+      rectangle(filteredLine, h.tl(), h.br(), Scalar(0,80,0));
+    
+    for (auto v : vert)
+      rectangle(filteredLine, v.tl(), v.br(), Scalar(0,0,80));
+
+    imshow("filtered lines", filteredLine);
+    imwrite("./bin/lines-filtered.jpg", filteredLine);
+#endif
 
     // TAOTODO
     return v;
