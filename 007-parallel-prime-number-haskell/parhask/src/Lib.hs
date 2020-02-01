@@ -1,12 +1,14 @@
 module Lib
-    ( someFunc
+    ( multiplesOf,
+      findPrimes
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Control.Parallel.Strategies
 
-isPrime :: Int -> Bool
-isPrime _ = error "not implemented"
+-- Find all multiples of the specified integer
+multiplesOf :: Int -> Int -> [Int] -> [Int]
+multiplesOf n lim primes = [n*p | p <- primes, n*p <= lim]
 
-findPrimeLessThan :: Int -> [Int]
-findPrimeLessThan _ = error "not implemented"
+-- Find all prime number up until the specified bound
+findPrimes :: Int -> [Int]
+findPrimes lim = error "not implemented"
