@@ -24,6 +24,9 @@ spec = do
     it "uniqify and sort a list" $ do
       uniq [1,10,5,4] `shouldBe` [1,4,5,10]
 
+    it "exclude elements from the list" $ do
+      exclude [1..10] [1,5,7,8,10] `shouldBe` [2,3,4,6,9]
+
   describe "Multiples" $ do
 
     it "finds multiples of a number" $ do
