@@ -2,13 +2,6 @@ module NumMagic.Opr where
 
 import Data.Set
 
--- Find all multiples of the specified integers
--- multiplesOf :: Int -> Int -> [Int] -> [Int]
--- multiplesOf n lim primes = uniq $ do 
---   m <- [n * p | p <- primes, n*p <= lim] -- first-degree expansion
---   q <- m:(multiplesOf m lim primes)    -- second-degree expansion
---   return q
-
 
 multiplesOf :: Int -> Int -> [Int]
 multiplesOf a lim = [a*i | i <- [2..], a*i <= lim]
@@ -23,6 +16,7 @@ uniq ns = uniq' [] ns where
 
 -- Exclude all members from list [A] in [B]
 exclude :: [Int] -> [Int] -> [Int]
+exclude [] _ = []
 exclude ns [] = ns
 exclude (n:ns) ms = if n `elem` ms 
   then exclude ns ms
@@ -38,24 +32,34 @@ addOrder n (m:ms) =
       else m:(addOrder n ms)
  
 
+-- Find all prime numbers up to the specified number
 findPrimes :: Int -> [Int]
-findPrimes 1 = []
-findPrimes 2 = [2]
-findPrimes n = 
-  -- TAOTODO recursive call, see hints on the bottom of page
-  withoutMultiplesOf (2) [2..n]
+findPrimes lim = filteroutMultiples 2 [2..lim]
 
 
+filteroutMultiples :: Int -> [Int] -> [Int]
+filteroutMultiples _ [] = []
+filteroutMultiples _ [1] = []
+filteroutMultiples _ [1,2] = [2]
+filteroutMultiples a (n:ns) = 
+  if n<=1 then filteroutMultiples a ns
+    else if a>=last(n:ns) then n:ns -- it's over, no more elements to filter
+      else if a>=n then a:(filteroutMultiples (a+1) ns) -- TAOTODO instead of monotonically increasing, we can walk up the list of primes
+        else withoutMultiplesOf a (n:ns)
+
+-- Filter the list without multiples of the specified number
 withoutMultiplesOf :: Int -> [Int] -> [Int]
 withoutMultiplesOf _ [] = []
-withoutMultiplesOf n ns = ns `exclude` (multiplesOf n (last ns))
+withoutMultiplesOf a ns = [n | n <- ns, n `mod` a > 0] --ns `exclude` (multiplesOf n (last ns))
 
-[2,3,4,5,6,7]
+
+
+-- [2,3,4,5,6,7]
  
- 2 -> [4]      -> [2,3,_,5,6,7,9]
- 3 -> [6,9]    -> [2,3,_,5,_,7,_]
- 5 -> []       -> [2,3,_,5,_,7,_]
- ..
+--  2 -> [4]      -> [2,3,_,5,6,7,9]
+--  3 -> [6,9]    -> [2,3,_,5,_,7,_]
+--  5 -> []       -> [2,3,_,5,_,7,_]
+--  ..
 
 
 
