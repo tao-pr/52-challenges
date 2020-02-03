@@ -44,8 +44,8 @@ filteroutMultiples _ [1,2] = [2]
 filteroutMultiples a (n:ns) = 
   if n<=1 then filteroutMultiples a ns
     else if a>=last(n:ns) then n:ns -- it's over, no more elements to filter
-      else if a>=n then a:(filteroutMultiples (a+1) ns) -- TAOTODO instead of monotonically increasing, we can walk up the list of primes
-        else withoutMultiplesOf a (n:ns)
+      else if a>=n then a:(filteroutMultiples a ns)
+        else filteroutMultiples (a+1) (withoutMultiplesOf a (n:ns))
 
 -- Filter the list without multiples of the specified number
 withoutMultiplesOf :: Int -> [Int] -> [Int]
