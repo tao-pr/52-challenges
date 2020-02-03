@@ -3,11 +3,15 @@ module NumMagic.Opr where
 import Data.Set
 
 -- Find all multiples of the specified integers
-multiplesOf :: Int -> Int -> [Int] -> [Int]
-multiplesOf n lim primes = uniq $ do 
-  m <- [n * p | p <- primes, n*p <= lim] -- first-degree expansion
-  q <- m:(multiplesOf m lim primes)    -- second-degree expansion
-  return q
+-- multiplesOf :: Int -> Int -> [Int] -> [Int]
+-- multiplesOf n lim primes = uniq $ do 
+--   m <- [n * p | p <- primes, n*p <= lim] -- first-degree expansion
+--   q <- m:(multiplesOf m lim primes)    -- second-degree expansion
+--   return q
+
+
+multiplesOf :: Int -> Int -> [Int]
+multiplesOf a lim = [a*i | i <- [2..], a*i <= lim]
 
 
 -- Sort and uniqify the list of Integer
@@ -32,13 +36,26 @@ addOrder n (m:ms) =
   if n<m then n:m:ms
     else if n==m then m:ms
       else m:(addOrder n ms)
+ 
 
-
--- Find all prime number up until the specified bound
 findPrimes :: Int -> [Int]
-findPrimes 0 = primes
-findPrimes 1 = primes
-findPrimes lim = do
-  n <- [2..lim]
-  m <- multiplesOf n lim primes -- TAOTODO find primes for this input first
+findPrimes 1 = []
+findPrimes 2 = [2]
+findPrimes n = 
+  -- TAOTODO recursive call, see hints on the bottom of page
+  withoutMultiplesOf (2) [2..n]
+
+
+withoutMultiplesOf :: Int -> [Int] -> [Int]
+withoutMultiplesOf _ [] = []
+withoutMultiplesOf n ns = ns `exclude` (multiplesOf n (last ns))
+
+[2,3,4,5,6,7]
+ 
+ 2 -> [4]      -> [2,3,_,5,6,7,9]
+ 3 -> [6,9]    -> [2,3,_,5,_,7,_]
+ 5 -> []       -> [2,3,_,5,_,7,_]
+ ..
+
+
 
