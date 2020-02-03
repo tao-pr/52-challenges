@@ -29,8 +29,5 @@ spec = do
 
   describe "Multiples" $ do
 
-    it "finds multiples of a number" $ do
-      (multiplesOf 7 35 [2,3,5]) `shouldBe` [14,21,28,35]
-
-    it "finds multiples of a number (highly nested)" $ do 
-      (multiplesOf 12 100 [2,3,5,7,11]) `shouldBe` [24,36,48,60,72,84,96]
+    it "filter list without multiples of something" $ do
+      withoutMultiplesOf 3 [1..28] `shouldBe` [1,2,4,5,7,8,10,11,13,14,16,17,19,20,22,23,25,26,28]
