@@ -50,10 +50,11 @@ filteroutMultiples a (n:ns) =
 -- Filter the list without multiples of the specified number
 withoutMultiplesOf :: Int -> [Int] -> [Int]
 withoutMultiplesOf _ [] = []
-withoutMultiplesOf a ns = [n | n <- ns, n `mod` a > 0] --ns `exclude` (multiplesOf n (last ns))
+withoutMultiplesOf a ns = [n | n <- ns, n `mod` a > 0]
 
 
 
+-- Given initial list, remove all multiples of each element until the last
 -- [2,3,4,5,6,7]
  
 --  2 -> [4]      -> [2,3,_,5,6,7,9]
