@@ -22,7 +22,7 @@ List of challenges are collected below.
 | 004 | Time-Series Geographical data regression | Python         | 7 hrs         | --         |
 | 005 | Fast Fourier Transformation with Haskell | Haskell | 4 hrs | Recall FT knowledge + Fight with Haskell |
 | 006 | Extract table from image | C++17 OpenCV | 12 hrs | Experimenting with algorithms |
-| 007 | Finding Prime Numbers with Parallel Programming on Haskell | Haskell | -- | Parallel library in Haskell + Prime Sieve Algorithm | 
+| 007 | Finding Prime Numbers with  Haskell | Haskell | 10 hrs | Prime Sieve Algorithm | 
 
 
 ## Licence

@@ -1,9 +1,6 @@
-# 007 Parallel programming on Haskell
+# 007 Prime Sieve 
 
-TBD
-
-
-
+Using Haskell to find prime numbers with Prime Sieve method.
 
 
 ## Licence
