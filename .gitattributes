@@ -1,2 +1,2 @@
-# Override ipython notebook 
-*.rb linguist-language=Haskell
+# Stop ipython notebooks from being traced by Github Linguists
+*.ipynb -linguist-detectable
