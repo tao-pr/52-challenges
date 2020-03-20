@@ -23,7 +23,7 @@ List of challenges are collected below.
 | 005 | Fast Fourier Transformation with Haskell | Haskell | 4 hrs | Recall FT knowledge + Fight with Haskell |
 | 006 | Extract table from image | C++17 OpenCV | 12 hrs | Experimenting with algorithms |
 | 007 | Finding Prime Numbers with  Haskell | Haskell | 10 hrs | Prime Sieve Algorithm | 
-
+| 008 | Stateful REST API        | Java Play | 7 hrs | -- |
 
 ## Licence
 
