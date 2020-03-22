@@ -24,7 +24,7 @@ List of challenges are collected below.
 | 006 | Extract table from image | C++17 OpenCV | 12 hrs | Experimenting with algorithms |
 | 007 | Finding Prime Numbers with  Haskell | Haskell | 10 hrs | Prime Sieve Algorithm | 
 | 008 | Stateful REST API        | Java Play | 7 hrs | -- |
-| 009 | Study Corona Virus time-series data | Python | -- | -- |
+| 009 | Study Corona Virus time-series data | Python | 4 hrs | -- |
 
 ## Licence
 
