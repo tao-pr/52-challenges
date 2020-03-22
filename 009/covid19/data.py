@@ -100,13 +100,15 @@ def make_daily_step(wranged):
   df = wranged.sort_values(by=["Country/Region","date"])
   cnt = df.groupby(["Country/Region"])
 
-  df["new_confirmed"]   = cnt["Confirmed"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
-  df["new_patients"]   = cnt["Patients"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
-  df["ratio_recovered"] = df["Recovered"] / (df["Confirmed"] - df["Recovered"])
-  df["ratio_death"]     = df["Deaths"] / (df["Confirmed"] - df["Recovered"])
+  df.loc[:,"new_confirmed"]   = cnt["Confirmed"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
+  df.loc[:,"new_patients"]    = cnt["Patients"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
+  df.loc[:,"ratio_recovered"] = df["Recovered"] / (df["Confirmed"] - df["Recovered"])
+  df.loc[:,"ratio_death"]     = df["Deaths"] / (df["Confirmed"] - df["Recovered"])
+  df.loc[:,"ratio_death/rec"] = df["Deaths"] / df["Recovered"]
   
-  df["ratio_recovered"] = df["ratio_recovered"].fillna(0)
-  df["ratio_death"]     = df["ratio_death"].fillna(0)
+  df.loc[:,"ratio_recovered"] = df["ratio_recovered"].fillna(0)
+  df.loc[:,"ratio_death"]     = df["ratio_death"].fillna(0)
+  df.loc[:,"ratio_death/rec"] = df["ratio_death/rec"].fillna(0)
 
   return df
 
