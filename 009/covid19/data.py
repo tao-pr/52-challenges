@@ -28,7 +28,7 @@ def load_daily_cases(d):
 
         # Register header if hasn't
         if len(header)==0:
-          header = [a for a in tokens]
+          header = [a.replace("\n","") for a in tokens]
           continue
 
         # Empty preceding tokens (null province)
@@ -44,6 +44,7 @@ def load_daily_cases(d):
 
   daily = pd.DataFrame(daily)
   print(daily[:5])
+  print(daily.columns)
   print(colored("Daily records read : ", "cyan"), len(daily), " rows")
   return daily
 
