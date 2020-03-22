@@ -1,4 +1,5 @@
 import sys
+import math
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,41 +14,83 @@ def load_daily_cases(d):
   @param d path to the directory containing daily case CSV files
   """
 
+  def get_date(t):
+    [m,d,y] = t.split(".")[0].split("-")
+    return "-".join([y,m,d])
+
   # List all daily case files
   q = join(d, "csse_covid_19_data/csse_covid_19_daily_reports")
   csv_list = [f for f in listdir(q) if isfile(join(q, f)) and f.endswith(".csv")]
   daily = []
   for tag in csv_list:
     print(colored("Reading : ", "cyan"), tag)
-    with open(join(q,tag), "r") as f:
-      # CSV is poorly formatted, there are preceding commas at the beginning
-      # of many lines so let's read them manually
-      header = []
-      for l in f.readlines():
-        tokens = l.split(",")
+    df = pd.read_csv(join(q,tag), header="infer")
+    df["date"] = get_date(tag)
+    daily.append(df)
+  daily = pd.concat(daily)
 
-        # Register header if hasn't
-        if len(header)==0:
-          header = [a.replace("\n","") for a in tokens]
-          continue
-
-        # Empty preceding tokens (null province)
-        # will be replaced with country name (subsequent token)
-        if len(tokens[0])==0:
-          tokens[0] = tokens[1]
-
-        kv = {a: b for a,b in zip(header,tokens)}
-
-        # Also add "date" as another column
-        kv["date"] = tag.split(".")[0] 
-        daily.append(kv)
-
-  daily = pd.DataFrame(daily)
   print(daily[:5])
   print(daily.columns)
   print(colored("Daily records read : ", "cyan"), len(daily), " rows")
   return daily
 
+def clean_country(cnt):
+  """
+  Special country names:
+    - Others
+    - Cruise Ship
+  """
+  # if type(cnt)==float:
+  #   return "Others"
+
+  if cnt=="Viet Nam":
+    return "Vietnam"
+  if cnt=="United Kingdom":
+    return "UK"
+  if cnt=="Taipei and environs" or cnt=="Taiwan*":
+    return "Taiwan"
+  if cnt=="Republic of Korea" or cnt=='Korea':
+    return "South Korea"
+  if cnt=="Republic of Moldova":
+    return "Moldova"
+  if cnt=="Republic of Ireland":
+    return "Ireland"
+  if cnt=="Republic of the Congo" or cnt.startswith("Congo"):
+    return "Congo"
+  if cnt=="Iran (Islamic Republic of)":
+    return "Iran"
+  if "U.S." in cnt or "D.C." in cnt:
+    return "US"
+
+  # Clean US states
+  if "(From Diamond Princess)" in cnt:
+    cnt = cnt.replace("(From Diamond Princess)","")
+
+  if len(cnt.replace('"',"").strip())==2: # state codes, eg. TX, CA
+    return "US"
+
+  return cnt.strip().replace('"','')
+
+
+def wrang_data(daily):
+  """
+  Group data into country level (except large country like USA, China)
+  Also drop unnessary column
+  """
+  daily = daily.iloc[:, :-1] # Drop last column (duplicate Province/State)
+
+  daily.loc[:,"Country/Region"] = daily["Country/Region"].apply(clean_country)
+  
+  # Group into country level
+  daily = daily.groupby(["date","Country/Region"]).agg({
+    "Confirmed": "sum",
+    "Deaths": "sum",
+    "Recovered": "sum"
+  })
+
+  print(daily)
+
+  return daily
 
 if __name__ == '__main__':
   """
@@ -56,4 +99,6 @@ if __name__ == '__main__':
   """
   path = sys.argv[-1]
   print(colored("Loading daily cases from : ","cyan"), path)
-  daily = load_daily_cases(path)
+  
+  daily   = load_daily_cases(path)
+  wranged = wrang_data(daily)
