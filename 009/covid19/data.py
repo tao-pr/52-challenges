@@ -8,6 +8,7 @@ from termcolor import colored
 from os import listdir
 from os.path import isfile, join
 
+
 def load_daily_cases(d):
   """
   Load all daily cases (CSV per date) from the containing directory
@@ -33,6 +34,7 @@ def load_daily_cases(d):
   print(daily.columns)
   print(colored("Daily records read : ", "cyan"), len(daily), " rows")
   return daily
+
 
 def clean_country(cnt):
   """
@@ -88,9 +90,24 @@ def wrang_data(daily):
     "Recovered": "sum"
   })
 
+  print(colored("Daily data aggregated", "cyan"))
   print(daily)
-
   return daily
+
+
+def make_daily_step(wranged):
+  df = wranged.sort_values(by=["Country/Region","date"])
+  cnt = df.groupby(["Country/Region"])
+
+  df["new_confirmed"]   = cnt["Confirmed"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
+  df["ratio_recovered"] = df["Recovered"] / df["Confirmed"]
+  df["ratio_death"]     = df["Deaths"] / df["Confirmed"]
+  
+  df["ratio_recovered"] = df["ratio_recovered"].fillna(0)
+  df["ratio_death"]     = df["ratio_death"].fillna(0)
+
+  return df
+
 
 if __name__ == '__main__':
   """
@@ -102,3 +119,4 @@ if __name__ == '__main__':
   
   daily   = load_daily_cases(path)
   wranged = wrang_data(daily)
+  step    = make_daily_step(wranged)
