@@ -30,6 +30,18 @@ $ python3 -m covid19.plot {PATH_TO_COVID19_GIT_REPOPATH}
 
 The program will show several plots
 
+## Sample plots
+
+![Accumulated cases](plot/case.png)
+
+![Daily increment](plot/increment.png)
+
+![mortal rate](plot/mortal.png)
+
+![Recovery rate](plot/recovery.png)
+
+![Mortal over recovery](plot/mortal-over-recovery.png)
+
 ## Licence
 
 MIT
