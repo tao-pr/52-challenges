@@ -13,7 +13,11 @@ $ source covid/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
-Then you're ready to explore the functionality of the repo.
+Clone the Covid-19 daily case data repo somewhere
+
+```bash
+$ git clone https://github.com/CSSEGISandData/COVID-19.git
+```
 
 ## Generate reports
 
@@ -21,6 +25,12 @@ Make sure you have the virtual env activated, then do following:
 
 ```bash
 
-$ TAOTODO
+$ python3 -m covid19.plot {PATH_TO_COVID19_GIT_REPOPATH}
 ```
+
+The program will show several plots
+
+## Licence
+
+MIT
 
