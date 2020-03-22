@@ -89,6 +89,7 @@ def wrang_data(daily):
     "Deaths": "sum",
     "Recovered": "sum"
   })
+  daily["Patients"] = daily["Confirmed"] - daily["Recovered"] - daily["Deaths"]
 
   print(colored("Daily data aggregated", "cyan"))
   print(daily)
@@ -100,8 +101,9 @@ def make_daily_step(wranged):
   cnt = df.groupby(["Country/Region"])
 
   df["new_confirmed"]   = cnt["Confirmed"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
-  df["ratio_recovered"] = df["Recovered"] / df["Confirmed"]
-  df["ratio_death"]     = df["Deaths"] / df["Confirmed"]
+  df["new_patients"]   = cnt["Patients"].pct_change().replace([np.inf, -np.inf], np.nan).fillna(0)
+  df["ratio_recovered"] = df["Recovered"] / (df["Confirmed"] - df["Recovered"])
+  df["ratio_death"]     = df["Deaths"] / (df["Confirmed"] - df["Recovered"])
   
   df["ratio_recovered"] = df["ratio_recovered"].fillna(0)
   df["ratio_death"]     = df["ratio_death"].fillna(0)
