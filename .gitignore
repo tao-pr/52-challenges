@@ -10,3 +10,8 @@
 004-time-series-geo-data/libdata/libdata.egg-info/
 004-time-series-geo-data/model.pkl
 006-extract-table-from-image/build/
+006-extract-table-from-image/bin/
+009-covid19-study/covid/
+009-covid19-study/covid19/__pycache__/
+010-profile-python-memory-access/env/
+010-profile-python-memory-access/*.dat
