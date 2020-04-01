@@ -17,6 +17,20 @@ $ mprof run python3 -m memory_profile.mem NEW_ARRAY_SAME_REF
 
 ## Pickle vs Joblib
 
+To run
+
+```bash
+$ mprof run python3 -m memory_profile.serialise JOBLIB WRITE
+$ mprof run python3 -m memory_profile.serialise JOBLIB READ
+
+$ mprof run python3 -m memory_profile.serialise JOBLIB-COMPRESS WRITE
+$ mprof run python3 -m memory_profile.serialise JOBLIB-COMPRESS READ
+
+$ mprof run python3 -m memory_profile.serialise PICKLE WRITE
+$ mprof run python3 -m memory_profile.serialise PICKLE READ
+
+```
+
 Space usage
 
 ```
