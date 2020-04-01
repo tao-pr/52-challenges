@@ -27,15 +27,15 @@ Space usage
 
 Writing memory & time comparison
 
-![m](plots/joblib-write)
-![m](plots/joblib-compress-write)
-![m](plots/pickle-write)
+![m](plots/joblib-write.png)
+![m](plots/joblib-compress-write.png)
+![m](plots/pickle-write.png)
 
 Reading memory & time comparison
 
-![m](plots/joblib-read)
-![m](plots/joblib-compress-read)
-![m](plots/pickle-read)
+![m](plots/joblib-read.png)
+![m](plots/joblib-compress-read.png)
+![m](plots/pickle-read.png)
 
 
 ## Licence
