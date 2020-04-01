@@ -25,7 +25,7 @@ List of challenges are collected below.
 | 007 | Finding Prime Numbers with  Haskell | Haskell | 10 hrs | Prime Sieve Algorithm | 
 | 008 | Stateful REST API        | Java Play | 7 hrs | -- |
 | 009 | Study Corona Virus time-series data | Python | 4 hrs | -- |
-| 010 | Profiling of Python memory access | Python | -- | -- |
+| 010 | Profiling of Python memory access | Python | 3 hrs | -- |
 
 ## Licence
 
