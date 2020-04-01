@@ -9,6 +9,12 @@ $ mprof run python3 -m memory_profile.mem NEW_ARRAY_SAME_REF
 
 ```
 
+## Memory profiling
+
+![inplace](plots/mem-inplace.png)
+![inplace](plots/mem-newarray.png)
+
+
 ## Licence
 
 MIT
