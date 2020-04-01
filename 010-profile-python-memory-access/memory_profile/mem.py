@@ -2,15 +2,7 @@ import sys
 import numpy as np
 from memory_profiler import profile
 
-
-class M:
-  def __init__(self):
-    self.data = [np.arange(1,5000) for i in range(1000)]
-
-  def update(self):
-    self.data = [v*-1 for v in self.data]
-    return self
-
+from .data import M
 
 def inplace_ref_write(ms):
   [m.update() for m in ms]
