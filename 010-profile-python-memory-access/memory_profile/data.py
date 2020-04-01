@@ -1,5 +1,4 @@
-from pickle import 
-from .data import M
+import numpy as np
 
 class M:
   def __init__(self):
