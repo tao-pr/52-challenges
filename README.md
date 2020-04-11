@@ -26,6 +26,7 @@ List of challenges are collected below.
 | 008 | Stateful REST API        | Java Play | 7 hrs | -- |
 | 009 | Study Corona Virus time-series data | Python | 4 hrs | -- |
 | 010 | Profiling of Python memory access | Python | 3 hrs | -- |
+| 011 | Estimate Sinusoidal parameters with TensorFlow | Python TensorFlow | ?? | Learn TensorFlow |
 
 ## Licence
 
