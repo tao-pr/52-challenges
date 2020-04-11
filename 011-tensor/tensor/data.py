@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
 import cv2
+import argparse
+import sys
+import os
 
 from typing import Tuple
 
-def gen_dataset(n: int, dim: Tuple[int,int], noise_level: Double): 
+def gen_dataset(n: int, dim: Tuple[int,int], noise_level: float): 
   """
   Generate an image dataset
   Args:
@@ -36,6 +39,28 @@ def gen_dataset(n: int, dim: Tuple[int,int], noise_level: Double):
     im = add_noise(im)
     dset.append(im)
   return dset
+
+
+def commandline():
+  """
+  Create an instance of argument parser
+  """
+  parser = argparse.ArgumentParser(description='Dataset generator')
+  parser.add_argument('--saveto', dest='path', default='data',
+    help='Path to store the output')
+  parser.add_argument('--size', dest='size', default=100,
+    help='Size of the dataset to generate')
+  parser.add_argument('--dim', dest='dim', default=256,
+    help='Dimension of the image to generate (square)')
+
+  args = parser.parse_args()
+  return args
+
+if __name__ == '__main__':
+  """
+  Generate a dataset onto the specified path
+  """
+  cmdline = commandline()
 
 
 
