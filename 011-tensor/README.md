@@ -1,4 +1,4 @@
-# Estimate level of noise in images with TensorFlow
+# Let TensorFlow estimate the crosshair coordinates in images
 
 TBD
 
