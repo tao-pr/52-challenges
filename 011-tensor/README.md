@@ -16,6 +16,21 @@ $ pip install -r requirements.txt
 
 There are a few options you can run the tensor as follows.
 
+### 0. Generate the training data
+
+The repository has a script to generate the image data for you. 
+You can either quickly run the following.
+
+```bash
+$ ./GEN_DATA
+```
+
+or generate data with your own desired parameters
+
+```bash
+$ python3 -m tensor.data --saveto {PATH} --size {NUM_FILES} --dim {IMAGE_WIDTH}
+```
+
 ### 1. Train the model
 
 TBD
