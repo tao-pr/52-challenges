@@ -41,7 +41,7 @@ def gen_images(n: int, dim: Tuple[int,int], noise_level: float, f):
     cv2.line(im, (x,h), (x,0), (0,0,0), 1)
     im = add_noise(im)
     hashstr = joblib.hash(im)
-    dset.append((hashstr,im))
+    dset.append((hashstr,im, x, y))
     if f is not None:
       f(hashstr, im)
   return dset
@@ -55,33 +55,25 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
   4. With 50% noise
   5. With random noise between 15~50%
   """
-  indices = np.arange(n)
-
-  # Following is taken from https://stackoverflow.com/a/2130035/4154262
-  def chunkIt(seq, num):
-    avg = len(seq) / float(num)
-    out = []
-    last = 0.0
-    while last < len(seq):
-        out.append(seq[int(last):int(last + avg)])
-        last += avg
-    return out
-
-  portions = chunkIt(indices, 5)
   noises = [0, 0.05, 0.15, 0.5, np.random.choice(np.arange(0.15,0.5,0.1))]
 
   rows = []
-  i = 0
-  for n,p in zip(noises,portions):
-    i += 1
-    print("Generating images in portion #{}, noise level = {:.2f}".format(
-      i, n))
-    images = gen_images(len(portions), dim, n, f)
-    for hashstr,im in images:
+  psize = n//5
+  remain = n-(n//5)*5
+  for i,n in enumerate(noises):
+    print("Generating images in portion #{}/5, noise level = {:.2f}".format(
+      i+1, n))
+    
+    # The last portion will include the remainder
+    if i==len(noises)-1:
+      psize += remain
+
+    images = gen_images(int(psize), dim, n, f)
+    for hashstr,im, x, y in images:
       filename = "{}.jpg".format(hashstr)
       rows.append((filename, n))
   print("Generating dataframe")
-  df = pd.DataFrame(rows, columns=["filename","noise"])
+  df = pd.DataFrame(rows, columns=["filename","noise","x","y"])
   return df
 
 def save_image(path):
