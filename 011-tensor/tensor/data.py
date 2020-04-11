@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 import cv2
 import argparse
 import sys
@@ -21,7 +22,7 @@ def gen_images(n: int, dim: Tuple[int,int], noise_level: float, f):
   num_noise_pixels = int(noise_level * w * h)
 
   def add_noise(im):
-    for i in num_noise_pixels:
+    for i in range(num_noise_pixels):
       x = int(np.random.choice(range(w)))
       y = int(np.random.choice(range(h)))
       im[y,x] = 255
@@ -30,7 +31,7 @@ def gen_images(n: int, dim: Tuple[int,int], noise_level: float, f):
   dset = []
   for i in range(n):
     # Generate background
-    im = np.ones(dim, cv2.uint8) * int(np.random.choice([
+    im = np.ones((h,w,1), np.uint8) * int(np.random.choice([
       25, 50, 100, 128, 150, 200, 250
       ]))
     # Generate crosshair
@@ -54,7 +55,7 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
   4. With 50% noise
   5. With random noise between 15~50%
   """
-  indices = range(n)
+  indices = np.arange(n)
 
   # Following is taken from https://stackoverflow.com/a/2130035/4154262
   def chunkIt(seq, num):
@@ -85,7 +86,7 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
 
 def save_image(path):
   def to(hashstr, im):
-    p = "{}.jpg".format(path, hashstr)
+    p = "{}.jpg".format(os.path.join(path, hashstr))
     print("... Saving image to {}".format(p))
     cv2.imwrite(p, im)
   return to
@@ -95,7 +96,7 @@ def create_dir(path):
     print("Creating directory : {}".format(path))
     os.mkdir(path)
 
-def commandline(n: int, dim: Tuple[int,int], noise_level: float, f):
+def commandline():
   """
   Create an instance of argument parser
   """
@@ -104,7 +105,7 @@ def commandline(n: int, dim: Tuple[int,int], noise_level: float, f):
     help='Path to store the output')
   parser.add_argument('--size', dest='size', default=100, type=float,
     help='Size of the dataset to generate')
-  parser.add_argument('--dim', dest='dim', default=256,
+  parser.add_argument('--dim', dest='dim', default=256, type=int,
     help='Dimension of the image to generate (square)')
 
   args = parser.parse_args()
@@ -123,9 +124,9 @@ if __name__ == '__main__':
   # with csv file named "dataset.csv" inside
   dset = gen_dataset(
     cmdline.size,
-    (cmdline.size, cmdline.size),
+    (cmdline.dim, cmdline.dim),
     save_image(cmdline.saveto))
   
   path_csv = os.path.join(cmdline.saveto, "dataset.csv")
   print("Saving dataframe to {}".format(path_csv))
-  dset.to_csv(path_csv, sep=',', header=True)
+  dset.to_csv(path_csv, sep=',', header=True, index=False)
