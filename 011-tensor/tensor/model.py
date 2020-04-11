@@ -24,5 +24,6 @@ def build(w: int):
   return model
 
 if __name__ == '__main__':
+  # Test building and inspect the model structure
   m = build(512)
 
