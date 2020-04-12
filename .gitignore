@@ -1,5 +1,6 @@
-001-mandelbrot-with-opencv/build/*
+.DS_Store
 *.lock
+001-mandelbrot-with-opencv/build/*
 003-waste-disposal-plots-germany/003/
 003-waste-disposal-plots-germany/google_api_key
 003-waste-disposal-plots-germany/notebooks/.ipynb_checkpoints/
@@ -11,7 +12,15 @@
 004-time-series-geo-data/model.pkl
 006-extract-table-from-image/build/
 006-extract-table-from-image/bin/
+007-parallel-prime-number-haskell/parhask/.gitignore
 009-covid19-study/covid/
 009-covid19-study/covid19/__pycache__/
 010-profile-python-memory-access/env/
 010-profile-python-memory-access/*.dat
+010-profile-python-memory-access/joblib
+010-profile-python-memory-access/joblib-compressed
+010-profile-python-memory-access/memory_profile/__pycache__/
+010-profile-python-memory-access/pickle
+011-tensor/data/
+011-tensor/env/
+011-tensor/tensor/__pycache__/
