@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import logging
 import joblib
 import cv2
 import argparse
@@ -8,6 +9,13 @@ import os
 
 from typing import Tuple
 from termcolor import colored
+
+
+# Log to file and print to stdout simulteneously
+logging.basicConfig(filename='tensor.log',level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s')
+# logging.getLogger().addHandler(logging.StreamHandler())
+
 
 def gen_images(n: int, dim: Tuple[int,int], noise_level: float, f): 
   """
@@ -61,8 +69,9 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
   psize = n//5
   remain = n-(n//5)*5
   for i,n in enumerate(noises):
-    print("Generating images in portion #{}/5, noise level = {:.2f}".format(
-      i+1, n))
+    m = "Generating images in portion #{}/5, noise level = {:.2f}".format(
+      i+1, n)
+    logging.info(m)
     
     # The last portion will include the remainder
     if i==len(noises)-1:
@@ -73,19 +82,21 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
       filename = "{}.jpg".format(hashstr)
       rows.append((filename, n, x, y))
   print("Generating dataframe")
+  logging.info("Generating dataframe of size {}".format(len(rows)))
   df = pd.DataFrame(rows, columns=["filename","noise","x","y"])
   return df
 
 def save_image(path):
   def to(hashstr, im):
     p = "{}.jpg".format(os.path.join(path, hashstr))
-    print("... Saving image to {}".format(p))
+    m = "... Saving image to {}".format(p)
+    logging.debug(m)
     cv2.imwrite(p, im)
   return to
 
 def create_dir(path):
   if not os.path.exists(path) and not os.path.isfile(path):
-    print("Creating directory : {}".format(path))
+    logger.info("Creating directory : {}".format(path))
     os.mkdir(path)
 
 def commandline():
@@ -102,6 +113,35 @@ def commandline():
 
   args = parser.parse_args()
   return args
+
+class DataSet(object):
+  """
+  Dataset handler
+  """
+  def __init__(self, path: str):
+    self.path = path
+
+  def load_split(self, ratio: float):
+    """
+    Load the whole images and split into train and test
+    """
+    csvpath = os.path.join(self.path, "dataset.csv")
+    df = pd.read_csv(csvpath, sep=',')
+
+    getx = lambda row: cv2.imread(os.path.join(self.path, row["filename"]))
+    gety = lambda row: row[["x","y"]]
+
+    logging.info("Loading image dataset of size : {}".format(len(df)))
+    dd = [(getx(row),gety(row)) for i,row in df.iterrows()]
+
+    logging.info("Splitting image dataset into {:.0f} % for testing".format(
+      (1-ratio)*100))
+    [ta,tb] = np.split(df, [int(ratio*len(df)), int((1-ratio)*len(df))])
+
+    logging.debug("Split DONE")
+
+    # TAOTODO
+
 
 if __name__ == '__main__':
   """
