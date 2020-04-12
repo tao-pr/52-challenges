@@ -76,9 +76,10 @@ if __name__ == '__main__':
   logging.debug("Fitting DONE")
 
   # Save fitting history as json
-  with open("history-train.json", "w") as f:
-    logging.info("Saving history of fitting epochs as json")
-    json.dump(h, f, indent=2)
+  with open("tensor-history.json", "w") as f:
+    logging.info("Saving history of fitting as json")
+    hs = json.loads(h.history)
+    json.dump(hs, f, indent=2)
 
   # Save model (only weights)
   logging.info("Saving model to model.checkpoint")
@@ -95,7 +96,7 @@ if __name__ == '__main__':
 
   logging.info("Rendering visual predictions")
   logging.info("... Test size : {}".format(len(test_x)))
-  out = predict(test_x)
+  out = m.predict(test_x)
   for x,y,filename in zip(out, test_filenames):
     fullpath     = os.path.join(cmdline.out, filename)
     originalpath = os.path.join(cmdline.path, filename)
