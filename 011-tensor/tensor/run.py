@@ -23,11 +23,11 @@ def commandline():
   parser = argparse.ArgumentParser(description='Model runner')
   parser.add_argument('--datapath', dest='path', default='data',
     help='Path to read data from')
-  parser.add_argument('--ratio', dest='ratio', default=0.9,
+  parser.add_argument('--ratio', dest='ratio', default=0.9, type=float,
     help='Ratio of training, ranging between 0-1')
-  parser.add_argument("--batch", dest="batch", default=64,
+  parser.add_argument("--batch", dest="batch", default=64, type=int,
     help="Size of each batch")
-  parser.add_argument("--epoch", dest="epoch", default=3,
+  parser.add_argument("--epoch", dest="epoch", default=3, type=int,
     help="Number of epochs to run")
   args = parser.parse_args()
   return args
@@ -51,7 +51,8 @@ if __name__ == '__main__':
   
   # Feed to the model
   logging.info("Fitting the model")
-  m = build()
+  w = train_x[0].shape[0]
+  m = build(w)
   m.fit(train_x, test_x, batch_size=cmdline.batch, epochs=cmdline.epoch)
   logging.debug("Fitting DONE")
 
@@ -65,4 +66,5 @@ if __name__ == '__main__':
   logging.info("Evaluating model")
   loss = m.evaluate(test_x, test_y, batch_size=cmdline.batch)
   logging.debug("... loss = {}".format(loss))
+
 
