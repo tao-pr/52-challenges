@@ -21,6 +21,13 @@ def build(w: int):
     tf.keras.layers.Dense(2, activation='relu')
   ])
   model.summary()
+  opt = tf.keras.optimizers.RMSprop(0.001)
+
+  model.compile(
+    loss='mse',
+    optimizer=opt,
+    metrics=['mae', 'mse'])
+
   return model
 
 if __name__ == '__main__':
