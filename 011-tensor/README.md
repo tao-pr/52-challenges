@@ -33,7 +33,18 @@ $ python3 -m tensor.data --saveto {PATH} --size {NUM_FILES} --dim {IMAGE_WIDTH}
 
 ### 1. Train the model
 
-TBD
+Running the following script to train the model
+
+```bash
+$ ./TRAIN
+```
+
+or train with your own desired parameters
+
+```bash
+$ python3 -m tensor.run --datapath {PATH} --ratio {TRAIN_RATIO} \
+                        --batch {BATCHSIZE} --epoch {NUM_EPOCHS}
+```
 
 ### 2. Generate dataset for testing
 
