@@ -9,7 +9,7 @@ def build(w: int):
     w (int): Width of input image
   """
   model = tf.keras.models.Sequential([
-    # 256x256
+    # 256x256x1
     tf.keras.layers.Conv2D(filters=8, kernel_size=(3,3), input_shape=(w,w,1)),
     tf.keras.layers.MaxPool2D(pool_size=(2,2)),
     # 127x127
