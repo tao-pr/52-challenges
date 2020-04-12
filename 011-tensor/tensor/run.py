@@ -2,10 +2,12 @@ import tensorflow as tf
 import numpy as np
 import joblib
 import logging
+import json
 
 import argparse
 import sys
 import os
+import cv2
 
 from .model import build
 from .data import DataSet
@@ -23,6 +25,8 @@ def commandline():
   parser = argparse.ArgumentParser(description='Model runner')
   parser.add_argument('--datapath', dest='path', default='data',
     help='Path to read data from')
+  parser.add_argument("--outputpath", dest='out', default='out',
+    help='Output path to store visual predictions')
   parser.add_argument('--ratio', dest='ratio', default=0.9, type=float,
     help='Ratio of training, ranging between 0-1')
   parser.add_argument("--batch", dest="batch", default=64, type=int,
@@ -45,37 +49,64 @@ if __name__ == '__main__':
 
   # Load and split the dataset
   ds = DataSet(cmdline.path)
-  train,test = ds.load_split(cmdline.ratio)
-  train_x, train_y = zip(*train)
-  test_x, test_y   = zip(*test)
+  train,test                     = ds.load_split(cmdline.ratio)
+  train_x, train_y, _            = zip(*train)
+  test_x, test_y, test_filenames = zip(*test)
 
-  # Reshape inputs (x,y)
-  w = test_x[0].shape[0]
+  # Reshape inputs (x,y), and make sure they are floating (tensor-compatible)
+  h,w     = test_x[0].shape[0], test_x[0].shape[1]
   train_x = np.array(train_x)
   train_x = train_x.reshape(len(train_y), w, w, 1)
-
   train_y = np.array(train_y).astype(float)
+
+  test_x = np.array(test_x)
+  test_x = test_x.reshape(len(test_y), w, w, 1)
+  test_y = np.array(test_y).astype(float)
   
-  # Feed to the model
+  # Train & validate
   logging.info("Fitting the model")
   logging.debug("... Input shape : {}".format(train_x.shape))
   w = train_x[0].shape[0]
   m = build(w)
-  m.fit(train_x, train_y, batch_size=cmdline.batch, epochs=cmdline.epoch)
+  h = m.fit(
+    train_x, train_y, 
+    batch_size=cmdline.batch, 
+    epochs=cmdline.epoch,
+    validation_data=(test_x, test_y))
   logging.debug("Fitting DONE")
 
-  # Saving the model
-  model_path = "model.bin"
-  logging.info("Saving the model to {}".format(model_path))
-  joblib.dump(m, model_path)
-  logging.debug("Model SAVED")
+  # Save fitting history as json
+  with open("history-train.json", "w") as f:
+    logging.info("Saving history of fitting epochs as json")
+    json.dump(h, f, indent=2)
 
-  # Run test
+  # Save model (only weights)
+  logging.info("Saving model to model.checkpoint")
+  m.save_weights("model.checkpoint")
+  logging.debug("... Model SAVED")
+
+  # Render the predictions
+  if not os.path.exists(cmdline.out) and not os.path.isfile(cmdline.out):
+    os.mkdir(cmdline.out)
+
   logging.info("Evaluating model")
-  test_x = np.array(test_x)
-  test_x = test_x.reshape(len(test_y), w, w, 1)
-  test_y = np.array(test_y).astype(float)
   loss = m.evaluate(test_x, test_y, batch_size=cmdline.batch)
-  logging.debug("... loss = {}".format(loss))
+  logging.info("... loss = {}".format(loss))
+
+  logging.info("Rendering visual predictions")
+  logging.info("... Test size : {}".format(len(test_x)))
+  out = predict(test_x)
+  for x,y,filename in zip(out, test_filenames):
+    fullpath     = os.path.join(cmdline.out, filename)
+    originalpath = os.path.join(cmdline.path, filename)
+    logging.debug("... Saving output to {}".format(fullpath))
+    
+    im = cv2.read(originalpath)
+    if y>=0 and y<h:
+      cv2.line(im, (0,y), (w,y), (245,0,0), 1)
+    if x>=0 and x<w:
+      cv2.line(im, (x,0), (x,h), (245,0,0), 1)
+    cv2.imwrite(fullpath, im)
+
 
 
