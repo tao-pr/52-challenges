@@ -1,3 +1,5 @@
 #!/bin/bash
 
-python3 -m tensor.run --datapath data --ratio 0.9 --batch 50 --epoch 3
+python3 -m tensor.run --datapath data \
+  --ratio 0.9 --batch 50 --epoch 3 \
+  --outputpath out

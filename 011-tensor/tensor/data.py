@@ -130,9 +130,10 @@ class DataSet(object):
 
     getx = lambda row: cv2.imread(os.path.join(self.path, row["filename"]), cv2.IMREAD_GRAYSCALE)
     gety = lambda row: row[["x","y"]]
+    getf = lambda row: row["filename"]
 
     logging.info("Loading image dataset of size : {}".format(len(df)))
-    dd = [(getx(row),gety(row)) for i,row in df.iterrows()]
+    dd = [(getx(row),gety(row),getf(row)) for i,row in df.iterrows()]
 
     logging.info("Splitting image dataset into {:.0f} % for testing".format((1-ratio)*100))
     indices = np.arange(len(df))
