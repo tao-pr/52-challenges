@@ -24,3 +24,8 @@
 011-tensor/data/
 011-tensor/env/
 011-tensor/tensor/__pycache__/
+011-tensor/checkpoint
+011-tensor/model.checkpoint.*
+011-tensor/out/
+011-tensor/tensor-history.json
+011-tensor/tensor.log
