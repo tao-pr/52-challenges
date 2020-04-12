@@ -14,7 +14,7 @@ from termcolor import colored
 # Log to file and print to stdout simulteneously
 logging.basicConfig(filename='tensor.log',level=logging.DEBUG)
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s')
-# logging.getLogger().addHandler(logging.StreamHandler())
+logging.getLogger().addHandler(logging.StreamHandler())
 
 
 def gen_images(n: int, dim: Tuple[int,int], noise_level: float, f): 
@@ -134,13 +134,21 @@ class DataSet(object):
     logging.info("Loading image dataset of size : {}".format(len(df)))
     dd = [(getx(row),gety(row)) for i,row in df.iterrows()]
 
-    logging.info("Splitting image dataset into {:.0f} % for testing".format(
-      (1-ratio)*100))
-    [ta,tb] = np.split(df, [int(ratio*len(df)), int((1-ratio)*len(df))])
+    logging.info("Splitting image dataset into {:.0f} % for testing".format((1-ratio)*100))
+    indices = np.arange(len(df))
+    np.random.shuffle(indices)
+    ta, tb = [],[]
+    for i,row in zip(indices,dd):
+      if i<int(ratio * len(df)):
+        ta.append(row)
+      else:
+        tb.append(row)
 
     logging.debug("Split DONE")
+    logging.debug("... Training size : {}".format(len(ta)))
+    logging.debug("... Test size     : {}".format(len(tb)))
 
-    # TAOTODO
+    return [ta,tb]
 
 
 if __name__ == '__main__':

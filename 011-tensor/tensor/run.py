@@ -13,7 +13,7 @@ from .data import DataSet
 # Log to file and print to stdout simulteneously
 logging.basicConfig(filename='tensor.log',level=logging.DEBUG)
 logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s')
-#logging.getLogger().addHandler(logging.StreamHandler())
+logging.getLogger().addHandler(logging.StreamHandler())
 
 
 def commandline():
@@ -41,4 +41,5 @@ if __name__ == '__main__':
 
   # Load CSV describing the whole dataset
   ds = DataSet(cmdline.path)
+  train,test = ds.load_split(cmdline.ratio)
   pass
