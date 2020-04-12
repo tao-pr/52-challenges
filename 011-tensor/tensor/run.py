@@ -25,10 +25,14 @@ def commandline():
     help='Path to read data from')
   parser.add_argument('--ratio', dest='ratio', default=0.9,
     help='Ratio of training, ranging between 0-1')
+  parser.add_argument("--batch", dest="batch", default=64,
+    help="Size of each batch")
+  parser.add_argument("--epoch", dest="epoch", default=3,
+    help="Number of epochs to run")
   args = parser.parse_args()
   return args
 
-# TAOTODO Main entry
+
 if __name__ == '__main__':
   cmdline = commandline()
 
@@ -39,7 +43,26 @@ if __name__ == '__main__':
   if not os.path.exists(cmdline.path) or os.path.isfile(cmdline.path):
     raise FileNotFoundError("Unable to find data path : {}".format(cmdline.path))
 
-  # Load CSV describing the whole dataset
+  # Load and split the dataset
   ds = DataSet(cmdline.path)
   train,test = ds.load_split(cmdline.ratio)
-  pass
+  train_x, train_y = zip(*train)
+  test_x, test_y   = zip(*test)
+  
+  # Feed to the model
+  logging.info("Fitting the model")
+  m = build()
+  m.fit(train_x, test_x, batch_size=cmdline.batch, epochs=cmdline.epoch)
+  logging.debug("Fitting DONE")
+
+  # Saving the model
+  model_path = "model.bin"
+  logging.info("Saving the model to {}".format(model_path))
+  joblib.dump(m, model_path)
+  logging.debug("Model SAVED")
+
+  # Run test
+  logging.info("Evaluating model")
+  loss = m.evaluate(test_x, test_y, batch_size=cmdline.batch)
+  logging.debug("... loss = {}".format(loss))
+
