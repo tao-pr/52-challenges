@@ -53,14 +53,21 @@ Following show graphical predictions of the model, not a bad model, isn't it?
 > Blue lines denote predictions, whereas black lines represent labels
 
 Without noise 
-![sample](media/0284e5acd27d9770dad2399fe2d7bf5d.jpg)
-![sample](media/06923c8b1dee50cee709340d986a12e3.jpg)
-![sample](media/1edf9d088838f89a013e8b713ee5db52.jpg)
+
+<p float="left">
+  <img src="media/0284e5acd27d9770dad2399fe2d7bf5d.jpg"/>
+  <img src="media/06923c8b1dee50cee709340d986a12e3.jpg"/>
+  <img src="media/1edf9d088838f89a013e8b713ee5db52.jpg"/>
+</p>
+
 
 With moderate & heavy noise
-![sample](media/0e198ee133901c862edeebd54671458b.jpg)
-![sample](media/148e176420c054d85f8f98f9927d1a3c.jpg)
-![sample](media/181ca53fd299dd2c469434c0c746e09a.jpg)
+
+<p float="left">
+  <img src="media/0e198ee133901c862edeebd54671458b.jpg"/>
+  <img src="media/148e176420c054d85f8f98f9927d1a3c.jpg"/>
+  <img src="media/181ca53fd299dd2c469434c0c746e09a.jpg"/>
+</p>
 
 ## Model performance
 
