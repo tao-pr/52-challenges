@@ -1,8 +1,8 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 # This script generates a training dataset
-# containing 10k jpegs of size 512x512 pixels
+# containing 4k jpegs of size 256x256 pixels
 # WARNING: This takes a few hours, YMMV
 #          The whole sample dataset takes approx. 1.3GB of disk space.
 
-python3 -m tensor.data --saveto data --size 10000 --dim 512
+python3 -m tensor.data --saveto data --size 4000 --dim 256
