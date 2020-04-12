@@ -128,7 +128,7 @@ class DataSet(object):
     csvpath = os.path.join(self.path, "dataset.csv")
     df = pd.read_csv(csvpath, sep=',')
 
-    getx = lambda row: cv2.imread(os.path.join(self.path, row["filename"]))
+    getx = lambda row: cv2.imread(os.path.join(self.path, row["filename"]), cv2.IMREAD_GRAYSCALE)
     gety = lambda row: row[["x","y"]]
 
     logging.info("Loading image dataset of size : {}".format(len(df)))
