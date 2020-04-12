@@ -46,13 +46,6 @@ $ python3 -m tensor.run --datapath {PATH} --ratio {TRAIN_RATIO} \
                         --batch {BATCHSIZE} --epoch {NUM_EPOCHS}
 ```
 
-### 2. Generate dataset for testing
-
-TBD
-
-### 3. Test
-
-TBD
 
 ## Licence
 
