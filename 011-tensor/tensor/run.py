@@ -48,12 +48,20 @@ if __name__ == '__main__':
   train,test = ds.load_split(cmdline.ratio)
   train_x, train_y = zip(*train)
   test_x, test_y   = zip(*test)
+
+  # Reshape inputs (x,y)
+  w = test_x[0].shape[0]
+  train_x = np.array(train_x)
+  train_x = train_x.reshape(len(train_y), w, w, 1)
+
+  train_y = np.array(train_y).astype(float)
   
   # Feed to the model
   logging.info("Fitting the model")
+  logging.debug("... Input shape : {}".format(train_x.shape))
   w = train_x[0].shape[0]
   m = build(w)
-  m.fit(train_x, test_x, batch_size=cmdline.batch, epochs=cmdline.epoch)
+  m.fit(train_x, train_y, batch_size=cmdline.batch, epochs=cmdline.epoch)
   logging.debug("Fitting DONE")
 
   # Saving the model
@@ -64,6 +72,9 @@ if __name__ == '__main__':
 
   # Run test
   logging.info("Evaluating model")
+  test_x = np.array(test_x)
+  test_x = test_x.reshape(len(test_y), w, w, 1)
+  test_y = np.array(test_y).astype(float)
   loss = m.evaluate(test_x, test_y, batch_size=cmdline.batch)
   logging.debug("... loss = {}".format(loss))
 
