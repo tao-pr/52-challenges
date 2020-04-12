@@ -68,7 +68,7 @@ if __name__ == '__main__':
   logging.debug("... Input shape : {}".format(train_x.shape))
   w = train_x[0].shape[0]
   m = build(w)
-  h = m.fit(
+  hist = m.fit(
     train_x, train_y, 
     batch_size=cmdline.batch, 
     epochs=cmdline.epoch,
@@ -79,7 +79,7 @@ if __name__ == '__main__':
   with open("tensor-history.json", "w") as f:
     logging.info("Saving history of fitting as json")
     safe = lambda v: [i.item() for i in v]
-    hs = {k:safe(v) for k,v in h.history.items()}
+    hs = {k:safe(v) for k,v in hist.history.items()}
     json.dump(hs, f, indent=2)
 
   # Save model (only weights)
@@ -98,12 +98,13 @@ if __name__ == '__main__':
   logging.info("Rendering visual predictions")
   logging.info("... Test size : {}".format(len(test_x)))
   out = m.predict(test_x)
-  for x,y,filename in zip(out, test_filenames):
+  for xy,filename in zip(out, test_filenames):
+    x,y = xy
     fullpath     = os.path.join(cmdline.out, filename)
     originalpath = os.path.join(cmdline.path, filename)
     logging.debug("... Saving output to {}".format(fullpath))
     
-    im = cv2.read(originalpath)
+    im = cv2.imread(originalpath)
     if y>=0 and y<h:
       cv2.line(im, (0,y), (w,y), (245,0,0), 1)
     if x>=0 and x<w:
