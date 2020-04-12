@@ -78,7 +78,8 @@ if __name__ == '__main__':
   # Save fitting history as json
   with open("tensor-history.json", "w") as f:
     logging.info("Saving history of fitting as json")
-    hs = json.loads(h.history)
+    safe = lambda v: [i.item() for i in v]
+    hs = {k:safe(v) for k,v in h.history.items()}
     json.dump(hs, f, indent=2)
 
   # Save model (only weights)
