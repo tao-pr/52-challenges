@@ -71,7 +71,7 @@ def gen_dataset(n: int, dim: Tuple[int,int], f):
     images = gen_images(int(psize), dim, n, f)
     for hashstr,im, x, y in images:
       filename = "{}.jpg".format(hashstr)
-      rows.append((filename, n))
+      rows.append((filename, n, x, y))
   print("Generating dataframe")
   df = pd.DataFrame(rows, columns=["filename","noise","x","y"])
   return df
