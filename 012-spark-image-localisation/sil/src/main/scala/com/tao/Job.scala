@@ -7,9 +7,4 @@ import org.apache.spark.sql.catalyst.encoders._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
-import com.tao.thundercats.physical._
-import com.tao.thundercats.functional._
-import com.tao.thundercats.physical.Implicits._
-import com.tao.thundercats.estimator._
-
 object Main {}

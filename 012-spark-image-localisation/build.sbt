@@ -22,15 +22,6 @@ libraryDependencies ++= List(
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
 
-// Following dependency is for typesafe Avro schema generator
-// Unfortunately it's Jackson4s is not compatible with Spark 2.4
-// ------------------------------
-// val miscDependencies = List(
-//   "com.sksamuel.avro4s" %% "avro4s-core" % avro4sVersion excludeAll(
-//     ExclusionRule("org.scala-lang.modules",s"scala-xml_${scalaVersion.toString.dropRight(2)}"),
-//     ExclusionRule("org.apache.avro", "avro"))
-// )
-
 // Test
 val devDependencies = List(
   "org.scalatest" %% "scalatest" % "3.0.8" % "test"
@@ -41,10 +32,9 @@ val sparkDependencies = List(
   "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-sql"  % sparkVersion % "provided",
   "org.apache.spark" %% "spark-mllib"  % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-sql-kafka-0-10" % sparkVersion % "provided",
   "org.apache.spark" %% "spark-avro" % sparkVersion % "provided"
 )
 
-lazy val thundercats = project
-  .settings(name := "thundercats")
+lazy val sil = project
+  .settings(name := "sil")
   .settings(libraryDependencies ++= sparkDependencies ++ devDependencies)
