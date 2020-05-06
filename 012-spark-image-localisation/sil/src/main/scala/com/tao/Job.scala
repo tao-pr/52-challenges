@@ -7,4 +7,18 @@ import org.apache.spark.sql.catalyst.encoders._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
-object Main {}
+import com.tao.image.ImageBase
+
+object Job extends App with SparkBase {
+
+  override val appName = "SIL"
+
+  logger.info("Starting ...")
+  
+
+  // TAOTODO
+  
+
+
+  shutdown
+}
