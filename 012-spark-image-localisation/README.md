@@ -2,9 +2,13 @@
 
 Trying image processing on Spark
 
-## Setup
+## Setup & Run
 
-TBD
+Just execute
+
+```bash
+$ sbt sil/run
+```
 
 ## Licence
 
