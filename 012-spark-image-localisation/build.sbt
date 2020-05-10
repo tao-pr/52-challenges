@@ -23,22 +23,18 @@ libraryDependencies ++= List(
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
 
-// Logger
-libraryDependencies ++= List(
-  "org.apache.logging.log4j" %% "log4j-api-scala" % "11.0"
-)
-
 // Test
 val devDependencies = List(
   "org.scalatest" %% "scalatest" % "3.0.8" % "test"
 )
 
 // Spark
+// NOTE: "provided" is supposed to be activated for cluster deployment mode
 val sparkDependencies = List(
-  "org.apache.spark" %% "spark-core" % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-sql"  % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-mllib"  % sparkVersion % "provided",
-  "org.apache.spark" %% "spark-avro" % sparkVersion % "provided"
+  "org.apache.spark" %% "spark-core" % sparkVersion,// % "provided",
+  "org.apache.spark" %% "spark-sql"  % sparkVersion,// % "provided",
+  "org.apache.spark" %% "spark-mllib"  % sparkVersion,// % "provided",
+  "org.apache.spark" %% "spark-avro" % sparkVersion// % "provided"
 )
 
 lazy val sil = project
