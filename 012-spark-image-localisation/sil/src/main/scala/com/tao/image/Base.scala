@@ -56,49 +56,90 @@ trait ImageBase extends IO {
       .withColumn("filename", filename(col("image.origin")))
       .join(labels, "filename")
 
-    colourPrint(DEBUG, "[Training]", "Generating feature vectors")
+    // Feature ideas:
+    // - Mean horizontal vector
+    // - Mean vertical vector
     val features = labelledDf.rdd.map{ row =>
       val labelx = row.getAs[Int]("x")
       val labely = row.getAs[Int]("y")
-      val image = row.getAs[Row]("image")
+      val image  = row.getAs[Row]("image")
       val imData = ImageSchema.getData(image) // Array[Byte]
       val w = ImageSchema.getWidth(image)
       val h = ImageSchema.getWidth(image)
-
-      // Collect all border pixels
-      val buff = scala.collection.mutable.ArrayBuffer.empty[Float]
-      (0 to h).foreach{ j =>
-        // Collect left border 
-        val leftB = imData(j*w*3 + 0)
-        val leftG = imData(j*w*3 + 1)
-        val leftR = imData(j*w*3 + 2)
-        // Collect right border
-        val rightB = imData(j*w*3 + (w-1)*3+0)
-        val rightG = imData(j*w*3 + (w-1)*3+1)
-        val rightR = imData(j*w*3 + (w-1)*3+2)
-
-        buff += (leftB+leftG+leftR)/3.0f
-        buff += (rightB+rightG+rightR)/3.0f
+      
+      // Mean horizontal vector
+      val hvector = scala.collection.mutable.ArrayBuffer.empty[Float]
+      (0 until h).foreach{ j =>
+        if (hvector.size==0){
+          (0 until w).foreach{ i =>
+            hvector += imData(j*w+i).toFloat
+          }
+        }
+        else {
+          (0 until w).foreach{ i =>
+            hvector(i) += imData(j*w+i).toFloat
+          }
+        }
       }
 
-      // NOTE: Skip leftmost and rightmost pixels, as they overlap with previous step
-      (1 to w-1).foreach{ i =>
-        // Collect top border
-        val topB = imData(i*3 + 0)
-        val topG = imData(i*3 + 1)
-        val topR = imData(i*3 + 2)
-        // Collect the bottom border
-        val bottomB = imData((h-1)*w*3 + i*3 + 0)
-        val bottomG = imData((h-1)*w*3 + i*3 + 1)
-        val bottomR = imData((h-1)*w*3 + i*3 + 2)
-
-        buff += (topB+topG+topR)/3.0f
-        buff += (bottomB+bottomG+bottomR)/3.0f
+      // Mean vertical vector
+      val vvector = scala.collection.mutable.ArrayBuffer.empty[Float]
+      (0 until h).foreach{ i =>
+        if (vvector.size==0){
+          (0 until h).foreach{ j =>
+            vvector += imData(j*w+i).toFloat
+          }
+        }
+        else {
+          (0 until h).foreach{ j =>
+            vvector(j) += imData(j*w+i).toFloat
+          }
+        }
       }
 
-      LabelledFeature(labelx, labely, buff.toArray)
+      // Calculate mean
+      (0 until h).foreach( j => vvector(j) /= w.toFloat )
+      (0 until w).foreach( i => hvector(i) /= h.toFloat )
 
+      // Make up feature vector
+      vvector ++= hvector
+      LabelledFeature(labelx, labely, vvector.toArray)
     }.toDS
+
+    // val features = labelledDf.rdd.map{ row =>
+    //   val labelx = row.getAs[Int]("x")
+    //   val labely = row.getAs[Int]("y")
+    //   val image = row.getAs[Row]("image")
+    //   val imData = ImageSchema.getData(image) // Array[Byte]
+    //   val w = ImageSchema.getWidth(image)
+    //   val h = ImageSchema.getWidth(image)
+
+    //   // Collect all border pixels
+    //   val buff = scala.collection.mutable.ArrayBuffer.empty[Float]
+    //   (0 to h-1).foreach{ j =>
+    //     // Collect left and right border 
+    //     val leftPixel  = imData(j*w)
+    //     val rightPixel = imData(j*w + (w-1))
+    //     buff += leftPixel.toFloat
+    //     buff += rightPixel.toFloat
+    //   }
+
+    //   // NOTE: Skip leftmost and rightmost pixels, as they overlap with previous step
+    //   (1 to w-2).foreach{ i =>
+    //     // Collect top and bottom border
+    //     val topPixl     = imData(i + 0)
+    //     val bottomPixel = imData((h-1)*w + i + 0)
+
+    //     buff += topPixl.toFloat
+    //     buff += bottomPixel.toFloat
+    //   }
+
+    //   // Normalise the feature vector
+    //   val vector = buff.map{_ / buff.sum.toFloat}
+
+    //   LabelledFeature(labelx, labely, buff.toArray)
+
+    // }.toDS
 
     val seq: Array[Dataset[LabelledFeature]] = features.randomSplit(Array(trainRatio, 1-trainRatio))
     val trainDs = seq.head
@@ -107,7 +148,7 @@ trait ImageBase extends IO {
     colourPrint(DEBUG, "Training set : ", s"${trainDs.count} images")
     colourPrint(DEBUG, "Test set     : ", s"${testDs.count} images")
 
-
+    // Create and train a linear model
     // TAOTODO:
   }
 }
