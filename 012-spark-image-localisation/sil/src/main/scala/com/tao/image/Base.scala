@@ -5,16 +5,20 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.{Column,Row}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import org.apache.spark.ml.regression.LinearRegression
-import org.apache.spark.ml.image.ImageSchema
 
-import breeze.linalg.Vector
+import org.apache.spark.ml.linalg.{Vector, DenseVector}
+import org.apache.spark.ml.image.ImageSchema
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.ml.evaluation.RegressionEvaluator
+import org.apache.spark.ml.tuning.TrainValidationSplit
+
+import breeze.linalg.{Vector => BreezeVector}
 
 import com.tao.IO
 
 case class Label(filename: String, noise: Double, x: Int, y: Int)
 
-case class LabelledFeature(x: Int, y: Int, featuresX: Array[Double], featuresY: Array[Double])
+case class LabelledFeature(filename: String, x: Int, y: Int, featuresX: Vector, featuresY: Vector)
 
 trait ImageBase extends IO {
 
@@ -61,6 +65,7 @@ trait ImageBase extends IO {
     // - Mean horizontal vector
     // - Mean vertical vector
     val features = labelledDf.rdd.map{ row =>
+      val filename = row.getAs[String]("filename")
       val labelx = row.getAs[Int]("x")
       val labely = row.getAs[Int]("y")
       val image  = row.getAs[Row]("image")
@@ -103,7 +108,10 @@ trait ImageBase extends IO {
       (0 until w).foreach( i => hvector(i) /= h.toDouble )
 
       // Make up feature vectors
-      LabelledFeature(labelx, labely, hvector.toArray, vvector.toArray)
+      LabelledFeature(
+        filename, 
+        labelx, labely, 
+        new DenseVector(hvector.toArray), new DenseVector(vvector.toArray))
     }.toDS
 
     val seq: Array[Dataset[LabelledFeature]] = features.randomSplit(Array(trainRatio, 1-trainRatio))
@@ -112,6 +120,7 @@ trait ImageBase extends IO {
 
     colourPrint(DEBUG, "Training set : ", s"${trainDs.count} images")
     colourPrint(DEBUG, "Test set     : ", s"${testDs.count} images")
+    trainDs.printSchema
 
     // Create and train linear model
     val lgX = new LinearRegression()
@@ -133,6 +142,24 @@ trait ImageBase extends IO {
     val modelY = lgY.fit(trainDs)
 
     colourPrint(INFO, "[Validation] ", "Starting ...")
-    // TAOTODO
+    val predictionX = modelX.transform(testDs).withColumn("error_x", abs('pred_x - 'x))
+    val predictionY = modelY.transform(testDs).withColumn("error_y", abs('pred_y - 'y))
+    val prediction = predictionX
+      .join(predictionY, "filename")
+      .withColumn("error", sqrt(pow('error_x, 2.0) + pow('error_y, 2.0)))
+
+    colourPrint(INFO, "[Validation] ", "Prediction RMSE error : ")
+    prediction
+      .select(
+        (sum('error)/lit(prediction.count.toDouble)).as("sum_error"),
+        (sum('error_x)/lit(prediction.count.toDouble)).as("sum_error_x"),
+        (sum('error_y)/lit(prediction.count.toDouble)).as("sum_error_y"))
+      .show(1, false)
+
+    // +------------------+-----------------+-----------------+
+    // |sum_error         |sum_error_x      |sum_error_y      |
+    // +------------------+-----------------+-----------------+
+    // |100.54706683701589|64.60088423647127|66.33227611133337|
+    // +------------------+-----------------+-----------------+
   }
 }
