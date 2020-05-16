@@ -5,6 +5,7 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.{Column,Row}
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
+import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.image.ImageSchema
 
 import breeze.linalg.Vector
@@ -13,7 +14,7 @@ import com.tao.IO
 
 case class Label(filename: String, noise: Double, x: Int, y: Int)
 
-case class LabelledFeature(x: Int, y: Int, features: Array[Float])
+case class LabelledFeature(x: Int, y: Int, featuresX: Array[Double], featuresY: Array[Double])
 
 trait ImageBase extends IO {
 
@@ -66,80 +67,44 @@ trait ImageBase extends IO {
       val imData = ImageSchema.getData(image) // Array[Byte]
       val w = ImageSchema.getWidth(image)
       val h = ImageSchema.getWidth(image)
-      
+
       // Mean horizontal vector
-      val hvector = scala.collection.mutable.ArrayBuffer.empty[Float]
+      val hvector = scala.collection.mutable.ArrayBuffer.empty[Double]
       (0 until h).foreach{ j =>
         if (hvector.size==0){
           (0 until w).foreach{ i =>
-            hvector += imData(j*w+i).toFloat
+            hvector += imData(j*w+i).toDouble
           }
         }
         else {
           (0 until w).foreach{ i =>
-            hvector(i) += imData(j*w+i).toFloat
+            hvector(i) += imData(j*w+i).toDouble
           }
         }
       }
 
       // Mean vertical vector
-      val vvector = scala.collection.mutable.ArrayBuffer.empty[Float]
+      val vvector = scala.collection.mutable.ArrayBuffer.empty[Double]
       (0 until h).foreach{ i =>
         if (vvector.size==0){
           (0 until h).foreach{ j =>
-            vvector += imData(j*w+i).toFloat
+            vvector += imData(j*w+i).toDouble
           }
         }
         else {
           (0 until h).foreach{ j =>
-            vvector(j) += imData(j*w+i).toFloat
+            vvector(j) += imData(j*w+i).toDouble
           }
         }
       }
 
       // Calculate mean
-      (0 until h).foreach( j => vvector(j) /= w.toFloat )
-      (0 until w).foreach( i => hvector(i) /= h.toFloat )
+      (0 until h).foreach( j => vvector(j) /= w.toDouble )
+      (0 until w).foreach( i => hvector(i) /= h.toDouble )
 
-      // Make up feature vector
-      vvector ++= hvector
-      LabelledFeature(labelx, labely, vvector.toArray)
+      // Make up feature vectors
+      LabelledFeature(labelx, labely, hvector.toArray, vvector.toArray)
     }.toDS
-
-    // val features = labelledDf.rdd.map{ row =>
-    //   val labelx = row.getAs[Int]("x")
-    //   val labely = row.getAs[Int]("y")
-    //   val image = row.getAs[Row]("image")
-    //   val imData = ImageSchema.getData(image) // Array[Byte]
-    //   val w = ImageSchema.getWidth(image)
-    //   val h = ImageSchema.getWidth(image)
-
-    //   // Collect all border pixels
-    //   val buff = scala.collection.mutable.ArrayBuffer.empty[Float]
-    //   (0 to h-1).foreach{ j =>
-    //     // Collect left and right border 
-    //     val leftPixel  = imData(j*w)
-    //     val rightPixel = imData(j*w + (w-1))
-    //     buff += leftPixel.toFloat
-    //     buff += rightPixel.toFloat
-    //   }
-
-    //   // NOTE: Skip leftmost and rightmost pixels, as they overlap with previous step
-    //   (1 to w-2).foreach{ i =>
-    //     // Collect top and bottom border
-    //     val topPixl     = imData(i + 0)
-    //     val bottomPixel = imData((h-1)*w + i + 0)
-
-    //     buff += topPixl.toFloat
-    //     buff += bottomPixel.toFloat
-    //   }
-
-    //   // Normalise the feature vector
-    //   val vector = buff.map{_ / buff.sum.toFloat}
-
-    //   LabelledFeature(labelx, labely, buff.toArray)
-
-    // }.toDS
 
     val seq: Array[Dataset[LabelledFeature]] = features.randomSplit(Array(trainRatio, 1-trainRatio))
     val trainDs = seq.head
@@ -148,7 +113,26 @@ trait ImageBase extends IO {
     colourPrint(DEBUG, "Training set : ", s"${trainDs.count} images")
     colourPrint(DEBUG, "Test set     : ", s"${testDs.count} images")
 
-    // Create and train a linear model
-    // TAOTODO:
+    // Create and train linear model
+    val lgX = new LinearRegression()
+      .setFeaturesCol("featuresX")
+      .setLabelCol("x")
+      .setPredictionCol("pred_x")
+      .setElasticNetParam(0.05)
+      .setMaxIter(15)
+    
+    val lgY = new LinearRegression()
+      .setFeaturesCol("featuresY")
+      .setLabelCol("y")
+      .setPredictionCol("pred_y")
+      .setElasticNetParam(0.05)
+      .setMaxIter(15)
+
+    colourPrint(INFO, "[Training] ", "Starting ...")
+    val modelX = lgX.fit(trainDs)
+    val modelY = lgY.fit(trainDs)
+
+    colourPrint(INFO, "[Validation] ", "Starting ...")
+    // TAOTODO
   }
 }
