@@ -29,3 +29,6 @@
 011-tensor/out/
 011-tensor/tensor-history.json
 011-tensor/tensor.log
+012-spark-image-localisation/project/
+012-spark-image-localisation/target/
+012-spark-image-localisation/sil/target/
