@@ -2,6 +2,8 @@
 
 Trying image processing on Spark
 
+[More info: Image support on Spark](https://issues.apache.org/jira/browse/SPARK-21866)
+
 ## Submit a job
 
 First, Package a JAR
