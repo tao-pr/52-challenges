@@ -27,7 +27,7 @@ List of challenges are collected below.
 | 009 | Study Corona Virus time-series data | Python | 4 hrs | -- |
 | 010 | Profiling of Python memory access | Python | 3 hrs | -- |
 | 011 | Estimate crosshair coordinates in images with TensorFlow | Python TensorFlow | 14 hrs | Learn TensorFlow |
-| 012 | Image localisation with Spark | Scala Spark | -- | -- |
+| 012 | Image localisation with Spark | Scala Spark | 8 hrs | Learn Spark Image package (since Spark 2.3) |
 
 ## Licence
 
