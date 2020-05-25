@@ -32,3 +32,7 @@
 012-spark-image-localisation/project/
 012-spark-image-localisation/target/
 012-spark-image-localisation/sil/target/
+013-flatbuffers-serialisation/build/CMakeCache.txt
+013-flatbuffers-serialisation/build/CMakeFiles/
+013-flatbuffers-serialisation/build/Makefile
+013-flatbuffers-serialisation/build/cmake_install.cmake
