@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 # Dependencies
 include_directories(/usr/local/include)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/headers")
+include_directories("${FLATBUFFER_SRC_DIR}/include/flatbuffers")
 link_directories(/usr/local/lib)
 
 project("013-flatbuff" CXX C)
