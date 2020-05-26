@@ -7,8 +7,17 @@
 
 using namespace std;
 
-inline vector<Product> generateProducts()
-{
+inline vector<Campaign> generateCampaigns(int numCampaigns){
+  auto camps = vector<Campaign>();
+  if (numCampaigns <= 1) camps.push_back(Campaign(5, "30% Off"));
+  if (numCampaigns <= 2) camps.push_back(Campaign(14, "10% Off"));
+  if (numCampaigns <= 3) camps.push_back(Campaign(10, "Buy one get one FREE"));
+  if (numCampaigns <= 4) camps.push_back(Campaign(5, "Buy 2 get one FREE"));
+  if (numCampaigns <= 5) camps.push_back(Campaign(10, "Summer SALE"));
+  return camps;
+};
+
+inline vector<Product> generateProducts(){
   auto products = vector<Product>();
   for (int i=0; i<25; i++){
     products.push_back(Product());
@@ -65,6 +74,16 @@ inline vector<Product> generateProducts()
   products[6].colours = colourPresets[0];
   products[7].colours = colourPresets[3];
   products[8].colours = colourPresets[1];
+
+  products[0].campaigns = generateCampaigns(1);
+  products[1].campaigns = generateCampaigns(4);
+  products[2].campaigns = generateCampaigns(4);
+  products[3].campaigns = generateCampaigns(3);
+  products[4].campaigns = generateCampaigns(1);
+  products[5].campaigns = generateCampaigns(2);
+  products[6].campaigns = generateCampaigns(2);
+  products[7].campaigns = generateCampaigns(3);
+  products[8].campaigns = generateCampaigns(5);
 
   return products;
 };
