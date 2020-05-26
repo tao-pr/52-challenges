@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "flatbuffers/flatbuffers.h"
+
 #include "data.hpp"
 #include "functions.hpp"
 
