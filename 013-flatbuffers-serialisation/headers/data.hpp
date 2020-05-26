@@ -3,7 +3,6 @@
 
 #include <string>
 #include <vector>
-#include <chrono>
 
 using namespace std;
 
@@ -18,10 +17,13 @@ enum Colour {
 };
 
 struct Campaign {
-  chrono::steady_clock::time_point  dt;
-  int                 numDays;
-  int                 targetGroup;
-  string              title;
+  int           numDays;
+  string        title;
+
+  Campaign(int _numDays, string _title){
+    numDays = _numDays;
+    title   = _title;
+  };
 };
 
 struct Product {
