@@ -4,11 +4,11 @@
 #include <unistd.h>
 
 #include "data.hpp"
+#include "functions.hpp"
 
 int main(int argc, char** argv)
 {
-  const unsigned int MAX_PROC = 32;
-
-
+  auto products = generateProducts();
+  
   // TAOTODO
 }

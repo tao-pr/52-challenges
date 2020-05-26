@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum Color {
+enum Colour {
   None = 0,
   White,
   Green,
@@ -25,10 +25,10 @@ struct Campaign {
 };
 
 struct Product {
-  int           index;
-  string        title;
-  unsigned int  qty;
-  vector<Color> colors;
+  int            index;
+  string         title;
+  unsigned int   qty;
+  vector<Colour> colours;
   vector<Campaign> campaigns;
 };
 
