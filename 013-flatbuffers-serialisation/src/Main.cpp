@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
+
 
 #include "flatbuffers/flatbuffers.h"
 
@@ -59,14 +61,43 @@ int main(int argc, char** argv)
   // auto station2 = CreateStation(b, b.CreateString("Amsterdam"), routes2, 65);
 
   b.Finish(station1);
+  auto size = b.GetSize();
 
   // Serialise data into file
   auto s = GetStation(b.GetBufferPointer());
   assert(s->title()->str() == "Frankfurt");
   assert(s->routes()->size() == 2);
+  cout << "Memory used " << size << " bytes" << endl;
+
+  ofstream file;
+  cout << "Writing to file" << endl;
+  file.open("station.bin", ios::out | ios::binary);
+  file.write((char*)s, size);
+  file.close();
 
   // Deserialise from file
+  ifstream infile("station.bin", ios::in | ios::binary);
+  cout << "Reading from file back in " << endl;
+  infile.seekg(0, ios::end);
+  int length = infile.tellg();
+  infile.seekg(0, ios::beg);
+  char *data = new char[length];
+  infile.read(data, length);
+  infile.close();
+  cout << "Memory size : " << length << " bytes" << endl;
 
+  auto readStation = GetStation(data);
+  cout << "Successfully deserialised" << endl;
+
+  // Verify
+  assert(readStation->title()->str() == "Frankfurt");
+  assert(readStation->routes()->size() == 2);
+  cout << "aa" << endl;
+  const flatbuffers::Vector<flatbuffers::Offset<Data::Route>>* rr = readStation->routes();
+  cout << "bb" << endl;
+  assert(rr->Get(0)->operator_()->str() == "DB");
+  cout << "cc" << endl;
+  assert(rr->Get(0)->stations()->size() == 4);
 
   cout << "Ending ..." << endl;
 }
