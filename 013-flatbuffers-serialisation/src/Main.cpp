@@ -13,9 +13,7 @@
 using namespace std;
 using namespace Data;
 
-int main(int argc, char** argv)
-{
-  cout << "Starting ..." << endl;
+void serialise(){
   flatbuffers::FlatBufferBuilder b(5*1024); // buffer size of 5 MB
   
   // Initialise data for serialisation
@@ -56,10 +54,6 @@ int main(int argc, char** argv)
   auto routes1  = b.CreateVector(routevec1);
   auto station1 = CreateStation(b, b.CreateString("Frankfurt"), routes1, 75);
 
-  // vector<flatbuffers::Offset<Data::Route>> routevec2 = {route1, route3};
-  // auto routes2  = b.CreateVector(routevec2);
-  // auto station2 = CreateStation(b, b.CreateString("Amsterdam"), routes2, 65);
-
   b.Finish(station1);
   auto size = b.GetSize();
 
@@ -67,6 +61,7 @@ int main(int argc, char** argv)
   auto s = GetStation(b.GetBufferPointer());
   assert(s->title()->str() == "Frankfurt");
   assert(s->routes()->size() == 2);
+  assert(s->routes()->Get(0)->operator_()->str() == "DB");
   cout << "Memory used " << size << " bytes" << endl;
 
   ofstream file;
@@ -74,7 +69,9 @@ int main(int argc, char** argv)
   file.open("station.bin", ios::out | ios::binary);
   file.write((char*)s, size);
   file.close();
+}
 
+void deserialise(){
   // Deserialise from file
   ifstream infile("station.bin", ios::in | ios::binary);
   cout << "Reading from file back in " << endl;
@@ -86,18 +83,20 @@ int main(int argc, char** argv)
   infile.close();
   cout << "Memory size : " << length << " bytes" << endl;
 
-  auto readStation = GetStation(data);
+  const Station* readStation = GetStation(data);
   cout << "Successfully deserialised" << endl;
 
   // Verify
   assert(readStation->title()->str() == "Frankfurt");
   assert(readStation->routes()->size() == 2);
-  cout << "aa" << endl;
   const flatbuffers::Vector<flatbuffers::Offset<Data::Route>>* rr = readStation->routes();
-  cout << "bb" << endl;
   assert(rr->Get(0)->operator_()->str() == "DB");
-  cout << "cc" << endl;
   assert(rr->Get(0)->stations()->size() == 4);
+}
 
+int main(int argc, char** argv){
+  cout << "Starting ..." << endl;
+  serialise();
+  deserialise();
   cout << "Ending ..." << endl;
 }
