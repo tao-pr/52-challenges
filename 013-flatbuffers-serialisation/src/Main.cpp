@@ -50,8 +50,20 @@ int main(int argc, char** argv)
     b.CreateString("NS"),
     40);
 
-  // Serialise data into file
+  vector<flatbuffers::Offset<Data::Route>> routevec1 = {route1, route2};
+  auto routes1  = b.CreateVector(routevec1);
+  auto station1 = CreateStation(b, b.CreateString("Frankfurt"), routes1, 75);
 
+  // vector<flatbuffers::Offset<Data::Route>> routevec2 = {route1, route3};
+  // auto routes2  = b.CreateVector(routevec2);
+  // auto station2 = CreateStation(b, b.CreateString("Amsterdam"), routes2, 65);
+
+  b.Finish(station1);
+
+  // Serialise data into file
+  auto s = GetStation(b.GetBufferPointer());
+  assert(s->title()->str() == "Frankfurt");
+  assert(s->routes()->size() == 2);
 
   // Deserialise from file
 
