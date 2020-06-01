@@ -28,7 +28,7 @@ List of challenges are collected below.
 | 010 | Profiling of Python memory access        | Python           | 3 hrs      | -- |
 | 011 | Estimate crosshair coordinates in images with TensorFlow    | Python TensorFlow | 14 hrs | Learn TensorFlow |
 | 012 | Image localisation with Spark            | Scala Spark      | 8 hrs      | Learn Spark Image package (since Spark 2.3) |
-| 013 | FlatBuffers with C++                     | C++ FlatBuffers  | --         | -- | 
+| 013 | FlatBuffers with C++                     | C++ FlatBuffers  | 8 hrs      | Learn FlatBuffers codebase | 
 
 ## Licence
 
