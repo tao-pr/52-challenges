@@ -13,8 +13,10 @@
 using namespace std;
 using namespace Data;
 
+const int BUFFER_SIZE = 5*1024;
+
 void serialise(){
-  flatbuffers::FlatBufferBuilder b(5*1024); // buffer size of 5 MB
+  flatbuffers::FlatBufferBuilder b(BUFFER_SIZE);
   
   // Initialise data for serialisation
   vector<flatbuffers::Offset<flatbuffers::String>> vec1 = {
@@ -72,6 +74,8 @@ void serialise(){
 }
 
 void deserialise(){
+  flatbuffers::FlatBufferBuilder b(BUFFER_SIZE);
+  
   // Deserialise from file
   ifstream infile("station.bin", ios::in | ios::binary);
   cout << "Reading from file back in " << endl;
