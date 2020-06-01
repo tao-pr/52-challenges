@@ -7,8 +7,7 @@ import org.apache.spark.sql.catalyst.encoders._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
-import com.tao.image.ImageBase
-import com.tao.IO._
+import com.tao.graph._
 
 object GraphJob extends App with SparkBase {
 
