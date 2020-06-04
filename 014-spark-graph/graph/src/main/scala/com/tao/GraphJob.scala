@@ -18,6 +18,16 @@ object GraphJob extends App with SparkBase {
 
   implicit val _spark = spark
 
+  // Generate graph RDDs
+
+  // Map graph 
+
+  // Aggregate graph 
+
+  // Traverse graph
+
+  // Save graph
+
   ???
 
   shutdown
