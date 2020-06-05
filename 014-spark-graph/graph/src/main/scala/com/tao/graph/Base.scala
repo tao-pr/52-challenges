@@ -5,7 +5,6 @@ import org.apache.spark.graphx.{Graph, VertexRDD, EdgeRDD}
 
 // Graph representation
 
-class Node
-case object UndefinedNode extends Node
-case class City(name: String, size: Long) extends Node
-case class Station(name: String) extends Node
+class Distance
+case class TrainDistance(d: Double) extends Distance 
+case class DrivingDistance(d: Double) extends Distance
