@@ -35,4 +35,8 @@ object Util {
     Graph(vertices, edges)
   }
 
+  def printGraph(g: Graph[_,_]) {
+    g.vertices.foreach(n => Console.println(s"NODE => ${n}"))
+  }
+
 }
