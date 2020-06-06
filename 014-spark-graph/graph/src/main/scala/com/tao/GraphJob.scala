@@ -7,6 +7,8 @@ import org.apache.spark.sql.catalyst.encoders._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
+import org.apache.spark.graphx.PartitionStrategy
+
 import com.tao.graph._
 
 object GraphJob extends App with SparkBase {
@@ -26,7 +28,7 @@ object GraphJob extends App with SparkBase {
     else TrainDistance(scala.math.abs(b%100))
   }
   val graph = Util.generateGraph(numEdges=1000, numNodes=200)
-  val graphE = Util.generateGraphWithEdgeAttr(numEdges=1000, numNodes=200, edgeRandomiser=er)
+  val graphE = Util.generateGraphWithEdgeAttr(numEdges=1000, numNodes=50, edgeRandomiser=er)
 
   graph.cache
   graphE.cache
@@ -35,12 +37,19 @@ object GraphJob extends App with SparkBase {
   colourPrint(INFO, "[graph]", "")
   Util.printGraph(graph)
 
-  // Map vertices 
-  val graph_ = graph.mapVertices((vertexId, vd) => City(vertexId))
+  // Map vertices & Repartition edges by source vertex
+  val graph_ = graphE
+    .mapVertices((vertexId, vd) => City(vertexId))
+    .partitionBy(PartitionStrategy.EdgePartition1D) // Edges with same source vertex go to the same partition
   colourPrint(INFO, "[graph_] (mapped)", "")
   Util.printGraph(graph_)
 
-  // Aggregate graph 
+  // Aggregate: Count num of outbound edges on each vertex
+  val sumDistanceEdges = graph_
+    .mapEdges((partitionId, iter) => iter.map(_.attr.toSumDistance))
+    .groupEdges(_ + _)
+  colourPrint(INFO, "[sumDistanceEdges]", s"${sumDistanceEdges.edges.count} entries")
+  Util.printEdges(sumDistanceEdges)
 
   // Traverse graph
 
