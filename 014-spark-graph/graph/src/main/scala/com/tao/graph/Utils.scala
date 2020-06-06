@@ -39,4 +39,8 @@ object Util {
     g.vertices.foreach(n => Console.println(s"NODE => ${n}"))
   }
 
+  def printEdges(g: Graph[_,_]) {
+    g.edges.foreach(e => Console.println(s"EDGE => ${e}"))
+  }
+
 }
