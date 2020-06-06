@@ -8,6 +8,8 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
 
 import org.apache.spark.graphx.PartitionStrategy
+import org.apache.spark.graphx.lib._
+import org.apache.spark.graphx.GraphOps
 
 import com.tao.graph._
 
@@ -28,7 +30,7 @@ object GraphJob extends App with SparkBase {
     else TrainDistance(scala.math.abs(b%100))
   }
   val graph = Util.generateGraph(numEdges=1000, numNodes=200)
-  val graphE = Util.generateGraphWithEdgeAttr(numEdges=1000, numNodes=50, edgeRandomiser=er)
+  val graphE = Util.generateGraphWithEdgeAttr(numEdges=6000, numNodes=25, edgeRandomiser=er)
 
   graph.cache
   graphE.cache
@@ -44,18 +46,26 @@ object GraphJob extends App with SparkBase {
   colourPrint(INFO, "[graph_] (mapped)", "")
   Util.printGraph(graph_)
 
-  // Aggregate: Count num of outbound edges on each vertex
+  // Aggregate
   val sumDistanceEdges = graph_
     .mapEdges((partitionId, iter) => iter.map(_.attr.toSumDistance))
     .groupEdges(_ + _)
   colourPrint(INFO, "[sumDistanceEdges]", s"${sumDistanceEdges.edges.count} entries")
   Util.printEdges(sumDistanceEdges)
 
-  // Traverse graph
-
   // Subgraph
+  val subgraph = sumDistanceEdges.subgraph(
+    epred = (triplet) => triplet.attr.num > 3,
+    vpred = (vertexId, v) => true
+  )
+  colourPrint(INFO, "[subgraph]", "only edges > 3")
+  Util.printEdges(subgraph)
 
-  // Save graph
+  // Connected components
+  // aka. cluster approximation
+  val graph__ = graph_.removeSelfEdges()
+  val numTriangles = TriangleCount.runPreCanonicalized(graph__).vertices
+  colourPrint(INFO, "[Canonical Triangles]", s"${numTriangles} triangles")
 
   shutdown
 }
