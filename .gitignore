@@ -36,3 +36,10 @@
 013-flatbuffers-serialisation/build/CMakeFiles/
 013-flatbuffers-serialisation/build/Makefile
 013-flatbuffers-serialisation/build/cmake_install.cmake
+013-flatbuffers-serialisation/build/flatbuff
+013-flatbuffers-serialisation/convert_fbs_to_json.sh
+013-flatbuffers-serialisation/schemas/
+013-flatbuffers-serialisation/station.bin
+014-spark-graph/graph/target/
+014-spark-graph/project/
+014-spark-graph/target/
