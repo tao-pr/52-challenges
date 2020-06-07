@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c0825092b57a30f7456e381cfcc8ce7d6c4eca91866c304f3feb187b3c752c00
+-- hash: aeaac92b7867975a009c7eee481cc976505b8df53e9fca19d7d2969e4c8f1a15
 
 name:           hlens
 version:        0.1.0.0
@@ -28,12 +28,14 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Recipe.HLens
   other-modules:
       Paths_hlens
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , lens >=4.18
   default-language: Haskell2010
 
 executable hlens-exe
@@ -46,6 +48,7 @@ executable hlens-exe
   build-depends:
       base >=4.7 && <5
     , hlens
+    , lens >=4.18
   default-language: Haskell2010
 
 test-suite hlens-test
@@ -59,4 +62,5 @@ test-suite hlens-test
   build-depends:
       base >=4.7 && <5
     , hlens
+    , lens >=4.18
   default-language: Haskell2010
