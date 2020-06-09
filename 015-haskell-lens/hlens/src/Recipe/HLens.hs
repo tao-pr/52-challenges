@@ -6,11 +6,13 @@ import           Control.Lens.Operators
 
 -- Data
 
-data P a b = P a b | Q a | R [b]
+data Coord a = 
+  Coord  { x :: a, y :: a } | NoWhere |
+  ECoord { x :: a, y :: a, tlx :: a, tly :: a }  -- with tolerance of measurements
+
 
 -- Typeclasses
 
-class Flippable a where
-  flip :: a -> a
-
--- Instances
+class Vec a where
+  i :: Ord b => a -> Maybe b
+  j :: Ord b => a -> Maybe b
