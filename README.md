@@ -30,7 +30,7 @@ List of challenges are collected below.
 | 012 | Image localisation with Spark            | Scala Spark      | 8 hrs      | Learn Spark Image package (since Spark 2.3) |
 | 013 | FlatBuffers with C++                     | C++ FlatBuffers  | 8 hrs      | Learn FlatBuffers codebase | 
 | 014 | Graph in Spark                           | Scala Spark Graph| 8 hrs      | Learn GraphX from scratch |
-| 015 | Lens in Haskell                          | Haskell Lens     | --         | -- |
+| 015 | Lens in Haskell                          | Haskell Lens     | 5 hrs      | Learn Lens + Prisms |
 
 ## Licence
 
