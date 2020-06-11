@@ -21,6 +21,11 @@ makePrisms ''Where
 
 -- Oprs
 
+getx :: Where a -> a
+getx = error "Not supported"
+  & outside _AtCoord .~ view x
+  & outside _AtCoord3D .~ view xx
+
 dist :: Coord a -> Coord a -> a
 dist p q = error "not implemented"
 
