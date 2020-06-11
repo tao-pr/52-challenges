@@ -19,14 +19,29 @@ data Where a = AtCoord (Coord a) | AtCoord3D (Coord3D a) | NW
   deriving (Eq, Ord, Show)
 makePrisms ''Where
 
+-- Instances
+
+
 -- Oprs
 
-getx :: Where a -> a
-getx = error "Not supported"
+getx :: Monoid a => Where a -> a
+getx = mempty    -- Fallback case (non exhaustive)
   & outside _AtCoord .~ view x
   & outside _AtCoord3D .~ view xx
 
-dist :: Coord a -> Coord a -> a
-dist p q = error "not implemented"
+gety :: Monoid a => Where a -> a
+gety = mempty
+  & outside _AtCoord .~ view y
+  & outside _AtCoord3D .~ view yy
+
+getz :: Monoid a => Where a -> a
+getz = mempty & outside _AtCoord3D .~ view zz
+
+dist :: (Num a, Monoid a) => Where a -> Where a -> a
+dist p q = 
+  let { x' = (getx p) - (getx q)
+      ; y' = (gety p) - (gety q)
+      ; z' = (getz p) - (getz q) }
+    in x'*x' + y'*y' + z'*z'
 
 
