@@ -45,6 +45,7 @@ int main(int argc, char** argv){
   }
   cout << "Input complete " << endl;
   cout << g << endl;
+  input = "";
 
   while (input != "n"){
     cout << endl << "Find shortest path from, to : ";
