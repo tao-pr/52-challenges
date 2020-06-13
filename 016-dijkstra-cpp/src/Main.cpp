@@ -14,6 +14,7 @@ int main(int argc, char** argv){
   // Inputs
   auto g = Graph();
   string input = "";
+  cout << endl << "NOTE: Enter [n] to finish" << endl;
   while (input != "n"){
     cout << endl << "Input edge (v1,v2,w): ";
     getline(cin, input);
@@ -44,6 +45,28 @@ int main(int argc, char** argv){
   }
   cout << "Input complete " << endl;
   cout << g << endl;
+
+  while (input != "n"){
+    cout << endl << "Find shortest path from, to : ";
+    getline(cin, input);
+    if (input != "n"){
+      stringstream ss(input);
+      vector<string> chunks;
+      char part = 0;
+      int v1, v2;
+      string substr;
+      while (getline(ss, substr, ',')){
+        if (part){
+          v1 = stoi(substr);
+        }
+        else {
+          v2 = stoi(substr);
+        }
+        ++part;
+      }
+      cout << g.findShortest(v1, v2) << endl;
+    }
+  }
 }
 
 
