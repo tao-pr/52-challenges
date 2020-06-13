@@ -128,6 +128,7 @@ ostream &operator<<(ostream &os, Graph const &g){
       );
     }
   }
+  return os << "=== End of Graph ===" << endl;
 };
 
 ostream &operator<<(ostream &os, Path const &p){
@@ -135,6 +136,6 @@ ostream &operator<<(ostream &os, Path const &p){
   for (auto &c : p.steps){
     s += fmt::format("{} -> ", c);
   }
-  cout << s << endl;
+  return os << s << endl;
 };
 
