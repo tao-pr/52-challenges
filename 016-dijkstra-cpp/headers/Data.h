@@ -9,6 +9,11 @@
 
 using namespace std;
 
+struct Path {
+  vector<int> steps;
+  float sumDistance;
+};
+
 struct Graph {
   map<int, map<int, float>> edges; // Directional
   set<int> nodes;
@@ -30,6 +35,10 @@ struct Graph {
       edges.insert(make_pair(v1, newv2));
     }
   }
+
+  Path& findShortest(int v1, int v2){
+    // TAOTODO
+  }
 };
 
 ostream &operator<<(ostream &os, Graph const &g){
@@ -49,5 +58,13 @@ ostream &operator<<(ostream &os, Graph const &g){
       );
     }
   }
+};
+
+ostream &operator<<(ostream &os, Path const &p){
+  string s = fmt::format("{:2f} : ", p.sumDistance);
+  for (auto &c : p.steps){
+    s += fmt::format("{} -> ", c);
+  }
+  cout << s << endl;
 };
 
