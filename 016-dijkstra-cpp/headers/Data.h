@@ -18,10 +18,10 @@ struct Graph {
     nodes.insert(v2);
     if (edges.find(v1) != edges.end()){
       if (edges[v1].find(v2) != edges[v1].end()){
-        // TAOTODO
+        edges[v1][v2] = w;
       }
       else {
-
+        edges[v1].insert(make_pair(v2, w));
       }
     }
     else {
