@@ -84,7 +84,8 @@ int main(int argc, char** argv){
   cout << g << endl;
 
   // Verify if the graph is strongly connected
-  cout << "Graph strongly connected : " << g.isStronglyConnected() << endl;
+  auto isStronglyConnected = g.isStronglyConnected();
+  cout << "Graph strongly connected : " << isStronglyConnected << endl;
 
   input = "";
 
