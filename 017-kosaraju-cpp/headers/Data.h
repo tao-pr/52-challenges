@@ -123,6 +123,23 @@ struct Graph {
 
     return path;
   }
+
+  map<int, map<int, float>> reverseEdges(){
+    map<int, map<int, float>> rmap;
+
+    // TAOTODO
+    for (const auto &[v1, vnexts] : edges){
+      for (const auto &[v2, w] : vnexts){
+
+      }
+    }
+
+    return rmap;
+  }
+
+  void findStronglyConnected(){
+
+  }
 };
 
 ostream &operator<<(ostream &os, Graph const &g){

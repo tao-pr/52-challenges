@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf bin/d*
+rm -rf bin/*
 
 cd bin
 
