@@ -139,11 +139,12 @@ struct Graph {
     // DFS traversal and mark the visited nodes
 
     // Stop as all nodes are visited
-    if (visited.size() == nodes.size())
+    if (visited.size() == nodes.size() || visited.find(v) != visited.end())
       return;
 
     // Mark self as visited
     visited.insert(v);
+    cout << "... node " << v << " visited" << endl;
 
     if (edges.find(v) != edges.end())
       for (const auto& [next, w] : edges[v]){
@@ -159,6 +160,7 @@ struct Graph {
     set<int> visited;
 
     // DFS and mark visited nodes
+    cout << "... DFS, begins from " << *nodes.begin() << endl; 
     dfs(*nodes.begin(), visited);
 
     // If all nodes are visited, proceed
@@ -166,11 +168,13 @@ struct Graph {
       return false;
 
     // Reverse the edges and try again
+    cout << "... Reversing graph" << endl;
     Graph gr = reverse();
 
     // DFS and mark visited nodes
     visited.clear();
-    dfs(*gr.nodes.begin(), visited);
+    cout << "... DFS on reversed graph, begins from " << *nodes.begin() << endl;
+    gr.dfs(*gr.nodes.begin(), visited);
 
     if (visited.size() < nodes.size())
       return false;
