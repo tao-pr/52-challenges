@@ -32,7 +32,7 @@ List of challenges are collected below.
 | 014 | Graph in Spark                           | Scala Spark Graph| 8 hrs      | Learn GraphX from scratch |
 | 015 | Lens in Haskell                          | Haskell Lens     | 5 hrs      | Learn Lens + Prisms |
 | 016 | Dijkstra in C++17                        | C++17            | 6 hrs      | Recall Dijkstra + Try C++17 features |
-| 017 | Korasaju in C++17                        | C++17            | --         | -- |
+| 017 | Korasaju in C++17                        | C++17            | 3 hrs      | Learn Korasaju |
 
 ## Licence
 
