@@ -20,7 +20,7 @@ int main(int argc, char** argv){
   // Inputs
   auto g = Graph();
   string input = "";
-  if (args[0] == "PREDEF"){
+  if (args.size()>0 && args[0] == "PREDEF"){
     g.add(0,1,1);
     g.add(0,2,2);
     g.add(1,3,5);
