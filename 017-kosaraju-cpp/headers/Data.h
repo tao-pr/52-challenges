@@ -124,20 +124,18 @@ struct Graph {
     return path;
   }
 
-  map<int, map<int, float>> reverseEdges(){
-    map<int, map<int, float>> rmap;
-
-    // TAOTODO
+  Graph reverse(){
+    Graph gr;
     for (const auto &[v1, vnexts] : edges){
       for (const auto &[v2, w] : vnexts){
-
+        gr.add(v2, v1, w);
       }
     }
 
-    return rmap;
+    return gr;
   }
 
-  void findStronglyConnected(){
+  bool isStronglyConnected(){
 
   }
 };
