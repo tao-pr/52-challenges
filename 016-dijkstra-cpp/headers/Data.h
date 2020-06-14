@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <vector>
+#include <stack>
 #include <map>
 #include <set>
 #include <queue>
@@ -47,15 +48,17 @@ struct Graph {
   float findConnection(int v1, int v2){
     if (v1==v2)
       return 0;
-    else if (edges.find(v1)==edges.end())
+    else if (edges.find(v1)==edges.end()){
       return numeric_limits<float>::max();
-    else if (edges[v1].find(v2)==edges[v1].end())
+    }
+    else if (edges[v1].find(v2)==edges[v1].end()){
       return numeric_limits<float>::max();
+    }
     else
       return edges[v1][v2];
   }
 
-  Path& findShortest(int v1, int v2){
+  Path findShortest(int v1, int v2){
     auto comp = [](NODE n1, NODE n2){ return get<1>(n1) > get<1>(n2); };
     priority_queue<NODE, vector<NODE>, decltype(comp)> q(comp);
 
@@ -63,6 +66,7 @@ struct Graph {
     map<int, float> distances;
     for (const auto &v : nodes){
       auto d = findConnection(v1,v);
+      cout << "from " << v1 << "->" << v << " = " << d << endl; // TAODEBUG
       q.push(make_pair(v, d));
       distances[v] = d;
     }
@@ -76,10 +80,13 @@ struct Graph {
       int v = get<0>(tu);
       float d = get<1>(tu);
       
+      cout << "... Q size : " << q.size() << ", computing " << v << endl; 
 
       // Skip if the distance is not up-to-date
-      if (d != distances[v])
+      if (d != distances[v]){
+        cout << "...... skip " << v << ", d=" << d << " but distance registry = " << distances[v] << endl;
         continue;
+      }
 
       // Evaluate neighbours of v
       if (edges.find(v) != edges.end()){
@@ -87,6 +94,7 @@ struct Graph {
           auto next = get<0>(nextVW);
           float w = findConnection(v, next) + d;
           if (distances.find(next)==distances.end() || w<distances[next]){
+            cout << "...... Updating distance " << v << "->" << next << " => " << w << endl; 
             distances[next] = w;
             prev[next] = v;
             q.push(make_pair(next, w));
@@ -95,18 +103,24 @@ struct Graph {
       }
     }
 
+    cout << "... All nodes evaluated " << endl;
+
     // Reconstruct the path
     Path path;
-    auto v = v2;
-    while (v != v1){
-      path.steps.push_back(v);
-      if (prev.find(v) != prev.end()){
-        auto v0 = prev[v];
-        path.sumDistance += findConnection(v0,v);
-        v = v0;
-      }
-      else break;
+    stack<int> reversePath;
+    reversePath.push(v2);
+    while (reversePath.top() != v1){
+      auto vCurr = reversePath.top();
+      auto vPrev = prev[vCurr];
+      reversePath.push(vPrev);
+      path.sumDistance += findConnection(vPrev, vCurr);
     }
+
+    while (!reversePath.empty()){
+      path.steps.push_back(reversePath.top());
+      reversePath.pop();
+    }
+
     return path;
   }
 };
@@ -133,7 +147,7 @@ ostream &operator<<(ostream &os, Graph const &g){
 
 ostream &operator<<(ostream &os, Path const &p){
   string s = fmt::format("{:2f} : ", p.sumDistance);
-  for (auto &c : p.steps){
+  for (const auto &c : p.steps){
     s += fmt::format("{} -> ", c);
   }
   return os << s << endl;
