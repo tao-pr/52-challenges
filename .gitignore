@@ -43,3 +43,6 @@
 014-spark-graph/graph/target/
 014-spark-graph/project/
 014-spark-graph/target/
+015-haskell-lens/hlens/.stack-work/
+016-dijkstra-cpp/bin/
+017-kosaraju-cpp/bin/
