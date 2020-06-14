@@ -135,8 +135,47 @@ struct Graph {
     return gr;
   }
 
-  bool isStronglyConnected(){
+  void dfs(int v, set<int>& visited){
+    // DFS traversal and mark the visited nodes
 
+    // Stop as all nodes are visited
+    if (visited.size() == nodes.size())
+      return;
+
+    // Mark self as visited
+    visited.insert(v);
+
+    if (edges.find(v) != edges.end())
+      for (const auto& [next, w] : edges[v]){
+        dfs(next, visited);
+        if (visited.size() == nodes.size())
+          return;
+      }
+    else
+      return;
+  }
+
+  bool isStronglyConnected(){
+    set<int> visited;
+
+    // DFS and mark visited nodes
+    dfs(*nodes.begin(), visited);
+
+    // If all nodes are visited, proceed
+    if (visited.size() < nodes.size())
+      return false;
+
+    // Reverse the edges and try again
+    Graph gr = reverse();
+
+    // DFS and mark visited nodes
+    visited.clear();
+    dfs(*gr.nodes.begin(), visited);
+
+    if (visited.size() < nodes.size())
+      return false;
+    else
+      return true;
   }
 };
 
