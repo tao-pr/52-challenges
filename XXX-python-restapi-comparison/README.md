@@ -18,7 +18,8 @@ Python 3.8 or newer is recommended
 Run FastAPI service
 
 ```bash
-python3 -m rest.fastapi.service
+cd rest/fastapi
+uvicorn service:app
 ```
 
 ## Feature Breakdown
