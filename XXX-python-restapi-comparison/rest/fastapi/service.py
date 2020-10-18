@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 
-from rest.flask.model.data import *
+from rest.fastapi.model.data import *
 
 app = FastAPI()
 
