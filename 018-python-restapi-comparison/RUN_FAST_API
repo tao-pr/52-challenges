@@ -1,0 +1,3 @@
+#!/bin/bash
+cd rest/fastapi
+uvicorn service:app
