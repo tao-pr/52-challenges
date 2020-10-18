@@ -7,13 +7,25 @@ Try 3 Python API for serving the same use cases
 Python 3.8 or newer is recommended
 
 
-## Run
+## Setup
 
 - Create and activate your virtual environment
 - Install from requirements file
 - Install package locally `pip3 install -e .`
-- `python3 -m rest run`
 
 ## Usage
 
-TBD
+Run FastAPI service
+
+```bash
+python3 -m rest.fastapi.service
+```
+
+## Feature Breakdown
+
+- GET / POST / PUT / DELETE
+- Upload file
+- Async
+- Load testing
+- Memory footprint
+- CPU usage
