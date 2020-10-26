@@ -13,16 +13,18 @@ using namespace std;
 struct Node {
   string value;
   double cost;
-  map<string, Edge> edges;
-};
-
-struct Edge {
-  double cost;
-  shared_ptr<Node> from;
-  shared_ptr<Node> to;
+  map<string, double> edges;
 };
 
 class Graph {
   protected:
-    map<string, shared_ptr<Node>> nodes;
+    map<string, Node> nodes;
+
+  public:
+    Graph();
+    ~Graph();
+
+    bool addNode(string value, double cost);
+    bool delNode(string value);
+    bool addEdge(string from, string to, double cost);
 };
