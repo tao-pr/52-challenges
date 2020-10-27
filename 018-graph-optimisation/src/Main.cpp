@@ -28,9 +28,23 @@ inline void segFaultHandler(int sig) {
   exit(1);
 }
 
+void runTest(){
+  Graph g;
+  g.addNode("start", 0);
+  g.addNode("end", 1);
+  g.addNode("stop-1", 3);
+  g.addNode("stop-2", 5);
+  g.addEdge("start","stop-1", 1);
+  g.addEdge("start","stop-2", 2);
+  g.addEdge("stop-1","end", 10);
+  g.addEdge("stop-2","end", 5);
+}
+
 int main(int argc, char** argv){
 
   signal(SIGSEGV, segFaultHandler);
+
+  runTest();
 
   // TAOTODO
 }
