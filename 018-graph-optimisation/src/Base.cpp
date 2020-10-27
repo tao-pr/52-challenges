@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Base.hpp"
 
 Graph::Graph(){
@@ -41,7 +39,7 @@ bool Graph::addEdge(string from, string to, double cost){
     return false;
   }
   else {
-    (*itFrom).edges.insert_or_assign(to, cost);
+    (*itFrom).second.edges.insert_or_assign(to, cost);
     return true;
   }
 }
