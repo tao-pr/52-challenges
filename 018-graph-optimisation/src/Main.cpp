@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 #include "Base.hpp"
+#include "Test.hpp"
 
 using namespace std;
 
