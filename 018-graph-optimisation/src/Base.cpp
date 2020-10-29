@@ -52,9 +52,6 @@ int Graph::numEdges() const{
   int num = 0;
   for (auto& n : this->nodes){
     for (auto& e : n.second.edges){
-      // TAOTODO: need to modify iter
-
-
       // Only count valid edges
       auto to = e.first;
       if (this->nodes.find(to) != this->nodes.end()){
