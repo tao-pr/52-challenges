@@ -24,7 +24,14 @@ class Graph {
     Graph();
     ~Graph();
 
+    // Modifiers
     bool addNode(string value, double cost);
     bool delNode(string value);
     bool addEdge(string from, string to, double cost);
+
+    // Getters
+    int numNodes() const;
+    int numEdges() const;
+    vector<string> getNodes() const;
+    map<string, double> getEdges(string from) const;
 };
