@@ -43,3 +43,47 @@ bool Graph::addEdge(string from, string to, double cost){
     return true;
   }
 }
+
+int Graph::numNodes() const{
+  return this->nodes.size();
+}
+
+int Graph::numEdges() const{
+  int num = 0;
+  for (auto& n : this->nodes){
+    for (auto& e : n.second.edges){
+      // TAOTODO: need to modify iter
+
+
+      // Only count valid edges
+      auto to = e.first;
+      if (this->nodes.find(to) != this->nodes.end()){
+        num++;
+      }
+    }
+  }
+  return num;
+}
+
+vector<string> Graph::getNodes() const{
+  vector<string> v;
+  for (auto& n : this->nodes){
+    v.push_back(n.first);
+  }
+  return v;
+}
+
+map<string, double> Graph::getEdges(string from) const {
+  map<string, double> edges;
+  auto node = this->nodes.find(from);
+  if (node != this->nodes.end()){
+    for (auto& e : node->second.edges){
+      // Only take valid edges
+      auto to = e.first;
+      if (this->nodes.find(to) != this->nodes.end()){
+        edges.insert_or_assign(to, e.second);
+      }
+    }
+  }
+  return edges;
+}
