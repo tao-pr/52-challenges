@@ -28,6 +28,7 @@ inline void segFaultHandler(int sig) {
 }
 
 void runTest(){
+  cout << "Running test" << endl;
   Graph g;
   g.addNode("start", 0);
   g.addNode("end", 1);
@@ -37,6 +38,11 @@ void runTest(){
   g.addEdge("start","stop-2", 2);
   g.addEdge("stop-1","end", 10);
   g.addEdge("stop-2","end", 5);
+
+  assert(g.numNodes() == 4);
+  assert(g.numEdges() == 4);
+  assert(g.getEdges("stop-1").size() == 1);
+  cout << "All tests DONE" << endl;
 }
 
 int main(int argc, char** argv){
