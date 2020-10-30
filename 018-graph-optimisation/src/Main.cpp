@@ -49,6 +49,11 @@ void runTest(){
   assert(g.numEdges() == 5);
   assert(g.getEdges("stop-1").size() == 2);
 
+  g.delNode("stop-2");
+
+  assert(g.numNodes() == 3);
+  assert(g.numEdges() == 2);
+
   cout << "All tests DONE" << endl;
 }
 
