@@ -92,3 +92,19 @@ map<string, double> Graph::getEdges(string from) const {
   }
   return edges;
 }
+
+priority_queue<
+  NodeInt,
+  vector<NodeInt>, 
+  NodeIntDesc> 
+Graph::mostOutflows() const {
+  priority_queue<
+    NodeInt,
+    vector<NodeInt>,
+    NodeIntDesc> q;
+  for (auto& n : this->nodes){
+    int numOutflow = this->getEdges(n.first).size();
+    q.push(make_tuple(n.first, numOutflow));
+  }
+  return q;
+}

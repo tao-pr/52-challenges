@@ -4,6 +4,7 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <queue>
 #include <string>
 #include <iostream>
 #include <fmt/format.h>
@@ -14,6 +15,14 @@ struct Node {
   string value;
   double cost;
   map<string, double> edges;
+};
+
+#define NodeInt tuple<string, int>
+
+struct NodeIntDesc {
+  inline bool operator()(NodeInt &a, NodeInt &b){
+    return get<1>(a) < get<1>(b);
+  }
 };
 
 class Graph {
@@ -36,4 +45,10 @@ class Graph {
     vector<string> getNodes() const;
     map<string, double> getEdges(string from) const;
     Node& getNode(string node) const;
+
+    // Getters (adv)
+    priority_queue<
+      NodeInt,
+      vector<NodeInt>, 
+      NodeIntDesc> mostOutflows() const;
 };

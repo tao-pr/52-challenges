@@ -12,6 +12,7 @@
 namespace fs = std::filesystem;
 
 #include "Base.hpp"
+#include "Analyse.hpp"
 #include "parser.hpp"
 
 using namespace std;
@@ -117,9 +118,11 @@ Graph readRoutesFromFile(string filename){
       fieldId ++;
     }
   }
+  cout << "----------------------------" << endl;
   cout << "Finalising graph" << endl;
   cout << "Num nodes = " << g.numNodes() << endl;
   cout << "Num edges = " << g.numEdges() << endl;
+  cout << "----------------------------" << endl;
   return g;
 }
 
@@ -131,5 +134,5 @@ int main(int argc, char** argv){
 
   auto g = readRoutesFromFile("routes.csv");
 
-  // TAOTODO
+  analyse(g);
 }
