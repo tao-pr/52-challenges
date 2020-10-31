@@ -72,6 +72,8 @@ Graph readRoutesFromFile(string filename){
 
   cout << "Reading source file : " << pathFile << endl;
 
+  Graph g;
+
   ifstream f(pathFile);
   aria::csv::CsvParser csvParser(f);
 
@@ -108,12 +110,16 @@ Graph readRoutesFromFile(string filename){
         << "code = " << codeshare << ", "
         << "stops = " << numStops << endl;
 
+      g.addNode(src, 0);
+      g.addNode(dest, 0);
+      g.addEdge(src, dest, numStops+1);
+
       fieldId ++;
     }
   }
   cout << "Finalising graph" << endl;
-
-  Graph g;
+  cout << "Num nodes = " << g.numNodes() << endl;
+  cout << "Num edges = " << g.numEdges() << endl;
   return g;
 }
 
@@ -123,7 +129,6 @@ int main(int argc, char** argv){
 
   runTest();
 
-  // TAOTODO Read route files(s)
   auto g = readRoutesFromFile("routes.csv");
 
   // TAOTODO
