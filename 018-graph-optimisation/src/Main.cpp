@@ -8,6 +8,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <filesystem>
+namespace fs = std::filesystem;
 
 #include "Base.hpp"
 
@@ -28,6 +30,7 @@ inline void segFaultHandler(int sig) {
 }
 
 void runTest(){
+  cout << "----------------------" << endl;
   cout << "Running test" << endl;
   Graph g;
   g.addNode("start", 0);
@@ -55,6 +58,21 @@ void runTest(){
   assert(g.numEdges() == 2);
 
   cout << "All tests DONE" << endl;
+  cout << "----------------------" << endl;
+}
+
+Graph readRoutesFromFile(string filename){
+  const char* lpstrHome = getenv("HOME");
+  fs::path pathHome(lpstrHome);
+  fs::path pathData("data");
+  fs::path pathFileName(filename);
+  fs::path pathFile = pathHome / pathData / pathFileName;
+
+  cout << "Reading source file : " << pathFile << endl;
+  // TAOTODO
+
+  Graph g;
+  return g;
 }
 
 int main(int argc, char** argv){
@@ -62,6 +80,9 @@ int main(int argc, char** argv){
   signal(SIGSEGV, segFaultHandler);
 
   runTest();
+
+  // TAOTODO Read route files(s)
+  auto g = readRoutesFromFile("routes.csv");
 
   // TAOTODO
 }
