@@ -12,6 +12,7 @@
 namespace fs = std::filesystem;
 
 #include "Base.hpp"
+#include "parser.hpp"
 
 using namespace std;
 
@@ -65,11 +66,52 @@ Graph readRoutesFromFile(string filename){
   const char* lpstrHome = getenv("HOME");
   fs::path pathHome(lpstrHome);
   fs::path pathData("data");
+  fs::path pathFlightRoutes("flight-routes");
   fs::path pathFileName(filename);
-  fs::path pathFile = pathHome / pathData / pathFileName;
+  fs::path pathFile = pathHome / pathData / pathFlightRoutes / pathFileName;
 
   cout << "Reading source file : " << pathFile << endl;
-  // TAOTODO
+
+  ifstream f(pathFile);
+  aria::csv::CsvParser csvParser(f);
+
+  bool isHeader = true;
+  cout << "Parsing each line" << endl;
+  for (auto& row : csvParser){
+    if (isHeader){
+      // Skip header row
+      isHeader = false;
+      continue;
+    }
+    // Fields: airline,airline ID, source airport, source airport id, 
+    //         destination apirport, destination airport id, codeshare, 
+    //         stops, equipment
+    int fieldId = 0;
+    string airline, src, dest, codeshare;
+    int numStops;
+    for (auto& field : row){
+
+      if (fieldId==0)
+        airline = field;
+      else if (fieldId==2)
+        src = field;
+      else if (fieldId==4)
+        dest = field;
+      else if (fieldId==6)
+        codeshare = field;
+      else if (fieldId==7)
+        numStops = stoi(field);
+
+      cout << "airline = " << airline << ", "
+        << "from = " << src << ", "
+        << "to = " << dest << ", "
+        << "code = " << codeshare << ", "
+        << "stops = " << numStops << endl;
+
+      fieldId ++;
+    }
+  }
+  cout << "Finalising graph" << endl;
 
   Graph g;
   return g;
