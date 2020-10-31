@@ -44,6 +44,14 @@ bool Graph::addEdge(string from, string to, double cost){
   }
 }
 
+bool Graph::setNodeCost(string node, double cost){
+  auto n = this->nodes.find(node);
+  if (n != this->nodes.end()){
+    n->second.cost = cost;
+  }
+  else return false;
+}
+
 int Graph::numNodes() const{
   return this->nodes.size();
 }
