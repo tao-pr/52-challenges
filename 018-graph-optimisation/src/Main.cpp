@@ -54,6 +54,10 @@ void runTest(){
   assert(g.numEdges() == 5);
   assert(g.getEdges("stop-1").size() == 2);
 
+  g.setNodeCost("stop-2", 15);
+
+  assert(g.getNode("stop-2").value().cost == 15);
+
   g.delNode("stop-2");
 
   assert(g.numNodes() == 3);
