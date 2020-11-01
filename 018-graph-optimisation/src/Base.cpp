@@ -93,6 +93,14 @@ map<string, double> Graph::getEdges(string from) const {
   return edges;
 }
 
+optional<Node> Graph::getNode(string node) const {
+  auto n = this->nodes.find(node);
+  if (n != this->nodes.end()){
+    return { n->second };
+  }
+  else return nullopt;
+}
+
 priority_queue<
   NodeInt,
   vector<NodeInt>, 
@@ -137,4 +145,9 @@ Graph::mostInbounds() const {
   }
 
   return q;
+}
+
+bool Graph::hasCycle(vector<string> nodes) const {
+  // Detect if the selected nodes conform a cycle
+
 }
