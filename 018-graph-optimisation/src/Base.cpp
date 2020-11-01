@@ -147,7 +147,3 @@ Graph::mostInbounds() const {
   return q;
 }
 
-bool Graph::hasCycle(vector<string> nodes) const {
-  // Detect if the selected nodes conform a cycle
-
-}
