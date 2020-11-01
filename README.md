@@ -33,7 +33,7 @@ List of challenges are collected below.
 | 015 | Lens in Haskell                          | Haskell Lens     | 5 hrs      | Learn Lens + Prisms |
 | 016 | Dijkstra in C++17                        | C++17            | 6 hrs      | Recall Dijkstra + Try C++17 features |
 | 017 | Korasaju in C++17                        | C++17            | 3 hrs      | Learn Korasaju |
-| 018 | Graph optimisation practice              | C++17 Graph Algo | 1 hrs | --- |
+| 018 | Graph optimisation practice              | C++17 Graph Algo | 3 hrs | --- |
 
 ## Licence
 
