@@ -9,24 +9,36 @@ void topOutbounds(Graph& g, int num){
   cout << "----------------------" << endl;
   cout << "Top " << num << " Outbound routes" << endl;
   int i=0;
-  auto Outbounds = g.mostOutbounds();
+  auto outbounds = g.mostOutbounds();
   while (i < num){
     ++i;
-    auto el = Outbounds.top();
-    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " Outbounds" << endl;
-    Outbounds.pop();
+    auto el = outbounds.top();
+    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " outbounds" << endl;
+    outbounds.pop();
   }
+
+  while (outbounds.size() > 1)
+    outbounds.pop();
+
+  auto least = outbounds.top();
+  cout << "Least outbound = " << get<0>(least) << " : only " << get<1>(least) << " outbounds" << endl;
 }
 
 void topInbounds(Graph& g, int num){
   cout << "----------------------" << endl;
   cout << "Top " << num << " Inbound routes" << endl;
   int i=0;
-  auto Inbounds = g.mostInbounds();
+  auto inbounds = g.mostInbounds();
   while (i < num){
     ++i;
-    auto el = Inbounds.top();
-    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " Inbounds" << endl;
-    Inbounds.pop();
+    auto el = inbounds.top();
+    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " inbounds" << endl;
+    inbounds.pop();
   }
+
+  while (inbounds.size() > 1)
+    inbounds.pop();
+
+  auto least = inbounds.top();
+  cout << "Least inbound = " << get<0>(least) << " : only " << get<1>(least) << " inbounds" << endl;
 }
