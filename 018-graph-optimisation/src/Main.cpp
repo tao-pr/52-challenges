@@ -130,6 +130,36 @@ Graph readRoutesFromFile(string filename){
   return g;
 }
 
+Graph readAirportsFromFile(string filename, Graph &g){
+  fs::path pathHome(lpstrHome);
+  fs::path pathData("data");
+  fs::path pathFlightRoutes("flight-routes");
+  fs::path pathFileName(filename);
+  fs::path pathFile = pathHome / pathData / pathFlightRoutes / pathFileName;
+
+  cout << "Reading source file : " << pathFile << endl;
+
+  bool isHeader = true;
+  cout << "Parsing each line" << endl;
+  for (auto& row : csvParser){
+    if (isHeader){
+      // Skip header row
+      isHeader = false;
+      continue;
+    }
+    // Fields: id, fullname, city, country, code, code2, lat, lng, ...
+    int fieldId = 0;
+    for (auto& field : row){
+
+      // TAOTODO
+
+      fieldId++;
+    }
+  }
+
+  return g;
+}
+
 int main(int argc, char** argv){
 
   signal(SIGSEGV, segFaultHandler);
@@ -137,6 +167,7 @@ int main(int argc, char** argv){
   runTest();
 
   auto g = readRoutesFromFile("routes.csv");
+  g = readAirportsFromFile("airports-extended.csv", g);
 
   analyse(g);
 }

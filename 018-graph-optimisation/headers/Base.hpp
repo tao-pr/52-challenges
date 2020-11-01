@@ -56,5 +56,4 @@ class Graph {
       NodeInt,
       vector<NodeInt>, 
       NodeIntDesc> mostInbounds() const;
-    bool hasCycle(vector<string> nodes) const;
 };
