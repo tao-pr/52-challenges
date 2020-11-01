@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <memory>
 #include <vector>
 #include <stack>
@@ -44,9 +45,9 @@ class Graph {
     int numEdges() const;
     vector<string> getNodes() const;
     map<string, double> getEdges(string from) const;
-    Node& getNode(string node) const;
+    optional<Node> getNode(string node) const;
 
-    // Getters (adv)
+    // Analysis
     priority_queue<
       NodeInt,
       vector<NodeInt>, 
@@ -55,4 +56,5 @@ class Graph {
       NodeInt,
       vector<NodeInt>, 
       NodeIntDesc> mostInbounds() const;
+    bool hasCycle(vector<string> nodes) const;
 };
