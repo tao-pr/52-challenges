@@ -97,7 +97,7 @@ priority_queue<
   NodeInt,
   vector<NodeInt>, 
   NodeIntDesc> 
-Graph::mostOutflows() const {
+Graph::mostOutbounds() const {
   priority_queue<
     NodeInt,
     vector<NodeInt>,
@@ -106,5 +106,35 @@ Graph::mostOutflows() const {
     int numOutflow = this->getEdges(n.first).size();
     q.push(make_tuple(n.first, numOutflow));
   }
+  return q;
+}
+
+priority_queue<
+  NodeInt,
+  vector<NodeInt>, 
+  NodeIntDesc> 
+Graph::mostInbounds() const {
+  priority_queue<
+    NodeInt,
+    vector<NodeInt>,
+    NodeIntDesc> q;
+
+  map<string, int> bounds;
+
+  for (auto& n : this->nodes){
+    for (auto& e : this->getEdges(n.first)){
+      auto dest = e.first;
+      auto b = bounds.find(dest);
+      if (b != bounds.end()){
+        bounds.insert_or_assign(dest, b->second+1);
+      }
+      else bounds.insert_or_assign(dest, 1);
+    }
+  }
+
+  for (auto& b : bounds){
+    q.push(make_tuple(b.first, b.second));
+  }
+
   return q;
 }
