@@ -50,5 +50,9 @@ class Graph {
     priority_queue<
       NodeInt,
       vector<NodeInt>, 
-      NodeIntDesc> mostOutflows() const;
+      NodeIntDesc> mostOutbounds() const;
+    priority_queue<
+      NodeInt,
+      vector<NodeInt>, 
+      NodeIntDesc> mostInbounds() const;
 };
