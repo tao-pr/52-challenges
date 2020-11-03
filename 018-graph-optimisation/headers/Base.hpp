@@ -15,6 +15,8 @@ using namespace std;
 struct Node {
   string value;
   double cost;
+  double lat;
+  double lng;
   map<string, double> edges;
 };
 
@@ -36,6 +38,7 @@ class Graph {
 
     // Modifiers
     bool addNode(string value, double cost);
+    void assignNode(string value, Node& n);
     bool delNode(string value);
     bool addEdge(string from, string to, double cost);
     bool setNodeCost(string node, double cost);
