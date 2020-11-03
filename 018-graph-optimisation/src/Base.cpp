@@ -17,6 +17,10 @@ bool Graph::addNode(string value, double cost){
   else return false;
 }
 
+void Graph::assignNode(string value, Node& n){
+  this->nodes.insert_or_assign(value, n);
+}
+
 bool Graph::delNode(string value){
   auto it = this->nodes.find(value);
   if (it == this->nodes.end()){
