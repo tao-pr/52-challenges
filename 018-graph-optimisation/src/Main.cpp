@@ -131,11 +131,16 @@ Graph readRoutesFromFile(string filename){
 }
 
 Graph readAirportsFromFile(string filename, Graph &g){
+
+  const char* lpstrHome = getenv("HOME");
   fs::path pathHome(lpstrHome);
   fs::path pathData("data");
   fs::path pathFlightRoutes("flight-routes");
   fs::path pathFileName(filename);
   fs::path pathFile = pathHome / pathData / pathFlightRoutes / pathFileName;
+
+  ifstream f(pathFile);
+  aria::csv::CsvParser csvParser(f);
 
   cout << "Reading source file : " << pathFile << endl;
 
@@ -149,11 +154,32 @@ Graph readAirportsFromFile(string filename, Graph &g){
     }
     // Fields: id, fullname, city, country, code, code2, lat, lng, ...
     int fieldId = 0;
+    string fullname, city, country, code;
+    double lat, lng;
     for (auto& field : row){
 
-      // TAOTODO
-
+      if (fieldId==1)
+        fullname = field;
+      else if (fieldId==2)
+        city = field;
+      else if (fieldId==3)
+        country = field;
+      else if (fieldId==4)
+        code = field;
+      else if (fieldId==6)
+        lat = stod(field);
+      else if (fieldId==7)
+        lng = stod(field);
       fieldId++;
+
+      // Find and update the node
+      auto node = g.getNode(code);
+      if (node != nullopt){
+        auto v = node.value();
+        v.lat = lat;
+        v.lng = lng;
+        g.assignNode(code, v);
+      }
     }
   }
 
