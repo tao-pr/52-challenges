@@ -14,6 +14,7 @@ using namespace std;
 
 struct Node {
   string value;
+  string note;
   double cost;
   double lat;
   double lng;

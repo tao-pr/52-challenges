@@ -13,7 +13,9 @@ void topOutbounds(Graph& g, int num){
   while (i < num){
     ++i;
     auto el = outbounds.top();
-    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " outbounds" << endl;
+    string cityCountry = g.getNode(get<0>(el)).value().note;
+    cout << "   [" << i << "] " << get<0>(el) << 
+      "(" << cityCountry << ") : " << get<1>(el) << " outbounds" << endl;
     outbounds.pop();
   }
 
@@ -32,7 +34,9 @@ void topInbounds(Graph& g, int num){
   while (i < num){
     ++i;
     auto el = inbounds.top();
-    cout << "   [" << i << "] " << get<0>(el) << " : " << get<1>(el) << " inbounds" << endl;
+    string cityCountry = g.getNode(get<0>(el)).value().note;
+    cout << "   [" << i << "] " << get<0>(el) <<
+      "(" << cityCountry << ") : " << get<1>(el) << " inbounds" << endl;
     inbounds.pop();
   }
 
