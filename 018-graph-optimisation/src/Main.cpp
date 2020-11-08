@@ -178,6 +178,7 @@ Graph readAirportsFromFile(string filename, Graph &g){
         auto v = node.value();
         v.lat = lat;
         v.lng = lng;
+        v.note = city + ", " + country;
         g.assignNode(code, v);
       }
     }
@@ -185,6 +186,14 @@ Graph readAirportsFromFile(string filename, Graph &g){
 
   return g;
 }
+
+Graph updateRouteDistances(Graph& g){
+  // Update route distances as edge cost
+  // TAOTODO
+
+  return g;
+}
+
 
 int main(int argc, char** argv){
 
@@ -194,6 +203,6 @@ int main(int argc, char** argv){
 
   auto g = readRoutesFromFile("routes.csv");
   g = readAirportsFromFile("airports-extended.csv", g);
-
+  g = updateRouteDistances(g);
   analyse(g);
 }
