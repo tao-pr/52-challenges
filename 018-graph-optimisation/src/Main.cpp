@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
+#include <math.h>
 
 // Following imports are for stacktracing
 #include <execinfo.h>
@@ -187,10 +188,39 @@ Graph readAirportsFromFile(string filename, Graph &g){
   return g;
 }
 
-Graph updateRouteDistances(Graph& g){
-  // Update route distances as edge cost
-  // TAOTODO
+double distance(tuple<double,double> p1, tuple<double,double> p2){
+  // Haversine
+  const double R = 6371e3;
+  double pp = M_PI / 180;
+  double phi1 = get<0>(p1) * pp;
+  double phi2 = get<0>(p2) * pp;
+  double deltaPhi = (get<0>(p2) - get<0>(p1)) * pp;
+  double deltaLambda = (get<1>(p2) - get<1>(p1)) * pp;
+  double a = sin(deltaPhi/2) * sin(deltaPhi/2) +
+    cos(phi1) * cos(phi2) *
+    sin(deltaLambda/2) * sin(deltaLambda/2);
+  double c = 2 * atan2(sqrt(a), sqrt(1-a));
+  return R * c * 0.001; // km
+}
 
+Graph updateRouteDistances(Graph& g){
+  cout << "Updating edge distances ... " << endl;
+  // Update route distances as edge cost
+  for (auto n : g.getNodes()){
+    auto from = g.getNode(n).value();
+    vector<tuple<string,double>> updateList;
+    for (auto e : from.edges){
+      auto to = g.getNode(e.first).value();
+      auto posFrom = make_tuple(from.lat, from.lng);
+      auto posTo = make_tuple(to.lat, to.lng);
+      auto dist = distance(posFrom, posTo);
+      updateList.push_back(make_tuple(e.first, dist));
+    }
+    for (auto e : updateList){
+      g.addEdge(from.value, get<0>(e), get<1>(e));
+    }
+  }
+  cout << "[DONE]" << endl;
   return g;
 }
 

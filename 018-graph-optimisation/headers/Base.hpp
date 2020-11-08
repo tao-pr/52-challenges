@@ -29,6 +29,18 @@ struct NodeIntDesc {
   }
 };
 
+struct Path {
+  vector<string> stops;
+  double sumDistance;
+
+  // Ascendingly
+  inline bool operator()(Path& a, Path& b){
+    return a.sumDistance > b.sumDistance;
+  }
+
+  friend ostream & operator << (ostream &out, const Path &p);
+};
+
 class Graph {
   protected:
     map<string, Node> nodes;
@@ -50,14 +62,10 @@ class Graph {
     vector<string> getNodes() const;
     map<string, double> getEdges(string from) const;
     optional<Node> getNode(string node) const;
+    double getDistance(string from, string to) const;
 
     // Analysis
-    priority_queue<
-      NodeInt,
-      vector<NodeInt>, 
-      NodeIntDesc> mostOutbounds() const;
-    priority_queue<
-      NodeInt,
-      vector<NodeInt>, 
-      NodeIntDesc> mostInbounds() const;
+    priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostOutbounds() const;
+    priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostInbounds() const;
+    vector<Path> expandReach(string to, int maxDegree, vector<Path> paths) const;
 };
