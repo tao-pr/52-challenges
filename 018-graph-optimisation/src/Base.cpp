@@ -1,5 +1,14 @@
 #include "Base.hpp"
 
+ostream & operator << (ostream &out, const Path &p){
+  string str;
+  for (auto s : p.stops){
+    if (str.size()>0) str += " -> ";
+    str += s;
+  }
+  out << "Path : " << str << " [sum distance] = " << p.sumDistance;
+};
+
 Graph::Graph(){
 
 }
@@ -151,3 +160,41 @@ Graph::mostInbounds() const {
   return q;
 }
 
+double Graph::getDistance(string from, string to) const {
+  // TAOTODO
+}
+
+vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) const {
+  // DFS
+  vector<Path> out;
+  for (auto& path : paths){
+    if (*path.stops.end()==to){
+      out.push_back(path);
+    }
+    else if (path.stops.size()<maxDegree) {
+      // TAOTODO: should prevent from backtracking 
+      // Expand
+      auto lastStop = *path.stops.end();
+      auto n = this->getNode(lastStop).value();
+      for (auto &e : n.edges){
+        auto next = e.second;
+        auto nextPath = Path{.stops = copy(path.stops), .sumDistance = path.sumDistance};
+        if (next==to){
+          // Found the end!
+          nextPath.stops.push_back(next);
+          nextPath.sumDistance += this->getDistance(lastStop, next);
+          out.push_back(nextPath);
+        }
+        else {
+          // Go deeper!
+          vector<Path> tPaths{ nextPath };
+          auto expandedPaths = this->expandReach(to, maxDegree, tPaths);
+          for (auto& p : expandedPaths){
+            out.push_back(p);
+          }
+        }
+      }
+    }
+  }
+  return out;
+}
