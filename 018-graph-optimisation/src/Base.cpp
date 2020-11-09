@@ -6,7 +6,7 @@ ostream & operator << (ostream &out, const Path &p){
     if (str.size()>0) str += " -> ";
     str += s;
   }
-  out << "Path : " << str << " [sum distance] = " << p.sumDistance;
+  return out << "Path : " << str << " [sum distance] = " << p.sumDistance;
 };
 
 Graph::Graph(){
@@ -152,16 +152,18 @@ Graph::mostInbounds() const {
       else bounds.insert_or_assign(dest, 1);
     }
   }
-
   for (auto& b : bounds){
     q.push(make_tuple(b.first, b.second));
   }
-
   return q;
 }
 
 double Graph::getDistance(string from, string to) const {
-  // TAOTODO
+  auto nodeFrom = this->getNode(from).value();
+  auto nodeTo = this->getNode(to).value();
+  return distance(
+    make_tuple(nodeFrom.lat, nodeFrom.lng),
+    make_tuple(nodeTo.lat, nodeTo.lng));
 }
 
 vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) const {
