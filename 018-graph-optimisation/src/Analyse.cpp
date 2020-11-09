@@ -3,6 +3,7 @@
 void analyse(Graph& g){
   topOutbounds(g, 10);
   topInbounds(g, 10);
+  findReachability(g, "FRA", "BKK", 3);
 }
 
 void topOutbounds(Graph& g, int num){
