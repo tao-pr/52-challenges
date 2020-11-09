@@ -177,8 +177,8 @@ vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) co
       auto lastStop = *path.stops.end();
       auto n = this->getNode(lastStop).value();
       for (auto &e : n.edges){
-        auto next = e.second;
-        auto nextPath = Path{.stops = copy(path.stops), .sumDistance = path.sumDistance};
+        auto next = e.first;
+        auto nextPath = path.clone();
         if (next==to){
           // Found the end!
           nextPath.stops.push_back(next);
