@@ -3,7 +3,8 @@
 void analyse(Graph& g){
   topOutbounds(g, 10);
   topInbounds(g, 10);
-  findReachability(g, "FRA", "BKK", 3);
+  findReachability(g, "FRA", "BKK", 3, numeric_limits<double>::infinity());
+  findReachability(g, "HKG", "KIX", 3, 4000);
 }
 
 void topOutbounds(Graph& g, int num){
@@ -48,18 +49,25 @@ void topInbounds(Graph& g, int num){
   cout << "Least inbound = " << get<0>(least) << " : only " << get<1>(least) << " inbounds" << endl;
 }
 
-void findReachability(Graph& g, string from, string to, int maxDegree){
+void findReachability(Graph& g, string from, string to, int maxDegree, double maxDistance){
   cout << "----------------------" << endl;
   cout << "Finding all reachabilities from : " <<
     from << " -> " << to << endl;
 
   vector<string> s {from};
-  Path p {.stops = s, .sumDistance = 0 };
+  Path p {.stops = s, .sumCost = 0 };
   vector<Path> paths {p};
-  paths = g.expandReach(to, maxDegree, paths);
+  paths = g.expandReach(to, maxDegree, maxDistance, paths);
 
-  for (auto& p : paths){
+  // Sort the path by distance
+  priority_queue<Path, vector<Path>, Path> q;
+  for (auto& p : paths)
+    q.push(p);
+
+  while (q.size()>0){
+    auto p = q.top();
     cout << p << endl;
+    q.pop();
   }
 }
 

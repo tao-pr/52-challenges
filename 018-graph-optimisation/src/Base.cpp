@@ -6,7 +6,7 @@ ostream & operator << (ostream &out, const Path &p){
     if (str.size()>0) str += " -> ";
     str += s;
   }
-  return out << "Path : " << str << " [sum distance] = " << p.sumDistance;
+  return out << "Path : " << str << " [sum distance = " << p.sumCost << " km]";
 };
 
 Graph::Graph(){
@@ -166,14 +166,14 @@ double Graph::getDistance(string from, string to) const {
     make_tuple(nodeTo.lat, nodeTo.lng));
 }
 
-vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) {
+vector<Path> Graph::expandReach(string to, int maxDegree, double maxCost, vector<Path> paths) {
   // DFS
   vector<Path> out;
   for (auto& path : paths){
     if (path.stops.back()==to){
       out.push_back(path);
     }
-    else if (path.stops.size()<maxDegree) {
+    else if (path.stops.size()<maxDegree && path.sumCost<maxCost) {
       // Expand
       auto stop = path.stops.back();
       auto prevStop = path.stops.size()>1 ? path.stops[path.stops.size()-2] : stop;
@@ -187,7 +187,11 @@ vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) {
 
         // Next step of the path
         nextPath.stops.push_back(next);
-        nextPath.sumDistance += this->getDistance(stop, next);
+        nextPath.sumCost += this->getDistance(stop, next);
+
+        // Do not go beyond max cost
+        if (nextPath.sumCost > maxCost)
+          continue;
 
         if (next==to){
           // Found the end!
@@ -196,7 +200,7 @@ vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) {
         else {
           // Go deeper!
           vector<Path> tPaths{ nextPath };
-          auto expandedPaths = this->expandReach(to, maxDegree, tPaths);
+          auto expandedPaths = this->expandReach(to, maxDegree, maxCost, tPaths);
           for (auto& p : expandedPaths){
             out.push_back(p);
           }
