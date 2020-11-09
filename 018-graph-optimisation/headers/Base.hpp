@@ -33,11 +33,11 @@ struct NodeIntDesc {
 
 struct Path {
   vector<string> stops;
-  double sumDistance;
+  double sumCost;
 
   // Ascendingly
   inline bool operator()(Path& a, Path& b){
-    return a.sumDistance > b.sumDistance;
+    return a.sumCost > b.sumCost;
   }
 
   friend ostream & operator << (ostream &out, const Path &p);
@@ -45,7 +45,7 @@ struct Path {
   inline Path clone() const {
     Path p;
     copy(stops.begin(), stops.end(), back_inserter(p.stops));
-    p.sumDistance = sumDistance;
+    p.sumCost = sumCost;
     return p;
   }
 };
@@ -76,5 +76,5 @@ class Graph {
     // Analysis
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostOutbounds() const;
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostInbounds() const;
-    vector<Path> expandReach(string to, int maxDegree, vector<Path> paths);
+    vector<Path> expandReach(string to, int maxDegree, double maxCost, vector<Path> paths);
 };
