@@ -12,6 +12,8 @@
 
 using namespace std;
 
+#include "Functions.hpp"
+
 struct Node {
   string value;
   string note;
