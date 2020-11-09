@@ -46,8 +46,4 @@
 015-haskell-lens/hlens/.stack-work/
 016-dijkstra-cpp/bin/
 017-kosaraju-cpp/bin/
-018-python-restapi-comparison/env/
-018-python-restapi-comparison/rest.egg-info/
-018-python-restapi-comparison/rest/__pycache__/
-018-python-restapi-comparison/rest/fastapi/__pycache__/
-018-python-restapi-comparison/rest/fastapi/model/__pycache__/
+018-graph-optimisation/bin/
