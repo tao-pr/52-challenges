@@ -166,25 +166,31 @@ double Graph::getDistance(string from, string to) const {
     make_tuple(nodeTo.lat, nodeTo.lng));
 }
 
-vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) const {
+vector<Path> Graph::expandReach(string to, int maxDegree, vector<Path> paths) {
   // DFS
   vector<Path> out;
   for (auto& path : paths){
-    if (*path.stops.end()==to){
+    if (path.stops.back()==to){
       out.push_back(path);
     }
     else if (path.stops.size()<maxDegree) {
-      // TAOTODO: should prevent from backtracking 
       // Expand
-      auto lastStop = *path.stops.end();
-      auto n = this->getNode(lastStop).value();
+      auto stop = path.stops.back();
+      auto prevStop = path.stops.size()>1 ? path.stops[path.stops.size()-2] : stop;
+      auto n = this->getNode(stop).value();
       for (auto &e : n.edges){
+        // Do not backtrack
+        if (e.first==prevStop)
+          continue;
         auto next = e.first;
         auto nextPath = path.clone();
+
+        // Next step of the path
+        nextPath.stops.push_back(next);
+        nextPath.sumDistance += this->getDistance(stop, next);
+
         if (next==to){
           // Found the end!
-          nextPath.stops.push_back(next);
-          nextPath.sumDistance += this->getDistance(lastStop, next);
           out.push_back(nextPath);
         }
         else {

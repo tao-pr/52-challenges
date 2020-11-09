@@ -110,11 +110,11 @@ Graph readRoutesFromFile(string filename){
       else if (fieldId==7)
         numStops = stoi(field);
 
-      cout << "airline = " << airline << ", "
-        << "from = " << src << ", "
-        << "to = " << dest << ", "
-        << "code = " << codeshare << ", "
-        << "stops = " << numStops << endl;
+      // cout << "airline = " << airline << ", "
+      //   << "from = " << src << ", "
+      //   << "to = " << dest << ", "
+      //   << "code = " << codeshare << ", "
+      //   << "stops = " << numStops << endl;
 
       g.addNode(src, 0);
       g.addNode(dest, 0);

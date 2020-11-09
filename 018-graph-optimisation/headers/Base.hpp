@@ -76,5 +76,5 @@ class Graph {
     // Analysis
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostOutbounds() const;
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostInbounds() const;
-    vector<Path> expandReach(string to, int maxDegree, vector<Path> paths) const;
+    vector<Path> expandReach(string to, int maxDegree, vector<Path> paths);
 };
