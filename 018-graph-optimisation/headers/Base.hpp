@@ -39,6 +39,13 @@ struct Path {
   }
 
   friend ostream & operator << (ostream &out, const Path &p);
+
+  inline Path clone() const {
+    Path p;
+    copy(stops.begin(), stops.end(), back_inserter(p.stops));
+    p.sumDistance = sumDistance;
+    return p;
+  }
 };
 
 class Graph {
