@@ -86,8 +86,11 @@ int Graph::numEdges() const{
 Graph Graph::subgraph(set<string> nodes) const {
   Graph subgr;
   for (auto n : nodes){
-    auto node = this->getNode(n).value();
-    subgr.addNode(node.value, node.cost);
+    auto node = this->getNode(n);
+    if (node != nullopt)
+      subgr.addNode(node.value().value, node.value().cost);
+    else 
+      cerr << "Node " << n << " not found in the graph" << endl;
   }
   // Only collect edges which link nodes in subgraph
   for (auto from : nodes){
