@@ -64,6 +64,19 @@ void runTest(){
   assert(g.numNodes() == 3);
   assert(g.numEdges() == 2);
 
+  set<string> nodes {"stop-1", "end"};
+  auto subg = g.subgraph(nodes);
+  assert(subg.numNodes() == 2);
+  auto _nodes = subg.getNodes();
+  assert(find(_nodes.begin(), _nodes.end(), "stop-1") != _nodes.end());
+  assert(find(_nodes.begin(), _nodes.end(), "end") != _nodes.end());
+  assert(find(_nodes.begin(), _nodes.end(), "start") == _nodes.end());
+  for (auto &n : _nodes){
+    for (auto &e : subg.getEdges(n)){
+      assert(find(nodes.begin(), nodes.end(), e.first) != nodes.end());
+    }
+  }
+
   cout << "All tests DONE" << endl;
   cout << "----------------------" << endl;
 }
