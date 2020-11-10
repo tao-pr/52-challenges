@@ -9,6 +9,7 @@
 #include <queue>
 #include <string>
 #include <iostream>
+#include <algorithm>
 #include <fmt/format.h>
 
 using namespace std;
