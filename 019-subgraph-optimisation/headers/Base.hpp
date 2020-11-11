@@ -66,6 +66,10 @@ class Graph {
   protected:
     map<string, Node> nodes;
 
+  private:
+    bool isAllNodesTravesableFrom(string from) const;
+    set<string> traverse(string from, const set<string>& skip) const;
+
   public:
     Graph();
     ~Graph();
