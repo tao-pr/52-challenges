@@ -248,10 +248,39 @@ Graph Graph::reversed() const {
   return g;
 }
 
+set<string> Graph::traverse(string from, const set<string> &skip) const {
+  set<string> visited;
+  for (const auto n : skip)
+    visited.insert(n);
+  const auto node = this->nodes.find(from);
+  if (node == this->nodes.end())
+    return visited;
+  for (const auto& e : node->second.edges){
+    if (skip.find(e.first) == skip.end()){
+      visited.insert(e.first);
+      // DFS into
+      visited = traverse(e.first, visited);
+    }
+  }
+  return visited;
+}
+
+bool Graph::isAllNodesTravesableFrom(string from) const {
+  auto visited = traverse(from, set<string>{from});
+
+  // Check if all nodes are visited
+
+  // TAOTODO;
+
+  return false;
+}
+
 bool Graph::isStronglyConnected() const {
   // Korasaju's algo
-
-
-  // TAOTODO
-
+  auto from = *this->nodes.cbegin();
+  if (!isAllNodesTravesableFrom(from.first))
+    return false;
+  if (!this->reversed().isAllNodesTravesableFrom(from.first))
+    return false;
+  return true;
 }
