@@ -5,6 +5,7 @@ void analyse(Graph& g){
   topInbounds(g, 10);
   findReachability(g, "FRA", "BKK", 3, numeric_limits<double>::infinity());
   findReachability(g, "HKG", "KIX", 3, 4000);
+  analyseSubgraph(g, set<string>{"FRA", "MUC", "LHR", "PMI"});
 }
 
 void topOutbounds(Graph& g, int num){
@@ -69,5 +70,19 @@ void findReachability(Graph& g, string from, string to, int maxDegree, double ma
     cout << p << endl;
     q.pop();
   }
+}
+
+void analyseSubgraph(Graph&g, set<string> airports){
+  cout << "----------------------" << endl;
+  cout << "Analysing subgraph : ";
+  for (auto a : airports)
+    cout << a << ", ";
+  cout << endl;
+
+  auto subgraph = g.subgraph(airports);
+
+
+  // TAOTODO;
+
 }
 

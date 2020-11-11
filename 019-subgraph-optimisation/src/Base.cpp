@@ -231,3 +231,27 @@ vector<Path> Graph::expandReach(string to, int maxDegree, double maxCost, vector
   }
   return out;
 }
+
+Graph Graph::reversed() const {
+  Graph g;
+  for (auto& n : this->nodes){
+    auto n_ = n.second.cloneWithoutEdges();
+    g.assignNode(n.first, n_);
+  }
+  // Add all edges in reverse
+  for (auto& source : this->nodes){
+    for (auto& e : source.second.edges){
+      auto target = e.first;
+      g.addEdge(target, source.first, e.second);
+    }
+  }
+  return g;
+}
+
+bool Graph::isStronglyConnected() const {
+  // Korasaju's algo
+
+
+  // TAOTODO
+
+}

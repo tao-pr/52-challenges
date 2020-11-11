@@ -23,6 +23,16 @@ struct Node {
   double lat;
   double lng;
   map<string, double> edges;
+
+  Node cloneWithoutEdges() const {
+    return Node {
+      .value = value,
+      .note = note,
+      .cost = cost,
+      .lat = lat,
+      .lng = lng
+    };
+  };
 };
 
 #define NodeInt tuple<string, int>
@@ -75,9 +85,11 @@ class Graph {
     optional<Node> getNode(string node) const;
     double getDistance(string from, string to) const;
     Graph subgraph(set<string> nodes) const;
+    Graph reversed() const;
 
     // Analysis
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostOutbounds() const;
     priority_queue<NodeInt, vector<NodeInt>, NodeIntDesc> mostInbounds() const;
     vector<Path> expandReach(string to, int maxDegree, double maxCost, vector<Path> paths);
+    bool isStronglyConnected() const;
 };
