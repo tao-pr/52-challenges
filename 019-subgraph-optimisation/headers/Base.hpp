@@ -80,6 +80,7 @@ class Graph {
     bool delNode(string value);
     bool addEdge(string from, string to, double cost);
     bool setNodeCost(string node, double cost);
+    bool deleteEdge(string from, string to);
 
     // Getters
     int numNodes() const;
@@ -87,6 +88,7 @@ class Graph {
     vector<string> getNodes() const;
     map<string, double> getEdges(string from) const;
     optional<Node> getNode(string node) const;
+    optional<double> getEdge(string from, string to) const;
     double getDistance(string from, string to) const;
     Graph subgraph(set<string> nodes) const;
     Graph reversed() const;
