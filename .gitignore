@@ -46,4 +46,5 @@
 015-haskell-lens/hlens/.stack-work/
 016-dijkstra-cpp/bin/
 017-kosaraju-cpp/bin/
-018-graph-optimisation/bin/
+018-graph-traversal/bin/
+019-subgraph-optimisation/bin/
