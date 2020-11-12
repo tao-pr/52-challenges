@@ -80,7 +80,7 @@ class Graph {
     bool delNode(string value);
     bool addEdge(string from, string to, double cost);
     bool setNodeCost(string node, double cost);
-    bool deleteEdge(string from, string to);
+    bool delEdge(string from, string to);
 
     // Getters
     int numNodes() const;

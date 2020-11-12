@@ -68,7 +68,7 @@ void runTest(){
   g.addEdge("start", "end", 5);
   assert(g.getEdge("start", "end").value() == 5);
   // remove the added temp edge
-  g.deleteEdge("start", "end");
+  g.delEdge("start", "end");
   assert(g.getEdge("start", "end") == nullopt);
 
 
