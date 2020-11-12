@@ -64,6 +64,14 @@ void runTest(){
   assert(g.numNodes() == 3);
   assert(g.numEdges() == 2);
 
+  // Just add a new temp edge for test
+  g.addEdge("start", "end", 5);
+  assert(g.getEdge("start", "end").value() == 5);
+  // remove the added temp edge
+  g.deleteEdge("start", "end");
+  assert(g.getEdge("start", "end") == nullopt);
+
+
   set<string> nodes {"stop-1", "end"};
   auto subg = g.subgraph(nodes);
   assert(subg.numNodes() == 2);
