@@ -75,14 +75,18 @@ void findReachability(Graph& g, string from, string to, int maxDegree, double ma
 void analyseSubgraph(Graph&g, set<string> airports){
   cout << "----------------------" << endl;
   cout << "Analysing subgraph : ";
+  string str = "";
   for (auto a : airports)
-    cout << a << ", ";
-  cout << endl;
+    if (str.size()>0)
+      str += ", " + a;
+    else 
+      str = a;
+  cout << str << endl;
 
   auto subgraph = g.subgraph(airports);
-
-
-  // TAOTODO;
-
+  if (subgraph.isStronglyConnected())
+    cout << "(Graph is strongly connected)" << endl;
+  else
+    cout << "(Graph is NOT strongly connected)" << endl;
 }
 
