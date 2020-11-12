@@ -6,7 +6,7 @@ void analyse(Graph& g){
   findReachability(g, "FRA", "BKK", 3, numeric_limits<double>::infinity());
   findReachability(g, "HKG", "KIX", 3, 4000);
   analyseSubgraph(g, set<string>{"FRA", "MUC", "LHR", "PMI"});
-  analyseSubgraph(g, set<string>{"MUC", "CNX", "BKK"});
+  analyseSubgraph(g, set<string>{"MUC", "CNX", "BKK", "USM"});
 }
 
 void topOutbounds(Graph& g, int num){
