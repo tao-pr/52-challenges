@@ -65,6 +65,19 @@ bool Graph::setNodeCost(string node, double cost){
   else return false;
 }
 
+bool Graph::deleteEdge(string from, string to){
+  auto n = this->nodes.find(from);
+  if (n != this->nodes.end()){
+    auto e = n->second.edges.find(to);
+    if (e != n->second.edges.end()){
+      n->second.edges.erase(e);
+      return true;
+    }
+    return false;
+  }
+  else return false;
+}
+
 int Graph::numNodes() const{
   return this->nodes.size();
 }
@@ -131,6 +144,18 @@ optional<Node> Graph::getNode(string node) const {
   auto n = this->nodes.find(node);
   if (n != this->nodes.end()){
     return { n->second };
+  }
+  else return nullopt;
+}
+
+optional<double> Graph::getEdge(string from, string to) const {
+  auto n = this->nodes.find(from);
+  if (n != this->nodes.end()){
+    auto e = n->second.edges.find(to);
+    if (e != n->second.edges.end())
+      return { e->second };
+    else 
+      return nullopt;
   }
   else return nullopt;
 }
