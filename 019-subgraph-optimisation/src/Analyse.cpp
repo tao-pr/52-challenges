@@ -6,6 +6,7 @@ void analyse(Graph& g){
   findReachability(g, "FRA", "BKK", 3, numeric_limits<double>::infinity());
   findReachability(g, "HKG", "KIX", 3, 4000);
   analyseSubgraph(g, set<string>{"FRA", "MUC", "LHR", "PMI"});
+  analyseSubgraph(g, set<string>{"MUC", "CNX", "BKK"});
 }
 
 void topOutbounds(Graph& g, int num){
@@ -84,8 +85,32 @@ void analyseSubgraph(Graph&g, set<string> airports){
   cout << str << endl;
 
   auto subgraph = g.subgraph(airports);
-  if (subgraph.isStronglyConnected())
+  if (subgraph.isStronglyConnected()){
     cout << "(Graph is strongly connected)" << endl;
+    // Examine which edge gets removed will make the subgraph 
+    // NOT strongly connected anymore
+    int numRemovable = 0;
+    for (auto from : subgraph.getNodes()){
+      const auto edges = subgraph.getEdges(from);
+      for (auto e : edges){
+        const auto w = e.second;
+        const auto to = e.first;
+        // Test removing this edge
+        subgraph.delEdge(from, to);
+        if (!subgraph.isStronglyConnected()){
+          numRemovable++;
+          cout << "... Route " << from << " -> " << to << " CANNOT be removed" << endl;
+        }
+        else {
+          cout << "... Route " << from << " -> " << to << " can be removed. Graph remains strongly connected." << endl;
+        }
+        // Add the edge back
+        subgraph.addEdge(from, to, w);
+      }
+    }
+    if (numRemovable==0)
+      cout << "... All routes are removeable individually. Graph will remain strongly connected." << endl;
+  }
   else
     cout << "(Graph is NOT strongly connected)" << endl;
 }

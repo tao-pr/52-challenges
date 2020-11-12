@@ -65,7 +65,7 @@ bool Graph::setNodeCost(string node, double cost){
   else return false;
 }
 
-bool Graph::deleteEdge(string from, string to){
+bool Graph::delEdge(string from, string to){
   auto n = this->nodes.find(from);
   if (n != this->nodes.end()){
     auto e = n->second.edges.find(to);
