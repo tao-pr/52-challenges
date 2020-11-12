@@ -249,9 +249,7 @@ Graph Graph::reversed() const {
 }
 
 set<string> Graph::traverse(string from, const set<string> &skip) const {
-  set<string> visited;
-  for (const auto n : skip)
-    visited.insert(n);
+  set<string> visited = skip;
   const auto node = this->nodes.find(from);
   if (node == this->nodes.end())
     return visited;
@@ -267,12 +265,8 @@ set<string> Graph::traverse(string from, const set<string> &skip) const {
 
 bool Graph::isAllNodesTravesableFrom(string from) const {
   auto visited = traverse(from, set<string>{from});
-
   // Check if all nodes are visited
-
-  // TAOTODO;
-
-  return false;
+  return (visited.size() >= this->nodes.size());
 }
 
 bool Graph::isStronglyConnected() const {
