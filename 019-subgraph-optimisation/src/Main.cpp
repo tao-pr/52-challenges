@@ -77,6 +77,12 @@ void runTest(){
     }
   }
 
+  // Original graph should not be strongly connected
+  assert(g.isStronglyConnected() == false);
+  // Add one more link from end -> start should make it
+  g.addEdge("end", "start", 1);
+  assert(g.isStronglyConnected() == true);
+
   cout << "All tests DONE" << endl;
   cout << "----------------------" << endl;
 }
