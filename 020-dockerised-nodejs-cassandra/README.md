@@ -18,6 +18,18 @@ TBD
 
 ## Run & Usage
 
+Once the setup step above has been completed, simply run a Cassandra instance by
+
+```bash
+./START-CASSANDRA.sh
+```
+
+HINT: Test if we can connect to Cassandra with `csql` by
+
+```bash
+docker run -it --network n1 --rm cassandra cqlsh c1
+```
+
 TBD
 
 ## Licence
