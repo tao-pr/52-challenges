@@ -4,9 +4,15 @@ Interfacing NodeJS with Cassadra and make them containers.
 
 ## Prerequisites
 
-TBD
+- Docker
 
 ## Setup
+
+Run a setup script to prepare docker network interface.
+
+```bash
+./SETUP.sh
+```
 
 TBD
 
