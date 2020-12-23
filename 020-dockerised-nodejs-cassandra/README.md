@@ -30,7 +30,19 @@ HINT: Test if we can connect to Cassandra with `csql` by
 docker run -it --network n1 --rm cassandra cqlsh c1
 ```
 
+## Terminating services
+
+After usage, stop the service by:
+
+```bash
 TBD
+```
+
+Stop Cassandra docker instance
+
+```bash
+./STOP-CASSANDRA.sh
+```
 
 ## Licence
 
