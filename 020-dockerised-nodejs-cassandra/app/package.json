@@ -1,0 +1,14 @@
+{
+  "name": "node-cassandra",
+  "version": "1.0.0",
+  "description": "Containerised NodeJS app with Cassandra interface",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tao PR",
+  "license": "ISC",
+  "dependencies": {
+    "cassandra-driver": "^4.6.1"
+  }
+}
