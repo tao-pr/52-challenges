@@ -1,3 +1,16 @@
+const yargs = require('yargs');
+
+// Argument parser
+const argv = yargs
+  .option('port', {
+    alias: 'p',
+    description: 'Port number to listen',
+    type: 'integer'
+  })
+  .help()
+  .alias('help', 'h')
+  .argv;
+
 const cassandra = require('cassandra-driver');
 const C = new cassandra.Client({
   contactPoints: ['0.0.0.0:9042'],
@@ -32,7 +45,11 @@ async function prep(){
 prep();
 
 // Start a simple REST server
-// TAOTODO
+const express = require("express");
+var app = express();
+app.listen(argv.port, () => {
+ console.log(`Server running on port ${argv.port}`);
+});
 
 
 
