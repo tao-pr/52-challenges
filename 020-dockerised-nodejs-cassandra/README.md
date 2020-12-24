@@ -30,6 +30,18 @@ HINT: Test if we can connect to Cassandra with `csql` by
 docker run -it --network n1 --rm cassandra cqlsh c1
 ```
 
+Start a server manually (e.g. on port 4444)
+
+```bash
+node app/main -p 4444
+```
+
+Query records (via curl) and prettify JSON output
+
+```bash
+curl 0.0.0.0:4444/ls/ > jq
+```
+
 ## Terminating services
 
 After usage, stop the service by:
