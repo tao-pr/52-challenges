@@ -56,6 +56,20 @@ app.get("/ls", (req, res, next) => {
     })
 });
 
+// add new record
+app.post("/add/:id", (req, res, next) => {
+  const query = 'INSERT INTO ks1.tb1 (id, ts, v) VALUES (%, toTimestamp(toDate(now())), "%")';
+  C.execute(query, [req.params.id, req.query.v])
+    .then((r) => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send({status: 'ok'});
+    })
+    .except((e) => {
+      res.status = 500;
+      res.send({status: 'error'});
+    })
+});
+
 // Handle shutdown event signal
 // REF: https://hackernoon.com/graceful-shutdown-in-nodejs-2f8f59d1c357
 process.on('SIGTERM', () => {
