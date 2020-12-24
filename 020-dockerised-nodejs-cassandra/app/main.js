@@ -52,21 +52,23 @@ app.get("/ls", (req, res, next) => {
   C.execute(query)
     .then((records) => {
       res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(records));
+      res.send(JSON.stringify(records.rows));
     })
 });
 
 // add new record
-app.post("/add/:id", (req, res, next) => {
-  const query = 'INSERT INTO ks1.tb1 (id, ts, v) VALUES (%, toTimestamp(toDate(now())), "%")';
-  C.execute(query, [req.params.id, req.query.v])
+app.post("/add/:id", async (req, res, next) => {
+  await C.connect();
+  const dt = 'toTimestamp(toDate(now()))';
+  C.execute(`INSERT INTO ks1.tb1 (id, ts, v) VALUES (${req.params.id}, ${dt}, '${req.query.v}')`)
     .then((r) => {
       res.setHeader('Content-Type', 'application/json');
       res.send({status: 'ok'});
     })
-    .except((e) => {
+    .catch((e) => {
       res.status = 500;
       res.send({status: 'error'});
+      console.error(e);
     })
 });
 

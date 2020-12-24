@@ -36,11 +36,21 @@ Start a server manually (e.g. on port 4444)
 node app/main -p 4444
 ```
 
+### Query REST API
+
 Query records (via curl) and prettify JSON output
 
 ```bash
 curl 0.0.0.0:4444/ls/ > jq
 ```
+
+Add a new record
+
+```bash
+curl -X POST "0.0.0.0:4444/add/{id}?v={}"
+```
+
+where, `id` represents an id of the new record you want to add. 
 
 ## Terminating services
 
