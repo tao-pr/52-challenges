@@ -13,7 +13,7 @@ const argv = yargs
 
 const cassandra = require('cassandra-driver');
 const C = new cassandra.Client({
-  contactPoints: ['0.0.0.0:9042'],
+  contactPoints: ['c1:9042'], // Use container name (c1) instead of 0.0.0.0
   localDataCenter: 'datacenter1'
 });
 

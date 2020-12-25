@@ -36,6 +36,26 @@ Start a server manually (e.g. on port 4444)
 node app/main -p 4444
 ```
 
+### Build & Run from Docker
+
+To build docker, execute
+
+```bash
+./BUILD-DOCKER.sh
+```
+
+Then run docker container. At this point, it requires Cassandra docker to already runs.
+
+```bash
+./RUN-DOCKER.sh
+```
+
+To stop after use, run the script:
+
+```bash
+./STOP-DOCKER.sh
+```
+
 ### Query REST API
 
 Query records (via curl) and prettify JSON output
