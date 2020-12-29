@@ -36,6 +36,7 @@ List of challenges are collected below.
 | 018 | Graph traversal, in/outdegree practice   | C++17 Graph Algo | 6 hrs      | -- |
 | 019 | Subgraph optimisation practice           | C++17 Graph Algo | 4 hrs      | -- |
 | 020 | Dockerised NodeJS + Cassandra            | Docker C* NodeJS | 4 hrs | Datastax Cassandra Driver |
+| 021 | Haskell Semigroup                        | Haskell          | -- | -- | 
 
 ## Licence
 
