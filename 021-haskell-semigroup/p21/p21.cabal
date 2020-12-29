@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a77c4ab996077edaf6057b8785d64e694c96defe63dfe14b3cc83d32980399bf
+-- hash: b2272d86627c74ea8e91378a319442c6d72ca3a888c4231c31e3433172ab3048
 
 name:           p21
 version:        0.1.0.0
@@ -53,11 +53,15 @@ test-suite p21-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      SemiGr.SemiGrSpec
       Paths_p21
   hs-source-dirs:
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      QuickCheck
+    , base >=4.7 && <5
+    , hspec
+    , hspec-discover
     , p21
   default-language: Haskell2010
