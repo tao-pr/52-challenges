@@ -1,4 +1,6 @@
-module SemiGr.Semi (LinkedList(..), fromList) where
+module SemiGr.Semi (
+  LinkedList(..), fromList, toList) 
+where
 
 data LinkedList a = Empt | LinkedList a (LinkedList a)
 
@@ -18,5 +20,14 @@ fromList :: [a] -> LinkedList a
 fromList [] = Empt
 fromList (n:ns) = LinkedList n (fromList ns)
 
--- instance Semigroup (LinkedList a) where
---   <> = 
+-- Create a list from LinkedList
+toList :: LinkedList a -> [a]
+toList Empt = []
+toList (LinkedList a as) = a : toList as
+
+instance Semigroup (LinkedList a) where
+  (<>) Empt Empt = Empt
+  (<>) t Empt = t
+  (<>) Empt t = t
+  (<>) (LinkedList a as) (LinkedList b bs) = 
+    LinkedList a (LinkedList b (as <> bs))
