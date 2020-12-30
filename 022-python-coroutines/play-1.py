@@ -19,3 +19,6 @@ w.send("a")
 w.send("b")
 w.send("c")
 w.send("stop")
+
+# Send again after breaking the loop
+w.send("another") # This wont be intercepted nor processed at all
