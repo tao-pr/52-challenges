@@ -2,23 +2,23 @@ import asyncio
 
 def worker():
   print('Reading ...')
-  while True:
-    v = (yield)
-    if v=='stop':
-      print('[BREAKING]')
-      break
-    else:
-      print(f'Receiving ... {v}')
+  try:
+    while True:
+      v = (yield)
+      if v=='stop':
+        print('[BREAKING]')
+        break
+      else:
+        print(f'Receiving ... {v}')
+  except GeneratorExit: # Termination signal
+    print('[Terminating coroutine]')
 
 # Start a coroutine
 w = worker()
 w.__next__()
 
-# Send value to (yield)
 w.send("a")
 w.send("b")
 w.send("c")
-w.send("stop")
-
-# Send again after breaking the loop
-w.send("another") # This wont be intercepted nor processed at all
+w.send("d")
+w.close()
