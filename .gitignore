@@ -50,3 +50,4 @@
 019-subgraph-optimisation/bin/
 020-dockerised-nodejs-cassandra/app/node_modules/
 020-dockerised-nodejs-cassandra/app/package-lock.json
+021-haskell-semigroup/p21/.stack-work/
