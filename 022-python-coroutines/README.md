@@ -14,3 +14,9 @@ Run the script
 python3 play-1.py
 ```
 
+Switch the playbook of your choice.
+
+## Licence 
+
+MIT
+
