@@ -1,4 +1,6 @@
-import asyncio
+"""
+Single coroutine
+"""
 
 def worker():
   print('Reading ...')
@@ -13,9 +15,10 @@ def worker():
   except GeneratorExit: # Termination signal
     print('[Terminating coroutine]')
 
+
 # Start a coroutine
 w = worker()
-w.__next__()
+next(w)
 
 w.send("a")
 w.send("b")
