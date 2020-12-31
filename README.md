@@ -37,7 +37,7 @@ List of challenges are collected below.
 | 019 | Subgraph optimisation practice           | C++17 Graph Algo | 4 hrs      | -- |
 | 020 | Dockerised NodeJS + Cassandra            | Docker C* NodeJS | 4 hrs      | Datastax Cassandra Driver |
 | 021 | Haskell Semigroup                        | Haskell          | 2 hrs      | Recall Typeclasses + Semigroup concept | 
-| 022 | Python 3.7 coroutines and async          | Python Coroutine | --         | -- |
+| 022 | Python 3.7 coroutines and async          | Python Coroutine | 4 hrs      | Python Coroutine |
 
 ## Licence
 
