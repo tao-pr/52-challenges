@@ -4,7 +4,11 @@ Playground of data dashboard
 
 ## Setup
 
-TBD
+Install requirements
+
+```bash
+pip3 install -r requirements.txt
+```
 
 ## Run
 
