@@ -1,12 +1,14 @@
 import dash
 import dash_html_components as html
 import dash_core_components as dcc
+from dash.dependencies import Input, Output
 
 app = dash.Dash(__name__, external_stylesheets=['assets/style.css'])
 
 app.layout = html.Div(
   children=[
     html.Div(
+      # left panel (option panel)
       className='col',
       style={'width': '100%', 'height': '100%'},
       children=[
@@ -17,37 +19,54 @@ app.layout = html.Div(
             html.P('As of Jan 2021'),
             html.Div([
               dcc.Dropdown(
+                id='mode',
                 options=[
-                  {'label': 'Cases over time', 'value': 'cot'},
-                  {'label': 'Tests over time', 'value': 'tot'}
+                  {'label': 'Case vs Recovery', 'value': 'cvr'},
+                  {'label': 'Test vs Case', 'value': 'tvc'}
                 ],
-                value='cot'
+                value='cvr'
               )
             ]),
-            html.Div([
-              dcc.Dropdown(
-                options=[
-                  {'label': 'Germany', 'value': 'de'},
-                  {'label': 'France', 'value': 'fr'},
-                  {'label': 'UK', 'value': 'uk'},
-                  {'label': 'USA', 'value': 'us'},
-                  {'label': 'China', 'value': 'cn'},
-                  {'label': 'Thailand', 'value': 'th'}
-                ],
-                value=['de'],
-                multi=True
-              )
+            html.Div(
+              style={'margin-top': '10px'},
+              children=[
+                dcc.Dropdown(
+                  id='country',
+                  options=[
+                    {'label': 'Germany', 'value': 'de'},
+                    {'label': 'France', 'value': 'fr'},
+                    {'label': 'UK', 'value': 'uk'},
+                    {'label': 'USA', 'value': 'us'},
+                    {'label': 'China', 'value': 'cn'},
+                    {'label': 'Thailand', 'value': 'th'}
+                  ],
+                  value=['de'],
+                  multi=True
+                )
             ])
           ]
         ), 
         html.Div(
-          className='two columns div-user-controls',
-          children=[
-            html.P('aaaa')
-          ]
-        ),          
+          # Right panel (graph display)
+          id='display',
+          className='two columns div-user-controls'
+        ),
       ])
   ])
+
+
+# Bind UI callbacks 
+@app.callback(
+  Output(component_id='display', component_property='children'),
+  Input(component_id='mode', component_property='value'),
+  Input(component_id='country', component_property='value'))
+def refresh_display(mode, country):
+  print('-------------------------------')
+  print(f'Selected mode    : {mode}')
+  print(f'Selected country : {country}')
+  pass
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
