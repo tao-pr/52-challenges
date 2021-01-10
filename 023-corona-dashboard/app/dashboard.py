@@ -24,7 +24,8 @@ app.layout = html.Div(
                 id='mode',
                 options=[
                   {'label': 'Case vs Recovery', 'value': 'cvr'},
-                  {'label': 'Test vs Case', 'value': 'tvc'}
+                  {'label': 'Test vs Case', 'value': 'tvc'},
+                  {'label': 'Case vs Health care capacity', 'value': 'cvcap'}
                 ],
                 value='cvr'
               )
@@ -35,15 +36,29 @@ app.layout = html.Div(
                 dcc.Dropdown(
                   id='country',
                   options=[
-                    {'label': 'Germany', 'value': 'de'},
-                    {'label': 'France', 'value': 'fr'},
-                    {'label': 'UK', 'value': 'uk'},
-                    {'label': 'USA', 'value': 'us'},
-                    {'label': 'China', 'value': 'cn'},
-                    {'label': 'Thailand', 'value': 'th'}
+                    {'label': 'Germany', 'value': 'Germany'},
+                    {'label': 'France', 'value': 'France'},
+                    {'label': 'UK', 'value': 'United Kingdom'},
+                    {'label': 'USA', 'value': 'United States'},
+                    {'label': 'China', 'value': 'China'},
+                    {'label': 'Thailand', 'value': 'Thailand'}
                   ],
-                  value=['de'],
+                  value=['Germany', 'Thailand'],
                   multi=True
+                )
+            ]),
+            html.Div(
+              style={'margin-top': '10px'},
+              children=[
+                dcc.Dropdown(
+                  id='tick',
+                  options=[
+                    {'label': 'Daily', 'value': 'd'},
+                    {'label': 'Weekly', 'value': 'w'},
+                    {'label': 'Monthly', 'value': 'm'},
+                  ],
+                  value='d',
+                  multi=False
                 )
             ])
           ]
