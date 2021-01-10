@@ -3,6 +3,8 @@ import dash_html_components as html
 import dash_core_components as dcc
 from dash.dependencies import Input, Output
 
+from corona.data import source
+
 app = dash.Dash(__name__, external_stylesheets=['assets/style.css'])
 
 app.layout = html.Div(
@@ -54,6 +56,8 @@ app.layout = html.Div(
       ])
   ])
 
+# Data on memory
+df_covid19 = source.read_covid19_data()
 
 # Bind UI callbacks 
 @app.callback(
@@ -69,4 +73,5 @@ def refresh_display(mode, country):
 
 
 if __name__ == '__main__':
+    print(df_covid19[5:])
     app.run_server(debug=True)
