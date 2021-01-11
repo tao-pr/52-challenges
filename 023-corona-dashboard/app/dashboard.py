@@ -25,7 +25,8 @@ app.layout = html.Div(
                 options=[
                   {'label': 'Case vs Recovery', 'value': 'cvr'},
                   {'label': 'Test vs Case', 'value': 'tvc'},
-                  {'label': 'Case vs Health care capacity', 'value': 'cvcap'}
+                  {'label': 'Case vs Health care capacity', 'value': 'cvcap'},
+                  {'label': 'Case vs Vaccination', 'value': 'cvv'}
                 ],
                 value='cvr'
               )
