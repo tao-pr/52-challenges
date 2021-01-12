@@ -33,7 +33,12 @@ def plot_agg(df, country_list=['Germany'], aggregator={'total_cases': 'sum'}, pe
     period=period,
     aggregator=aggregator)
   try:
-    fig = px.line(dfg, x=tick_col, y=list(aggregator.keys())[0], color="location")
+    fig = px.line(
+      dfg, 
+      x=tick_col, 
+      y=list(aggregator.keys())[0], 
+      color="location",
+      template="plotly_dark")
   except:
     print(traceback.format_exc())
   return fig
