@@ -67,8 +67,10 @@ app.layout = html.Div(
         ), 
         html.Div(
           # Right panel (graph display)
-          id='display',
-          className='two columns div-user-controls'
+          className='one columns div-user-controls',
+          children=[
+            dcc.Graph(id='display')
+          ]
         ),
       ])
   ])
@@ -78,16 +80,16 @@ df_covid19 = source.read_covid19_data()
 
 def get_aggregator(mode):
   aggr = {
-    'cvr': {'total_cases': 'sum'},
+    'cvr': {'new_cases': 'sum'},
     'tvc': {'total_tests_per_thousand': 'sum'},
     'cvcap': {'weekly_icu_admissions': 'sum'},
-    'cvv': {'total_vaccinations': 'sum'}
+    'cvv': {'new_vaccinations': 'sum'}
   }
   return aggr[mode]
 
 # Bind UI callbacks 
 @app.callback(
-  Output(component_id='display', component_property='children'),
+  Output(component_id='display', component_property='figure'),
   Input(component_id='mode', component_property='value'),
   Input(component_id='country', component_property='value'),
   Input(component_id='tick', component_property='value'))
@@ -100,6 +102,7 @@ def refresh_display(mode, country, tick):
     country_list=country,
     period=tick,
     aggregator=get_aggregator(mode))
+
 
 
 
