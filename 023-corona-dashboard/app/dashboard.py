@@ -24,12 +24,15 @@ app.layout = html.Div(
               dcc.Dropdown(
                 id='mode',
                 options=[
-                  {'label': 'Case vs Recovery', 'value': 'cvr'},
-                  {'label': 'Test vs Case', 'value': 'tvc'},
-                  {'label': 'Case vs Health care capacity', 'value': 'cvcap'},
-                  {'label': 'Case vs Vaccination', 'value': 'cvv'}
+                  {'label': 'New cases', 'value': 'nc'},
+                  {'label': '% Hospitalised of all cases', 'value': 'hosp'},
+                  {'label': '% ICU of all cases', 'value': 'icu'},
+                  {'label': 'Test per thousand', 'value': 'tvc'},
+                  {'label': '% Death', 'value': 'death'},
+                  {'label': 'New Vaccination', 'value': 'cvv'},
+                  {'label': '% Vaccination', 'value': 'vc'}
                 ],
-                value='cvr'
+                value='nc'
               )
             ]),
             html.Div(
@@ -77,13 +80,21 @@ app.layout = html.Div(
 
 # Data on memory
 df_covid19 = source.read_covid19_data()
+df_covid19.loc[:, 'icu_ratio'] = df_covid19['icu_patients'] / df_covid19['total_cases']
+df_covid19.loc[:, 'hosp_ratio'] = df_covid19['hosp_patients'] / df_covid19['total_cases']
+df_covid19.loc[:, 'death_ratio'] = df_covid19['total_deaths'] / df_covid19['total_cases']
+df_covid19.loc[:, 'vacc_ratio'] = df_covid19['total_vaccinations'] / df_covid19['population']
+
 
 def get_aggregator(mode):
   aggr = {
-    'cvr': {'new_cases': 'sum'},
+    'nc': {'new_cases': 'sum'},
+    'hosp': {'hosp_ratio': 'mean'},
+    'icu': {'icu_ratio': 'mean'},
     'tvc': {'total_tests_per_thousand': 'sum'},
-    'cvcap': {'weekly_icu_admissions': 'sum'},
-    'cvv': {'new_vaccinations': 'sum'}
+    'death': {'death_ratio': 'sum'},
+    'cvv': {'new_vaccinations': 'sum'},
+    'vc': {'vacc_ratio': 'mean'}
   }
   return aggr[mode]
 
@@ -102,8 +113,6 @@ def refresh_display(mode, country, tick):
     country_list=country,
     period=tick,
     aggregator=get_aggregator(mode))
-
-
 
 
 if __name__ == '__main__':
