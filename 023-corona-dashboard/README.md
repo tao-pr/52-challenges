@@ -12,7 +12,13 @@ pip3 install -r requirements.txt
 
 ## Run
 
-TBD
+Simply run the dash board with:
+
+```bash
+python3 app/dashboard.py
+```
+
+Enjoy adjusting the control panel on the left and see the output changing as you go.
 
 ## Licence
 

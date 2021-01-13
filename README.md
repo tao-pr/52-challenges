@@ -38,7 +38,7 @@ List of challenges are collected below.
 | 020 | Dockerised NodeJS + Cassandra            | Docker C* NodeJS | 4 hrs      | Datastax Cassandra Driver |
 | 021 | Haskell Semigroup                        | Haskell          | 2 hrs      | Recall Typeclasses + Semigroup concept | 
 | 022 | Python 3.7 coroutines and async          | Python Coroutine | 4 hrs      | Python Coroutine |
-| 023 | Corona Tracking Dashboard                | Python Dash      | -- | -- |
+| 023 | Corona Tracking Dashboard                | Python Dash      | 5 hrs      | Learn Dash + Plotly |
 
 ## Licence
 
