@@ -52,3 +52,6 @@
 020-dockerised-nodejs-cassandra/app/package-lock.json
 021-haskell-semigroup/p21/.stack-work/
 022-python-coroutines/env/
+023-corona-dashboard/corona/__pycache__/
+023-corona-dashboard/corona/data/__pycache__/
+023-corona-dashboard/corona_track.egg-info/
