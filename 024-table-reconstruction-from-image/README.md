@@ -42,21 +42,3 @@ Reconstructed tables
 
 ![4](data/tables.jpg)
 
-
-## Run notebooks
-
-Create and start a virtual environment as follows.
-
-```
-$ virtualenv env
-$ source env/bin/activate
-```
-
-Install all required packages with jupyter notebook kernel as follows
-
-```
-$ pip3 install -r requirements.txt
-$ ipython kernel install --user --name=env
-```
-
-Then the notebook can be executed with the kernel named `env`.
