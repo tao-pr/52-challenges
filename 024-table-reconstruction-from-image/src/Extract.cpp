@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   cout << "Reading image ..." << endl;
   // Read in the image
   // Mat im = imread("./data/20200117134920228.jpg", IMREAD_GRAYSCALE);
-  Mat im = imread("./data/invoice-template-sample-77f8d9b37a5781c024b486090318cbfb.png", IMREAD_GRAYSCALE);
+  Mat im = imread("./data/invoice.png", IMREAD_GRAYSCALE);
   imshow("original", im);
   moveWindow("original", 0, 0);
 
