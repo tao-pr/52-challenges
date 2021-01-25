@@ -39,6 +39,7 @@ List of challenges are collected below.
 | 021 | Haskell Semigroup                        | Haskell          | 2 hrs      | Recall Typeclasses + Semigroup concept | 
 | 022 | Python 3.7 coroutines and async          | Python Coroutine | 4 hrs      | Python Coroutine |
 | 023 | Corona Tracking Dashboard                | Python Dash      | 5 hrs      | Learn Dash + Plotly |
+| 024 | (Extended) Extract table from image      | C++17 OpenCV     | 2 hrs      | -- |
 
 ## Licence
 
