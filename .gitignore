@@ -55,3 +55,5 @@
 023-corona-dashboard/corona/__pycache__/
 023-corona-dashboard/corona/data/__pycache__/
 023-corona-dashboard/corona_track.egg-info/
+024-table-reconstruction-from-image/bin/
+024-table-reconstruction-from-image/notebooks/.ipynb_checkpoints/
