@@ -9,7 +9,7 @@ setuptools.setup(
     author="Tao P.R.",
     author_email="pataoengineer@gmail.com",
     description="Crawling football matches data from Wikipedia",
-    long_description=long_description,
+    long_description="Crawling football matches data from Wikipedia",
     url="https://github.com/tao-pr/52-challenges/",
     packages=setuptools.find_packages(),
     classifiers=[
