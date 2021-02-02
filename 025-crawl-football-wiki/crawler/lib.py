@@ -24,6 +24,19 @@ def download_team_page(url):
   def to_score(a):
     return a.replace(' ', '').replace('–','-')
 
+  def iterate_and_clean(scores):
+    ss = [s.strip() for s in scores]
+    pp = []
+    is_skipping = False
+    for s in scores:
+      if s.strip()=='(':
+        is_skipping = True
+      if s.strip()==')':
+        is_skipping = False
+      if not is_skipping and is_score(s):
+        pp.append(to_score(s))
+    return pp
+
   def cleanse(a):
     return a.strip().replace('\xa0', ' ')
 
@@ -32,6 +45,6 @@ def download_team_page(url):
 
   teams = [cleanse(a) for a in tree.xpath(PATH_TEAMS) if len(a) > 3]
   teams = list(zip(teams[::2], teams[1:][::2]))
-  scores = [a for a in tree.xpath(PATH_SCORES) if is_score(a)]
+  scores = iterate_and_clean([a for a in tree.xpath(PATH_SCORES) if len(a)<10])
 
   return [(a[0],b,a[1]) for a,b in zip(teams,scores)]
