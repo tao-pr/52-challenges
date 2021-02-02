@@ -15,8 +15,23 @@ def download_team_page(url):
   page = requests.get(url)
   tree = html.fromstring(page.content)
 
-  matches = tree.xpath('//div[@class="vevent"]/table/tbody')
+  def is_score(a):
+    w = a.replace(' ', '').replace('–','-')
+    if len(w) != 3:
+      return False
+    return all(['0'<=i<='9' for i in w.split('-')])
 
-  # TAOTODO query from XPATH
+  def to_score(a):
+    return a.replace(' ', '').replace('–','-')
 
-  pass
+  def cleanse(a):
+    return a.strip().replace('\xa0', ' ')
+
+  PATH_TEAMS = '//td[@class="vcard attendee"]//text()'
+  PATH_SCORES = '//td[@class="vcard attendee"]/following-sibling::td//text()'
+
+  teams = [cleanse(a) for a in tree.xpath(PATH_TEAMS) if len(a) > 3]
+  teams = list(zip(teams[::2], teams[1:][::2]))
+  scores = [a for a in tree.xpath(PATH_SCORES) if is_score(a)]
+
+  return [(a[0],b,a[1]) for a,b in zip(teams,scores)]

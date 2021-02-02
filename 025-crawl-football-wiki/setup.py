@@ -4,7 +4,7 @@ with open("requirements.txt", "r") as f:
     reqs = [a.replace('\n','') for a in f.readlines()]
 
 setuptools.setup(
-    name="crawl-football-wiki",
+    name="crawl_football",
     version="0.0.1",
     author="Tao P.R.",
     author_email="pataoengineer@gmail.com",
