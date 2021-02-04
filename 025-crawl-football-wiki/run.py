@@ -30,5 +30,10 @@ if __name__ == '__main__':
     print('Lets query matches!')
     home = input('Home : ')
     away = input('Away : ')
+    
+    if not home in all_matches or not away in all_matches[home]:
+      print('NOT FOUND!')
+      continue
+
     for y, h, score, a in all_matches[home][away]:
       print(f'   {y} : {h} {score} {a}')
