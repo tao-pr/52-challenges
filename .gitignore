@@ -57,3 +57,6 @@
 023-corona-dashboard/corona_track.egg-info/
 024-table-reconstruction-from-image/bin/
 024-table-reconstruction-from-image/notebooks/.ipynb_checkpoints/
+025-crawl-football-wiki/crawl_football.egg-info/
+025-crawl-football-wiki/crawl_football_wiki.egg-info/
+025-crawl-football-wiki/crawler/__pycache__/
