@@ -1,4 +1,5 @@
 from lxml import html
+import unidecode
 import requests
 
 def crawl_pages_by_pattern(url_template, arange):
@@ -38,7 +39,7 @@ def download_team_page(url):
     return pp
 
   def cleanse(a):
-    return a.strip().replace('\xa0', ' ')
+    return unidecode.unidecode(a.strip().replace('\xa0', ' '))
 
   PATH_TEAMS = '//td[@class="vcard attendee"]//text()'
   PATH_SCORES = '//td[@class="vcard attendee"]/following-sibling::td//text()'
