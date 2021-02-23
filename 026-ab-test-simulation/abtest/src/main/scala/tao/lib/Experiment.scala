@@ -37,16 +37,31 @@ private [lib] trait Calculator {
     (1 to num).map{_ => outcomes(Random.nextInt(outcomes.length))}
   }
 
-  def toProbDist(values: Seq[Double], numBins: Int): Seq[Double] = {
+  def toProbDist(values: Seq[Double], numBins: Int): Seq[(Double,Double,Double)] = {
     val min = values.min
     val max = values.max
     val binMarks = (0 to numBins).map{ i => i*(max-min)/numBins + min }
     val binBounds = binMarks.zip(binMarks.tail)
     val prob = binBounds.map{ case (a,b) => 
       val p = values.filter{v => a<=v && v<b}.size.toDouble / values.size
-      p
+      (a,b,p)
     }
     prob
+  }
+
+  def findValueAtSignificance(density: Seq[(Double,Double,Double)], accum: Double, confidence: Double): Option[Double] = {
+    if (density.isEmpty)
+      None
+    else {
+      val (a,b,p) = density.head
+      val accum_ = accum + p
+      if (accum_ >= confidence){
+        // Found it
+        Some(a)
+      }
+      else 
+        findValueAtSignificance(density.tail, accum_, confidence)
+    }
   }
 }
 
@@ -57,11 +72,11 @@ trait Experiment extends Calculator {
   // Measure a value from sample
   def measureSample(samples: Seq[Double]): Double
 
-  def evaluateSignificance(
-    confidence: Double = 0.95, 
+  def evaluateValue(
+    confidence: Double = 0.95,
     numSamples: Int=5000,
     sampleSize: Int=100,
-    numBins: Int=1000): Double = {
+    numBins: Int=1000): Option[Double] = {
 
     // Generate outcomes (mixed variants)
     val outcomesA = variantA.generateOutcome(numSamples)
@@ -77,10 +92,8 @@ trait Experiment extends Calculator {
     // Generate probability distribution
     val probDist = toProbDist(values, numBins)
 
-    // p-value
-    // TAOTODO
-
-    0.0f
+    var accumDensity: Double = 0
+    findValueAtSignificance(probDist, accumDensity, confidence)
   }
 }
 
