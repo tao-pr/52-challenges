@@ -41,7 +41,7 @@ List of challenges are collected below.
 | 023 | Corona Tracking Dashboard                | Python Dash      | 5 hrs      | Learn Dash + Plotly |
 | 024 | (Extended) Extract table from image      | C++17 OpenCV     | 2 hrs      | -- |
 | 025 | Crawl football data from Wikipedia       | Python           | 2 hrs      | Parser |
-| 026 | A/B Test simulation                      | Scala | -- | -- |
+| 026 | A/B Test simulation                      | Scala | 1 hr | -- |
 
 ## Licence
 
