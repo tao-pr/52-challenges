@@ -30,4 +30,61 @@ case class UniformRandomHypothesis(
   }
 }
 
+private [lib] trait Calculator {
+  
+  // Sample with replacement
+  def draw(outcomes: Seq[Double], num: Int): Seq[Double] = {
+    (1 to num).map{_ => outcomes(Random.nextInt(outcomes.length))}
+  }
+
+  def toProbDist(values: Seq[Double], numBins: Int): Seq[Double] = {
+    val min = values.min
+    val max = values.max
+    val binMarks = (0 to numBins).map{ i => i*(max-min)/numBins + min }
+    val binBounds = binMarks.zip(binMarks.tail)
+    val prob = binBounds.map{ case (a,b) => 
+      val p = values.filter{v => a<=v && v<b}.size.toDouble / values.size
+
+      // TAODEBUG
+      Console.println(s"$a .. $b :: $p")
+
+      p
+    }
+    prob
+  }
+}
+
+trait Experiment extends Calculator {
+  val variantA: Hypothesis
+  val variantB: Hypothesis
+  val numSamples: Int = 10000
+  val sampleSize: Int = 100
+  val numBins: Int = 1000
+
+  // Measure a value from sample
+  def measureSample(samples: Seq[Double]): Double
+
+  def evaluateSignificance(confidence: Double = 0.95, numSamples: Int=5000): Double = {
+
+    // Generate outcomes (mixed variants)
+    val outcomesA = variantA.generateOutcome(numSamples)
+    val outcomesB = variantB.generateOutcome(numSamples)
+    val outcomes = outcomesA ++ outcomesB
+
+    // Draw from samples
+    val samples = (1 to numSamples).map{_ => draw(outcomes, sampleSize) }
+
+    // Measure sample values
+    val values = samples.map(measureSample)
+
+    // Generate probability distribution
+    val probDist = toProbDist(values, numBins)
+
+    // p-value
+    // TAOTODO
+
+    0.0f
+  }
+}
+
 
