@@ -60,3 +60,9 @@
 025-crawl-football-wiki/crawl_football.egg-info/
 025-crawl-football-wiki/crawl_football_wiki.egg-info/
 025-crawl-football-wiki/crawler/__pycache__/
+026-ab-test-simulation/abtest/src/main/scala/tao/Main.scala
+026-ab-test-simulation/abtest/project/
+026-ab-test-simulation/abtest/src/test/
+026-ab-test-simulation/abtest/target/
+026-ab-test-simulation/project/
+026-ab-test-simulation/target/
