@@ -20,7 +20,10 @@ case object CTRExp extends Experiment {
 
 
 object Main extends App {
-  val sigCTR = CTRExp.evaluateSignificance(
+  Console.println("------------------------------")
+  Console.println("Measuring CTR from A/B test")
+  val ctrValue = CTRExp.evaluateValue(
     confidence=0.95,
     numBins=500)
+  Console.println(s"At confidence level = 95%, CTR rate = ${ctrValue.get}")
 }
