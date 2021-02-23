@@ -33,12 +33,14 @@ case object CTRRandomExp extends Experiment {
 
 
 object Main extends App {
-  Console.println("------------------------------")
-  Console.println("Measuring CTR improvement from A/B test")
-  val ctrValue = CTRExp.evaluateValue(
-    confidence=0.95,
-    numBins=500)
-  Console.println(s"At confidence level = 95%, % CTR rate increase = ${ctrValue.get*100} %")
+  Seq(0.90, 0.95, 0.99).map{ confidence =>
+    Console.println("------------------------------")
+    Console.println("Measuring CTR improvement from A/B test")
+    val ctrValue = CTRExp.evaluateValue(
+      confidence=confidence,
+      numBins=500)
+    Console.println(s"At confidence level = ${confidence*100}%, % CTR rate increase = ${ctrValue.get*100} %")
+  }
 
   Console.println("------------------------------")
   Console.println("Measuring CTR improvement from A/B test (Random Model)")
