@@ -44,10 +44,6 @@ private [lib] trait Calculator {
     val binBounds = binMarks.zip(binMarks.tail)
     val prob = binBounds.map{ case (a,b) => 
       val p = values.filter{v => a<=v && v<b}.size.toDouble / values.size
-
-      // TAODEBUG
-      Console.println(s"$a .. $b :: $p")
-
       p
     }
     prob
@@ -57,14 +53,15 @@ private [lib] trait Calculator {
 trait Experiment extends Calculator {
   val variantA: Hypothesis
   val variantB: Hypothesis
-  val numSamples: Int = 10000
-  val sampleSize: Int = 100
-  val numBins: Int = 1000
 
   // Measure a value from sample
   def measureSample(samples: Seq[Double]): Double
 
-  def evaluateSignificance(confidence: Double = 0.95, numSamples: Int=5000): Double = {
+  def evaluateSignificance(
+    confidence: Double = 0.95, 
+    numSamples: Int=5000,
+    sampleSize: Int=100,
+    numBins: Int=1000): Double = {
 
     // Generate outcomes (mixed variants)
     val outcomesA = variantA.generateOutcome(numSamples)
