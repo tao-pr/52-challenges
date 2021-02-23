@@ -81,7 +81,8 @@ trait Experiment extends Calculator {
     // Generate outcomes (mixed variants)
     val outcomesA = variantA.generateOutcome(numSamples)
     val outcomesB = variantB.generateOutcome(numSamples)
-    val outcomes = outcomesA ++ outcomesB
+
+    val outcomes = outcomesA.zip(outcomesB).map{ case(a,b) => b-a }
 
     // Draw from samples
     val samples = (1 to numSamples).map{_ => draw(outcomes, sampleSize) }
