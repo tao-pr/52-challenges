@@ -3,10 +3,16 @@ package example
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
-trait Node { def v: String = "(end)"}
-case object EndNode extends Node
+trait Node { 
+  def v: String = "(end)"
+  def add(a: Int): Node
+}
+case object EndNode extends Node {
+  override def add(a: Int) = LinkedList(a, EndNode) 
+}
 case class LinkedList(n: Int, next: Node) extends Node {
   override def v = s"$n : ${next.v}"
+  override def add(a: Int) = LinkedList(n, next.add(a))
 }
 
 class HelloSpec extends AnyFunSpec with Matchers {
@@ -44,7 +50,6 @@ class HelloSpec extends AnyFunSpec with Matchers {
           2, LinkedList(
             3, LinkedList(
               4, EndNode))))
-      val w = "4 : 3 : 2 : 1 : (end)"
 
       // do it 
 
@@ -58,10 +63,44 @@ class HelloSpec extends AnyFunSpec with Matchers {
       val rv = copyReverseTo(v, EndNode)
 
       // test
-      rv.v shouldBe w
+      rv.v shouldBe "4 : 3 : 2 : 1 : (end)"
     }
 
 
+    it("Take last [n] elements from the linked list"){
+      val v = LinkedList(
+        1, LinkedList(
+          2, LinkedList(
+            3, LinkedList(
+              4, EndNode))))
+
+      // do it 
+      def takeLast(arr: Node, n: Int): Node = {
+        recursiveTake(arr, n, EndNode, 0)
+      }
+
+      def recursiveTake(arr: Node, n: Int, collected: Node, numCollected: Int): Node = {
+        arr match {
+          case EndNode => collected
+          case LinkedList(a, next) => 
+            if (numCollected >= n){
+              val newCollected = collected match {
+                case EndNode => LinkedList(a, EndNode) // collect as new list
+                case LinkedList(k,tail) => // drop head to retain length
+                  tail.add(a)
+              }
+              recursiveTake(next, n, newCollected, numCollected+1 )
+            }
+            else 
+              recursiveTake(next, n, collected.add(a), numCollected+1)
+        }
+      }
+
+      // test
+      takeLast(v, 1).v shouldBe "4 : (end)"
+      takeLast(v, 2).v shouldBe "3 : 4 : (end)"
+      takeLast(v, 6).v shouldBe "1 : 2 : 3 : 4 : (end)"
+    }
 
   }
 
