@@ -5,16 +5,32 @@ import org.scalatest.matchers.should.Matchers
 
 trait Node { 
   def v: String = "(end)"
-  def add(a: Int): Node
+  def add(a: Int): LinkedList
   def getNext: Node = EndNode
+  def ++(tail: Node): Node
+  def insertAt(a: Int, i: Int): LinkedList
 }
 case object EndNode extends Node {
-  override def add(a: Int) = LinkedList(a, EndNode) 
+  override def add(a: Int) = LinkedList(a, EndNode)
+  override def ++(tail: Node) = tail match {
+    case LinkedList(n, next) => LinkedList(n, next)
+    case EndNode => EndNode
+  }
+  def insertAt(a: Int, i: Int) = add(a)
 }
 case class LinkedList(n: Int, next: Node) extends Node {
   override def v = s"$n : ${next.v}"
   override def add(a: Int) = LinkedList(n, next.add(a))
   override def getNext = next
+  override def ++(tail: Node) = LinkedList(n, next ++ tail)
+  override def insertAt(a: Int, i: Int) = {
+    if (i<=0){
+      LinkedList(a, LinkedList(n, next))
+    }
+    else {
+      LinkedList(n, next.insertAt(a, i-1))
+    }
+  } 
 }
 
 class HelloSpec extends AnyFunSpec with Matchers {
@@ -148,6 +164,66 @@ class HelloSpec extends AnyFunSpec with Matchers {
       // test 
       findMiddle(v1) shouldBe 3
       findMiddle(v2) shouldBe 4
+    }
+
+
+    it("Permutation of linked list"){
+      val v1 = LinkedList(
+        1, LinkedList(
+          2, LinkedList(
+            3, EndNode)))
+
+      // do it 
+      // 
+      // Steinhaus–Johnson–Trotter algorithm
+      // wiki: https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
+      def permute(ns: Node): Seq[Node] = {
+        ns match {
+          case EndNode => 
+            Seq.empty
+
+          case LinkedList(n, EndNode) =>
+            Seq(LinkedList(n, EndNode))
+
+          case LinkedList(n, LinkedList(m, EndNode)) =>
+            Seq( // Just swap 2 elements
+              LinkedList(n, LinkedList(m, EndNode)),
+              LinkedList(m, LinkedList(n, EndNode)))
+
+          case LinkedList(n, next) =>
+            val permuteOfNext = permute(next)
+            // Add [n] to every combination
+            permuteOfNext.map{ ps =>
+              var curr = ps
+              var left: Node = EndNode
+              var right: Node = ps
+              var ss = Seq.empty[Node]
+              while (right != EndNode){
+                ss = ss :+ (left.add(n) ++ right)
+                right match {
+                  case LinkedList(r,rs) => 
+                    left = left.add(r)
+                    right = rs
+                }
+              }
+              ss = ss :+ ps.add(n)
+              ss
+            }.reduce(_ ++ _)
+        }
+      }
+
+
+      // test
+      val w = Seq(
+        "1 : 2 : 3 : (end)",
+        "1 : 3 : 2 : (end)",
+        "2 : 1 : 3 : (end)",
+        "2 : 3 : 1 : (end)",
+        "3 : 2 : 1 : (end)",
+        "3 : 1 : 2 : (end)",
+      )
+      permute(v1).map(_.v) should contain theSameElementsAs(w)
+
     }
 
   }
