@@ -6,6 +6,7 @@ import org.scalatest.matchers.should.Matchers
 trait Node { 
   def v: String = "(end)"
   def add(a: Int): Node
+  def getNext: Node = EndNode
 }
 case object EndNode extends Node {
   override def add(a: Int) = LinkedList(a, EndNode) 
@@ -13,6 +14,7 @@ case object EndNode extends Node {
 case class LinkedList(n: Int, next: Node) extends Node {
   override def v = s"$n : ${next.v}"
   override def add(a: Int) = LinkedList(n, next.add(a))
+  override def getNext = next
 }
 
 class HelloSpec extends AnyFunSpec with Matchers {
@@ -100,6 +102,52 @@ class HelloSpec extends AnyFunSpec with Matchers {
       takeLast(v, 1).v shouldBe "4 : (end)"
       takeLast(v, 2).v shouldBe "3 : 4 : (end)"
       takeLast(v, 6).v shouldBe "1 : 2 : 3 : 4 : (end)"
+    }
+
+
+    it("Find middle element of linked list in one pass"){
+      val v1 = LinkedList(
+        1, LinkedList(
+          2, LinkedList(
+            3, LinkedList(
+              4, LinkedList(
+                5, EndNode)))))
+      val v2 = LinkedList(
+        1, LinkedList(
+          2, LinkedList(
+            3, LinkedList(
+              4, LinkedList(
+                5, LinkedList(
+                  6, LinkedList(
+                    7, EndNode)))))))
+
+      // do it 
+      def findMiddle(arr: LinkedList): Int = {
+        // step `middle` to the next every even element
+        // element 0 -> middle=0
+        // element 1 -> middle=0
+        // element 2 -> middle=1
+        // ..
+        var middle: Node = arr
+        var a: Node = arr
+        var i = 0
+        while (a != EndNode){
+          if (i>0 && i%2==0){
+            // step next
+            middle = middle.getNext
+          }
+          a = a.getNext
+          i += 1
+        }
+        middle match {
+          case LinkedList(m, _) => m
+          case EndNode => -1 // No middle value found
+        }
+      }
+
+      // test 
+      findMiddle(v1) shouldBe 3
+      findMiddle(v2) shouldBe 4
     }
 
   }
