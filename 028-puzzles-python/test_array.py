@@ -79,12 +79,14 @@ def test_trap_rain_water():
     vol = 0
     has_end = False
     i = 0
+    next_blocks = blocks[:]
     for b in blocks:
       if b>=h:
         # Find right boundary
-        return vol, blocks[i+1:]
+        return vol, next_blocks
       else:
         vol += h-b
+      next_blocks = next_blocks[1:]
     return 0, [] # No right boundary
 
 
