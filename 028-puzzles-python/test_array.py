@@ -121,3 +121,19 @@ def test_first_missing_positives():
   assert find_it([1,2,0]) == 3
   assert find_it([3,4,-1,1]) == 2
   assert find_it([7,8,9,11,12]) == 1
+
+
+def test_nested_flatten():
+
+  def flatten(vs):
+    ws = []
+    for v in vs:
+      if type(v) is list:
+        ws = ws + flatten(v)
+      else:
+        ws.append(v)
+    return ws
+
+  assert flatten([1,2,3]) == [1,2,3]
+  assert flatten([[1,2,[3]],[4]]) == [1,2,3,4]
+  assert flatten([[],[1,[2,3,[4]]],5]) == [1,2,3,4,5]
