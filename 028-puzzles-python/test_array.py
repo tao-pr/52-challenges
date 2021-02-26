@@ -22,7 +22,6 @@ def test_remove_duplicates_sorted():
   assert remove_dup(ns) == [1,2,3,4,5]
 
 
-
 def test_median_one_pass():
   ns = [4,3,1,5,3,1,2,5,3,1,5]
 
@@ -92,3 +91,33 @@ def test_trap_rain_water():
 
   assert eval([0,1,0,2,1,0,1,3,2,1,2,1]) == 6
   assert eval([4,2,0,3,2,5]) == 9
+
+
+def test_first_missing_positives():
+  # REF: https://leetcode.com/problems/first-missing-positive/
+
+  def add_sorted(v, ws):
+    if len(ws)==0:
+      return [v]
+    elif v<=ws[0]:
+      return [v]+ws
+    else:
+      return [ws[0]]+add_sorted(v,ws[1:])
+
+  def find_it(ns):
+    sorted_ns = []
+    for n in ns:
+      if n>0:
+        sorted_ns = add_sorted(n, sorted_ns)
+
+    expect = 1
+    for n in sorted_ns:
+      if n!=expect:
+        return expect
+      else:
+        expect += 1
+    return n+1
+  
+  assert find_it([1,2,0]) == 3
+  assert find_it([3,4,-1,1]) == 2
+  assert find_it([7,8,9,11,12]) == 1
