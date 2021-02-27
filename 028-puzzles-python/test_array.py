@@ -185,3 +185,33 @@ def test_spiral_matrix():
 
   assert spiral_walk([[1,2,3,4],[5,6,7,8],[9,10,11,12]]) == [1,2,3,4,8,12,11,10,9,5,6,7]
   assert spiral_walk( [[1,2,3],[4,5,6],[7,8,9]]) == [1,2,3,6,9,8,7,4,5]
+
+
+def test_reverse_make_equal():
+  # REF: https://www.facebookrecruiting.com/portal/coding_practice_question/?problem_id=2869293499822992
+  def are_they_equal(array_a, array_b):
+    # Find the first & last position that they're not equal
+    min_index = -1
+    max_index = -1
+    first_missing = None
+    for a,b,i in zip(array_a, array_b, range(len(array_a))):
+      if a != b:
+        if min_index < 0:
+          min_index = i
+          first_missing = a
+
+      if min_index>0 and b == first_missing:
+        max_index = i
+        break
+    
+    if max_index < 0:
+      max_index = len(array_a)
+
+    if min_index > 0:
+      # try swapping subarray 
+      array_b[min_index:max_index+1] = array_b[min_index:max_index+1][::-1]
+      if array_a == array_b:
+        return True
+    return False
+
+  assert are_they_equal([1, 2, 3, 4], [1, 4, 3, 2]) == True
