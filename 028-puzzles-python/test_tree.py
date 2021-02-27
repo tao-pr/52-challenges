@@ -42,4 +42,3 @@ def test_count_visible__left_nodes():
   root_2.right.right = TreeNode(16)
   assert visible_nodes(root_2) == 5
 
-
