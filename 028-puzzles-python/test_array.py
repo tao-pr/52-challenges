@@ -137,3 +137,51 @@ def test_nested_flatten():
   assert flatten([1,2,3]) == [1,2,3]
   assert flatten([[1,2,[3]],[4]]) == [1,2,3,4]
   assert flatten([[],[1,[2,3,[4]]],5]) == [1,2,3,4,5]
+
+
+def test_spiral_matrix():
+  # REF: https://leetcode.com/problems/spiral-matrix/
+
+  def spiral_walk(mat):
+    # Create walk steps
+    steps = create_walk_steps(len(mat), len(mat[0]))
+    return [mat[row][col] for (row,col) in steps]
+
+  def create_walk_steps(rows, cols):
+    steps = []
+    row = 0
+    col = -1
+    row0, col0 = 0, 0
+    rowM, colM = rows-1, cols-1
+    dd = [[0,1],[1,0],[0,-1],[-1,0]] # row, col
+    while len(steps)<rows*cols:
+      d = dd[0]
+
+      row_ = row + d[0]
+      col_ = col + d[1]
+
+      # walk until hit boundary
+      while row_ >= row0 and row_ <= rowM and col_ >= col0 and col_ <= colM:
+        steps.append((row_, col_))
+        row = row_
+        col = col_
+        row_ = row + d[0]
+        col_ = col + d[1]
+
+      # change direction
+      dd = dd[1:] + dd[:1]
+
+      # truncate boundary
+      if d==[0,1]:
+        row0 += 1
+      if d==[1,0]:
+        colM -= 1
+      if d==[0,-1]:
+        rowM -= 1
+      if d==[-1,0]:
+        col0 += 1
+    return steps
+
+
+  assert spiral_walk([[1,2,3,4],[5,6,7,8],[9,10,11,12]]) == [1,2,3,4,8,12,11,10,9,5,6,7]
+  assert spiral_walk( [[1,2,3],[4,5,6],[7,8,9]]) == [1,2,3,6,9,8,7,4,5]
