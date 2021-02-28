@@ -78,32 +78,30 @@ def test_flatten_tree_to_list():
 def test_right_side_view():
   # REF: https://leetcode.com/problems/binary-tree-right-side-view/
   def right_view(tree):
-    view, level = get_right_view(tree, from_level=0, current_level=0)
-    return view
-
-  def get_right_view(tree, from_level, current_level):
     vec = []
-    if from_level==current_level:
-      vec.append(tree.val)
-    
-    depth_right = current_level+1
-    depth_left = current_level+1
+    proj = project_right(tree, weight=1, current_depth=0, proj={})
+    for level, node in proj.items():
+      w,val = node
+      vec.append(val)
+    return vec
 
-    # DFS right node
+  def project_right(tree, weight, current_depth, proj):
+    if current_depth not in proj:
+      proj[current_depth] = (weight, tree.val)
+    else:
+      w,a = proj[current_depth]
+      if weight>w:
+        proj[current_depth] = (weight, tree.val)
+
+    # DFS to right first
     if tree.right is not None:
-      subvec, depth_right = get_right_view(
-        tree.right, 
-        from_level=current_level+1,
-        current_level=current_level+1)
-      vec = vec + subvec
-    if tree.left is not None:
-      subvec, depth_left = get_right_view(
-        tree.left,
-        from_level=depth_right+1,
-        current_level=current_level+1)
-      vec = vec + subvec
-    return vec, max(depth_right, depth_left)
+      proj = project_right(tree.right, weight<<1, current_depth+1, proj) 
 
+    # DFS to left afterwards
+    if tree.left is not None:
+      proj = project_right(tree.left, weight, current_depth+1, proj)
+
+    return proj
 
   # Test
   #             8
