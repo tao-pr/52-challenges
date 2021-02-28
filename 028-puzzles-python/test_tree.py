@@ -99,7 +99,7 @@ def test_right_side_view():
     if tree.left is not None:
       subvec, depth_left = get_right_view(
         tree.left,
-        from_level=depth_right,
+        from_level=depth_right+1,
         current_level=current_level+1)
       vec = vec + subvec
     return vec, max(depth_right, depth_left)
