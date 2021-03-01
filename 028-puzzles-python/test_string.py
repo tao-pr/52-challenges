@@ -61,3 +61,32 @@ def test_string_to_number():
   assert str_to_num("two hundred eleven") == 211
   assert str_to_num("seven hundred thirty five") == 735
   assert str_to_num("five hundred fifteen") == 515
+
+
+def test_string_compression():
+  # REF: https://leetcode.com/problems/string-compression/
+
+  def compress(s):
+    ctr = ""
+    cnt = 0
+    for c in s + ' ':
+      if len(ctr)==0:
+        ctr = c
+      
+      if ctr[-1]==c:
+        # repeating
+        cnt += 1
+      else:
+        # change of alpha
+        # conclude the old char
+        if cnt>1:
+          ctr += str(cnt)
+        
+        # End marker
+        if c != ' ':
+          ctr += c
+          cnt = 1
+    return ctr
+
+  assert compress("aabbcc") == "a2b2c2"
+  assert compress("aaabccc") == "a3bc3"
