@@ -18,6 +18,15 @@ class Node:
     return last
 
 
+def create(ls):
+  root = Node(ls[0])
+  cur = root
+  for a in ls[1:]:
+    cur.next = Node(a)
+    cur = cur.next
+  return root
+
+
 def test_reorder_alternate():
   # REF: https://leetcode.com/problems/reorder-list/
 
@@ -86,3 +95,36 @@ def test_reverse_and_filter():
   assert rev_filter(list1, 4).print() == "4:3:1"
   assert rev_filter(list1, 2).print() == "1"
 
+
+def test_rotate_list():
+  # REF: https://leetcode.com/problems/rotate-list/
+
+  def rotate(ls, k):
+    n = 1
+    # make list cyclic
+    last = ls
+    while last.next is not None:
+      last = last.next
+      n += 1
+    last.next = ls
+
+    # rotate head position
+    k = k % n
+    head = ls
+    while k>0:
+      head = head.next
+      last = last.next
+      k -= 1
+    # cut head & last off so it's linear once again
+    last.next = None
+    return head
+
+  # Test1
+  list1 = create([1,2,3,4,5])
+  assert list1.print() == "1:2:3:4:5"
+  assert rotate(list1, 3).print() == "4:5:1:2:3"
+  
+  list2 = create([1,2,3,4,5,6,7])
+  assert list2.print() == "1:2:3:4:5:6:7"
+  assert rotate(list2, 9).print() == "3:4:5:6:7:1:2"
+  
