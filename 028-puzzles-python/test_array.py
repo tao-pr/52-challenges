@@ -215,3 +215,24 @@ def test_reverse_make_equal():
     return False
 
   assert are_they_equal([1, 2, 3, 4], [1, 4, 3, 2]) == True
+
+
+def test_minimum_path_sum_triangle_array():
+  # REF: https://leetcode.com/problems/triangle/
+
+  # Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+  #    2
+  #   3 4
+  #  6 5 7
+  # 4 1 8 3
+  # The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 
+
+
+  def min_path_sum(tri):
+    path_sum = 0
+    for line in tri:
+      path_sum += min(line)
+    return path_sum
+
+  assert min_path_sum([[2],[3,4],[6,5,7],[4,1,8,3]]) == 11
+  assert min_path_sum([[-10]]) == -10
