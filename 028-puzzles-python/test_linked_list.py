@@ -17,6 +17,12 @@ class Node:
       prev.next = None
     return last
 
+  def join(self, next):
+    if self.next is None:
+      self.next = next 
+    else:
+      self.next.join(next)
+
 
 def create(ls):
   root = Node(ls[0])
@@ -127,4 +133,45 @@ def test_rotate_list():
   list2 = create([1,2,3,4,5,6,7])
   assert list2.print() == "1:2:3:4:5:6:7"
   assert rotate(list2, 9).print() == "3:4:5:6:7:1:2"
+
+
+def test_odd_even_list():
+
+  def add(ls, n):
+    if ls is None:
+      return n
+    elif ls.next is None:
+      ls.next = n
+      return ls
+    else:
+      ls.next = add(ls.next, n)
+      return ls
+
+  def oddeven(ls):
+    odd = None
+    even = None
+    cur = ls
+    while cur is not None:
+      next = cur.next
+      if cur.data % 2 == 0:
+        # even
+        cur.next = None
+        even = add(even, cur)
+      else:
+        # odd
+        cur.next = None
+        odd = add(odd, cur)
+      cur = next
+    odd.join(even)
+    return odd
+
+  # Test1
+  list1 = create([1,2,3,4,5])
+  assert list1.print() == "1:2:3:4:5"
+  assert oddeven(list1).print() == "1:3:5:2:4"
+  
+  list2 = create([1,2,3,4,5,6,7])
+  assert list2.print() == "1:2:3:4:5:6:7"
+  assert oddeven(list2).print() == "1:3:5:7:2:4:6"
+
   
