@@ -236,3 +236,23 @@ def test_minimum_path_sum_triangle_array():
 
   assert min_path_sum([[2],[3,4],[6,5,7],[4,1,8,3]]) == 11
   assert min_path_sum([[-10]]) == -10
+
+
+def test_num_pair_sum():
+  # REF: https://www.facebookrecruiting.com/portal/coding_practice_question/?problem_id=840934449713537
+
+  def numberOfWays(arr, k):
+    # Write your code here
+    return len(pair(arr, k))
+  
+  def pair(arr, k):
+    pp = []
+    for i,a in enumerate(arr):
+      tail = arr[i+1:]
+      for j, b in enumerate(tail):
+        if a+b==k:
+          pp.append([a,b])
+    return pp
+
+  assert pair([1,2,3,4], 5) == [[1,4],[2,3]]
+  assert numberOfWays([1,2,3,4], 5) == 2
