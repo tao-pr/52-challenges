@@ -66,3 +66,6 @@
 026-ab-test-simulation/abtest/target/
 026-ab-test-simulation/project/
 026-ab-test-simulation/target/
+027-array-puzzles/puzzle/.gitignore
+027-array-puzzles/puzzle/project/
+027-array-puzzles/target/
