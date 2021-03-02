@@ -256,3 +256,26 @@ def test_num_pair_sum():
 
   assert pair([1,2,3,4], 5) == [[1,4],[2,3]]
   assert numberOfWays([1,2,3,4], 5) == 2
+
+
+def test_combination():
+
+  def gen_comb(arr, k):
+    # Generate combination of [k] length
+    return comb(arr, k, [])
+
+  def comb(arr, k, prefix):
+    if len(prefix)==k:
+      return [prefix]
+
+    out = []
+    for i,a in enumerate(arr):
+      cand = prefix + [a]
+      tail = arr[i+1:]
+      for c in comb(tail, k, cand):
+        out.append(c)
+    return out
+
+
+  assert gen_comb([1,2,3], 2) == [[1,2],[1,3],[2,3]]
+  assert gen_comb([1,2,3,4], 3) == [[1,2,3],[1,2,4],[1,3,4],[2,3,4]]
