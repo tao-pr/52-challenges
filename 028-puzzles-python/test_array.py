@@ -279,3 +279,32 @@ def test_combination():
 
   assert gen_comb([1,2,3], 2) == [[1,2],[1,3],[2,3]]
   assert gen_comb([1,2,3,4], 3) == [[1,2,3],[1,2,4],[1,3,4],[2,3,4]]
+
+
+def test_sum_combination():
+  # Find subarrays which sum up to make a number 
+  # less than or equal the threshold
+  def find_comb(arr, k):
+    combs = expand_comb(arr, k)
+    return combs
+
+  def expand_comb(arr, k):
+    comb = []
+    for i, a in enumerate(arr):
+      if a==k:
+        # Found the last element of the combination
+        comb.append([a])
+        continue
+      tail = arr[i+1:]
+      # take one element from tail
+      for j,b in enumerate(tail):
+        if a+b <= k:
+          cand = [a,b]
+          comb.append([a,b])
+          # recursion
+          for c in find_comb(tail[j+1:], k-a-b):
+            comb.append([a,b] + c)
+    return comb
+
+  assert find_comb([1,2,3,4], 5) == [[1,2],[1,3],[1,4],[2,3]]
+  assert find_comb([1,2,3,1], 4) == [[1,2],[1,2,1],[1,3],[1,1],[2,1],[3,1]]
