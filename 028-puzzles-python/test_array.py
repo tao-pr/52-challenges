@@ -308,3 +308,66 @@ def test_sum_combination():
 
   assert find_comb([1,2,3,4], 5) == [[1,2],[1,3],[1,4],[2,3]]
   assert find_comb([1,2,3,1], 4) == [[1,2],[1,2,1],[1,3],[1,1],[2,1],[3,1]]
+
+
+def test_lego_blocks():
+  # Given a list of 3x3 lego blocks, find matches (may need to rotate)
+  def find_matches(blocks):
+    matches = []
+    for i,b in enumerate(blocks):
+      rotatedB = gen_rotates(b)
+      assert(len(rotatedB)==4)
+      for j, c in enumerate(blocks[i+1:]):
+        rotatedC = gen_rotates(c)
+        assert(len(rotatedC)==4)
+        found_match = False
+        for rb in rotatedB:
+          for rc in rotatedC:
+            if fit(rb, rc):
+              matches.append([i, i+j+1])
+              found_match = True
+              break
+          if found_match:
+            break
+    return matches
+
+  def fit(a,b):
+    for i in range(len(a)):
+      for j in range(len(a)):
+        if a[i][j] + b[i][j] != 1:
+          return False
+    return True
+
+  def gen_rotates(b):
+    # Rotate clockwise by 90*
+    # (0,0) ---> (N,0) (1,0) (0,0)
+    # (1,0)
+    # (N,0)
+    rot = [b]
+    w = b[:]
+    N = len(b)
+    for n in range(3):
+      ww = []
+      for i in range(N):
+        row = [w[N-1-j][i] for j in range(N)]
+        ww.append(row)
+      rot.append(ww)
+      w = ww[:]
+    return rot
+
+  blocks1 = [
+    [[1,1,0],[1,1,0],[1,1,0]],
+    [[0,1,0],[0,1,0],[0,1,0]],
+    [[1,1,1],[0,0,0],[1,1,1]],
+    [[0,0,0],[0,1,0],[0,0,0]]
+  ]
+  assert find_matches(blocks1) == [[1,2]]
+
+  blocks2 = [
+    [[1,1,0],[1,1,0],[1,1,0]],
+    [[0,1,0],[0,1,0],[0,1,0]],
+    [[1,1,1],[0,0,0],[1,1,1]],
+    [[0,0,0],[0,1,0],[0,0,0]],
+    [[1,1,1],[0,0,0],[0,0,0]]
+  ]
+  assert find_matches(blocks2) == [[0,4],[1,2]]
