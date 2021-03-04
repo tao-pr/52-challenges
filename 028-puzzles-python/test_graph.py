@@ -45,3 +45,45 @@ def test_map_highest_peak():
   assert highestPeak([[0,1],[0,0]]) == [[1,0],[2,1]]
   assert highestPeak([[0,0,1],[1,0,0],[0,0,0]]) == [[1,1,0],[0,1,1],[1,2,2]]
 
+
+def test_possible_biparties():
+  # REF: https://leetcode.com/problems/possible-bipartition/
+  def possibleBipartition(N: int, dislikes: List[List[int]]) -> bool:
+    # greedy
+    A = set()
+    B = set()
+    # create reverse map (key is disliked by its member set)
+    hate = {}
+    for d in dislikes:
+      [x,y] = d
+      if y not in hate:
+        hate[y] = set()
+      hate[y].add(x)
+
+    print(hate)
+
+    for i in range(1,N+1):
+      # Try to add i => A,
+      # If fails, i => B
+      # Otherwise, we fail to create biparties
+      if not addTo(i, A, hate):
+        if not addTo(i, B, hate):
+          return False
+
+    return True
+
+  def addTo(i, grp, hate):
+    if i in grp:
+      return True
+    # Do not add if someone in grp hates i
+    if i in hate:
+      for g in grp:
+        if g in hate[i]:
+          return False
+    grp.add(i)
+    return True
+  
+  assert possibleBipartition(4, [[1,2],[1,3],[2,4]]) == True
+  assert possibleBipartition(3, [[1,2],[1,3],[2,3]]) == False
+  assert possibleBipartition(4, [[1,2],[1,3],[1,4],[2,3],[1,2]]) == False
+

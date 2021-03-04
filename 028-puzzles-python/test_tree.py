@@ -240,7 +240,14 @@ def test_heapsort_array():
     # bottom-up direction
     last_node = len(arr)-1
     parent_of_last = (last_node-1)//2
+
+    # build min-heap
     for i in range(parent_of_last, -1, -1):
+      heapify(arr, i)
+
+    # Take element from bottom up
+    for i in range(last_node, 0, -1):
+      arr[i], arr[0] = arr[0], arr[i]
       heapify(arr, i)
     return arr
 
