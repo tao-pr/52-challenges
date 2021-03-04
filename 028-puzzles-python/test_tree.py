@@ -234,3 +234,33 @@ def test_count_char_nodes():
   assert expected_2 == output_2
 
 
+def test_heapsort_array():
+  def heapsort(arr):
+    # heap sort basically heapifies "all parent nodes"
+    # bottom-up direction
+    last_node = len(arr)-1
+    parent_of_last = (last_node-1)//2
+    for i in range(parent_of_last, -1, -1):
+      heapify(arr, i)
+    return arr
+
+  def heapify(arr, root_index=0):
+    parent_of_root = (root_index-1)//2
+    child_left = root_index*2 + 1
+    child_right = root_index*2 + 2
+    # swap smallest to the root
+    smallest_index = root_index
+    if child_left < len(arr) and arr[child_left] < arr[root_index]:
+      smallest_index = child_left
+    if child_right < len(arr) and arr[child_right] < arr[root_index]:
+      smallest_index = child_right
+    if smallest_index != root_index:
+      # swap
+      arr[smallest_index], arr[root_index] = arr[root_index], arr[smallest_index]
+    # heapify parent node
+    if parent_of_root > 0:
+      heapify(arr, root_index=parent_of_root)
+    return arr
+
+  assert heapsort([1,15,3,9,4]) == [1,3,4,9,15]
+  assert heapsort([1,8,1,3]) == [1,1,3,8]
