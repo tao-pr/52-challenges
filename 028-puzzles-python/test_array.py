@@ -371,3 +371,79 @@ def test_lego_blocks():
     [[1,1,1],[0,0,0],[0,0,0]]
   ]
   assert find_matches(blocks2) == [[0,4],[1,2]]
+
+
+def test_rotate_submatrix():
+  # Given big matrix A: NxN
+  # how many submatrices we can rotate to make them 
+  # identical to the goal matrix?
+
+  def count_rotate_submat(M, G):
+    matsize = len(M)
+    gsize = len(G)
+    # Assume both square
+    n = 0
+    # gen rotates of G
+    Grotates = gen_rotates(G)
+    assert(len(Grotates)==4)
+    # sliding window
+    for i in range(matsize-gsize+1):
+      for j in range(matsize-gsize+1):
+        sub = [[M[i+b][j+a] for a in range(gsize)] for b in range(gsize)]
+        # check equality
+        for R in Grotates:
+          if eq(sub, R):
+            n += 1
+            break
+    return n
+
+  def eq(A,B):
+    for i in range(len(A)):
+      for j in range(len(A)):
+        if A[i][j] != B[i][j]:
+          return False
+    return True
+
+  def gen_rotates(M):
+    rot = [M]
+    W = M[:]
+    for i in range(0, 3):
+      # Rotate W by 90* clockwise
+      # 10  => 30 20 10
+      # 20
+      # 30 
+      R = []
+      for i in range(len(M)):
+        row = [W[len(M)-1-j][i] for j in range(len(M))]
+        R.append(row)
+      rot.append(R)
+      W = R[:]
+    return rot
+
+  # Test1
+  A1 = [
+    [1,1,1,1,1],
+    [1,1,2,1,1],
+    [1,1,1,1,1],
+    [1,1,1,1,1],
+    [1,1,1,1,1]
+  ]
+  G1 = [
+    [0, 0],
+    [0, 1]
+  ]
+  #assert(count_rotate_submat(A1, G1)) == 0
+
+  # Test2
+  A2 = [
+    [1,1,0,1,1],
+    [0,1,2,1,0],
+    [0,0,0,0,0],
+    [0,1,1,0,1],
+    [1,1,1,1,1]
+  ]
+  G2 = [
+    [0, 0],
+    [0, 1]
+  ]
+  assert(count_rotate_submat(A2, G2)) == 5
