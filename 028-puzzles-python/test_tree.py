@@ -281,3 +281,35 @@ def test_heapsort_array():
   assert heapify([5,2],0) == [2,5]
   assert heapsort([1,15,3,9,4]) == [1,3,4,9,15]
   assert heapsort([1,8,1,3]) == [1,1,3,8]
+
+
+def test_largest_triple_products():
+  # REF: https://www.facebookrecruiting.com/portal/coding_practice_question/?problem_id=510655302929581
+  # Supposed to be 'heap'
+
+  def findMaxProduct(arr):
+    from functools import reduce
+    from heapq import heapify, heappop, heappush, nlargest
+    prod = []
+    h = [] # heap
+    for i in range(len(arr)):
+      # Push i-th element to heap
+      heappush(h, arr[i]) 
+      if i<2:
+        prod.append(-1)
+        continue
+      
+      # Get 3 largest elements
+      triplet = nlargest(3, h)
+      prod.append(reduce(lambda a,b: a*b, triplet))
+    return prod
+
+  arr_1 = [1, 2, 3, 4, 5]
+  expected_1 = [-1, -1, 6, 24, 60]
+  output_1 = findMaxProduct(arr_1)
+  assert expected_1 == output_1
+
+  arr_2 = [2, 4, 7, 1, 5, 3]
+  expected_2 = [-1, -1, 56, 56, 140, 140]
+  output_2 = findMaxProduct(arr_2)
+  assert expected_2 == output_2
