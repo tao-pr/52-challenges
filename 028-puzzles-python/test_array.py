@@ -447,3 +447,36 @@ def test_rotate_submatrix():
     [0, 1]
   ]
   assert(count_rotate_submat(A2, G2)) == 5
+
+
+def test_seating_arrangement():
+  # REF: https://www.facebookrecruiting.com/portal/coding_practice_question/?problem_id=2444722699191194
+
+  def minOverallAwkwardness(arr):
+    # sorted: 1 2 3 4
+    # take every other element 1 3
+    # append with reverse of the remaining 1 3 + 4 2
+    sarr = sorted(arr)
+    minarr = []
+    remain = []
+    for i, a in enumerate(sarr):
+      if i%2 == 0:
+        minarr.append(a)
+      else:
+        remain = [a] + remain
+    marr = minarr + remain + [minarr[0]]
+    print(marr)
+    awk = 0
+    for a,b in zip(marr, marr[1:]):
+      awk = max(awk, abs(a-b))
+    return awk
+
+  arr_1 = [5, 10, 6, 8]
+  expected_1 = 4
+  output_1 = minOverallAwkwardness(arr_1)
+  assert expected_1 == output_1
+
+  arr_2 = [1, 2, 5, 3, 7]
+  expected_2 = 4
+  output_2 = minOverallAwkwardness(arr_2)
+  assert expected_2 == output_2
