@@ -239,17 +239,26 @@ def test_heapsort_array():
     # heap sort basically heapifies "all parent nodes"
     # bottom-up direction
     last_node = len(arr)-1
-    parent_of_last = (last_node-1)//2
+    parent_of_last = last_node//2 - 1
 
     # build min-heap
     for i in range(parent_of_last, -1, -1):
       heapify(arr, i)
 
-    # Take element from bottom up
-    for i in range(last_node, 0, -1):
-      arr[i], arr[0] = arr[0], arr[i]
-      heapify(arr, i)
-    return arr
+    # Keep popping root out, 
+    # swap last node in, until empty tree
+    out = []
+    while len(arr)>0:
+      out.append(arr[0]) # pop root
+      arr[0] = arr[len(arr)-1]
+      arr = arr[:-1]
+      if len(arr)>1:
+        # heapify parent nodes
+        N = ((len(arr)-1)-1) // 2
+        for j in range(N, -1, -1):
+          heapify(arr, j)
+    arr = out
+    return out
 
   def heapify(arr, root_index=0):
     parent_of_root = (root_index-1)//2
@@ -264,10 +273,11 @@ def test_heapsort_array():
     if smallest_index != root_index:
       # swap
       arr[smallest_index], arr[root_index] = arr[root_index], arr[smallest_index]
-    # heapify parent node
-    if parent_of_root > 0:
-      heapify(arr, root_index=parent_of_root)
+    # heapify the root again (if swapped)
+    if smallest_index != root_index:
+      heapify(arr, root_index)
     return arr
 
+  assert heapify([5,2],0) == [2,5]
   assert heapsort([1,15,3,9,4]) == [1,3,4,9,15]
   assert heapsort([1,8,1,3]) == [1,1,3,8]
