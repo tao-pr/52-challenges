@@ -201,3 +201,41 @@ def test_find_min_cost_to_reach_goal():
   ]
   assert get_path(g1, 0, 4) == [0,1,2,4]
   assert min_cost_to_goal(g1, 0, 4) == 49
+
+
+def test_reconstruct_itinerary():
+  # REF: https://leetcode.com/problems/reconstruct-itinerary/
+
+  def toposort(tickets, n, visited, order):
+    # DFS through next airports
+    visited.add(n)
+    for m in nextFrom(n, tickets):
+      if m not in visited:
+        toposort(tickets, m, visited, order)
+    order.append(n) # Add source airport at the end
+
+  def nextFrom(n, tickets):
+    # Suppose `n` always exists in tickets
+    nn = []
+    for a,b in tickets:
+      if a==n:
+        nn.append(b)
+    return nn
+
+  def findItinerary(tickets):
+    from functools import reduce
+    # topological sort
+    order = []
+    nodes = set(reduce(lambda x,y: x+y, [[a,b] for a,b in tickets]))
+    visited = set()
+    for n in nodes:
+      if n not in visited:
+        toposort(tickets, n, visited, order)
+    return order[::-1]
+
+  assert nextFrom("MUC", [["MUC","LHR"],["JFK","MUC"]]) == ["LHR"]
+  assert findItinerary([["MUC", "LHR"], ["JFK", "MUC"], ["SFO", "SJC"], ["LHR", "SFO"]]) == \
+    ["JFK", "MUC", "LHR", "SFO", "SJC"]
+
+  #assert findItinerary([["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]) == \
+  #  ["JFK","ATL","JFK","SFO","ATL","SFO"]
