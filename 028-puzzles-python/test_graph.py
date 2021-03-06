@@ -172,7 +172,6 @@ def test_find_min_cost_to_reach_goal():
         heappush(Q, (a, 0))
         H[a] = 0
       else:
-        heappush(Q, (a, float('inf')))
         H[a] = float('inf')
 
     # Iterate
@@ -185,8 +184,7 @@ def test_find_min_cost_to_reach_goal():
           H[b] = new_w
           prev[b] = a
           # add b back to q
-          heappush(Q, (b, new_w))
-
+          heappush(Q, (b, new_w)) # TAOTODO?
     return prev
 
   def adj(G, a):
