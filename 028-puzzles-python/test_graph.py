@@ -127,3 +127,79 @@ def test_can_we_install_these_orders():
   ]
   assert toposort(g1, [0,1,2,3,4]) == [2,1,0,4,3]
   assert find_order_install(g1, [[0,1],[1,4],[1,3]]) == [False, True, True]
+
+
+def test_find_min_cost_to_reach_goal():
+  from heapq import heappush, heappop
+  from functools import reduce
+
+  def min_cost_to_goal(G, start, finish):
+    prev = dijkstra(G, start, finish)
+
+    # Backtrack from finish to start, accumulate weight
+    w = 0
+    b = finish
+    while b != start:
+      b_ = prev[b]
+      w += get_weight(G, b_, b)
+      b = b_
+    return w
+
+  def get_path(G, start, finish):
+    prev = dijkstra(G, start, finish)
+    # Backtrack from finish to start, accumulate weight
+    w = 0
+    b = finish
+    path = [finish]
+    while b != start:
+      b = prev[b]
+      path.append(b)
+    return path[::-1]
+
+  def get_weight(G, a, b):
+    for i,j,w in G:
+      if i==a and b==j:
+        return w
+    return float('inf')
+
+  def dijkstra(G, start, finish):
+    nodes = set(reduce(lambda x,y: x+y, [[a,b] for a,b,w in G]))
+    Q = [] # heap: (weight, node)
+    H = {}
+    prev = {}
+    for a in nodes:
+      if a == start:
+        heappush(Q, (a, 0))
+        H[a] = 0
+      else:
+        heappush(Q, (a, float('inf')))
+        H[a] = float('inf')
+
+    # Iterate
+    while len(Q)>0:
+      (a,wa) = heappop(Q)
+      for b,wb in adj(G,a):
+        if H[b] > wb:
+          # update new weight of [b]
+          new_w = wa + wb
+          H[b] = new_w
+          prev[b] = a
+          # add b back to q
+          heappush(Q, (b, new_w))
+
+    return prev
+
+  def adj(G, a):
+    return [(j,w) for i,j,w in G if i==a]
+
+  g1 = [ # a -> b , weight
+    [0,1,14],
+    [0,2,25],
+    [0,3,1],
+    [1,2,10],
+    [2,3,10],
+    [2,4,25],
+    [3,4,100]
+  ]
+  assert get_path(g1, 0, 4) == [0,1,2,4]
+  assert min_cost_to_goal(g1, 0, 4) == 49
