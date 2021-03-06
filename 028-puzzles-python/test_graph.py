@@ -87,3 +87,43 @@ def test_possible_biparties():
   assert possibleBipartition(3, [[1,2],[1,3],[2,3]]) == False
   assert possibleBipartition(4, [[1,2],[1,3],[1,4],[2,3],[1,2]]) == False
 
+
+
+def test_can_we_install_these_orders():
+
+  def find_order_install(g, orders):
+    from functools import reduce
+    nodes = list(set(reduce(lambda x,y: x+y, [[a,b] for a,b in g])))
+    req = toposort(g, nodes)
+    verify = []
+    for a,b in orders:
+      verify.append(req.index(a)<req.index(b))
+    return verify
+
+  def topoSearch(n, g, visited, stack):
+    if n not in stack:
+      # Traverse next vertices from n
+      for a, b in g:
+        if a==n and b not in visited:
+          visited.add(b)
+          topoSearch(b, g, visited, stack)
+      stack.append(n)
+
+  def toposort(g, nodes):
+    visited = set()
+    stack = []
+    for n in nodes:
+      if n not in visited:
+        visited.add(n)
+        topoSearch(n, g, visited, stack)
+    return stack[::-1]
+
+  g1 = [
+    [1,0], # u->v means, u is prequisite of v
+    [2,0],
+    [0,3],
+    [2,4],
+    [0,4]
+  ]
+  assert toposort(g1, [0,1,2,3,4]) == [2,1,0,4,3]
+  assert find_order_install(g1, [[0,1],[1,4],[1,3]]) == [False, True, True]
