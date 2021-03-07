@@ -313,3 +313,4 @@ def test_largest_triple_products():
   expected_2 = [-1, -1, 56, 56, 140, 140]
   output_2 = findMaxProduct(arr_2)
   assert expected_2 == output_2
+
