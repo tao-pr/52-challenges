@@ -308,3 +308,62 @@ def test_find_prereqs():
   ]
   assert find_prereqs(plan1, ['C101','C201','C301']) == ['C101','C102','C201','C301']
   assert find_prereqs(plan1, ['C301','C401']) == ['C101','C102','C201','C301','C401']
+
+
+def test_route_is_bidirectional_cyclic():
+  def is_strongly_connected(G):
+    nodes = set()
+    edgeMap = {}
+    edgeReverseMap = {}
+    # Create edge map, reverse map
+    for a,b in G:
+      nodes.add(a)
+      nodes.add(b)
+      if a not in edgeMap:
+        edgeMap[a] = []
+      edgeMap[a].append(b)
+
+      if b not in edgeReverseMap:
+        edgeReverseMap[b] = []
+      edgeReverseMap[b].append(a)
+
+    nodes = list(nodes)
+    for i, a in enumerate(nodes):
+      for j, b in enumerate(nodes):
+        if i==j:
+          continue
+        visited = set([a])
+        if not reachable(edgeMap,a,b,visited):
+          return False
+        visited = set([a])
+        if not reachable(edgeReverseMap,a,b,visited):
+          return False
+    return True
+
+  def reachable(edgeMap, a, b, visited):
+    if a==b:
+      return True
+    if a in edgeMap:
+      if b in edgeMap[a]:
+        return True
+      # DFS
+      for n in edgeMap[a]:
+        if n not in visited:
+          visited.add(n)
+          if reachable(edgeMap, n, b, visited):
+            return True
+    return False
+
+  G1 = [
+    [1,2],[1,3],[1,4],
+    [2,1],[2,4]
+  ]
+  assert is_strongly_connected(G1) == False
+
+  G2 = [
+    [1,2],[1,3],[1,4],
+    [2,1],[2,4],
+    [3,2],
+    [4,1]
+  ]
+  assert is_strongly_connected(G2) == True
