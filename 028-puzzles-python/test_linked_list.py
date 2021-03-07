@@ -174,4 +174,48 @@ def test_odd_even_list():
   assert list2.print() == "1:2:3:4:5:6:7"
   assert oddeven(list2).print() == "1:3:5:7:2:4:6"
 
+
+def test_reverse_sub_linked_list_to_make_sorted():
+  def reverse_sort(ls):
+    # locate the first element to start a reverse
+    prevOfPrev = None
+    prev = None
+    n = ls
+    while n is not None:
+      if prev is not None:
+        # Only check if n is not the first
+        if n.data < prev.data:
+          # So first element to swap is [prev]
+          ls = swapsub(ls, prev, prevOfPrev)
+      prevOfPrev = prev
+      prev = n
+      n = n.next 
+    return ls
+
+  def swapsub(ls, cur, head):
+    # Swap from cur --> until the end, and reconnect to head
+    # head :: cur :: cur+1 :: ... :: last :: None
+    # -> becomes
+    # head :: last :: .. :: cur+1 :: cur :: None
+    prev = None
+    while cur is not None:
+      curnext = cur.next
+      # swap links
+      cur.next = prev
+
+      # iterate next
+      prev = cur
+      cur = curnext
+
+    if head is not None:
+      head.next = prev
+      return ls # no change to the head of list
+    else:
+      # Reversing the whole list, the new head will take place
+      return prev
+
+  assert reverse_sort(create([1,2,3,4])).print() == "1:2:3:4"
+  assert reverse_sort(create([1,4,3,2])).print() == "1:2:3:4"
+  assert reverse_sort(create([1,2,4,3])).print() == "1:2:3:4"
+  assert reverse_sort(create([4,3,2,1])).print() == "1:2:3:4"
   
