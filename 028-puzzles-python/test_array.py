@@ -480,3 +480,29 @@ def test_seating_arrangement():
   expected_2 = 4
   output_2 = minOverallAwkwardness(arr_2)
   assert expected_2 == output_2
+
+
+def test_quick_sort():
+  def qsort(arr):
+    return qsort_(arr, low=0, high=len(arr)-1)
+  def qsort_(arr, low, high):
+    if low < high:
+      pindex = partition(arr, low, high)
+      qsort_(arr, low, pindex-1) # left partition of pivot
+      qsort_(arr, pindex+1, high) # right partition of pivot
+    return arr
+
+  def partition(arr, low, high):
+    i = low-1
+    pivot = arr[high]
+    for n in range(low, high):
+      if arr[n] <= pivot:
+        i += 1
+        arr[n], arr[i] = arr[i], arr[n] # swap element smaller than pivot
+
+    arr[i+1], arr[high] = arr[high], arr[i+1]
+    return i+1
+
+  assert qsort([1,2,3]) == [1,2,3]
+  assert qsort([4,3,1,5]) == [1,3,4,5]
+  assert qsort([1,1,5,3]) == [1,1,3,5]
