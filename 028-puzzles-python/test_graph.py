@@ -239,3 +239,72 @@ def test_reconstruct_itinerary():
 
   #assert findItinerary([["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]) == \
   #  ["JFK","ATL","JFK","SFO","ATL","SFO"]
+
+def test_find_prereqs():
+  def to_maps(plan):
+    pm, rm = {}, {}
+    for a,b in plan:
+      if a not in pm:
+        pm[a] = []
+      if b not in rm:
+        rm[b] = []
+      pm[a].append(b)
+      rm[b].append(a)
+    return pm, rm
+
+  def find_prereqs(plan, courses):
+    plan_map, plan_reverse_map = to_maps(plan)
+    order = toposort(plan_map)
+    # Cut the topo sort upto the last courses required
+    last_course_index = max([order.index(c) for c in courses])
+    order = order[:last_course_index+1]
+    # Remove courses which are not required 
+    out = []
+    for a in order:
+      if is_required_by_any(a, courses, plan_reverse_map):
+        out.append(a)
+    return out
+
+  def is_required_by_any(a, courses, plan_reverse_map):
+    if a in courses:
+      return True
+    for c in courses:
+      # Check if a required by c
+      if c in plan_reverse_map:
+        if a in plan_reverse_map[c]:
+          return True
+
+        # Check if any of prereqs of c requires a
+        return is_required_by_any(a, plan_reverse_map[c], plan_reverse_map)
+
+    return False
+
+  def find_topo_sort(a, plan_map, visited, order):
+    # Iterate next nodes from a
+    visited.add(a)
+    if a in plan_map:
+      for b in plan_map[a]:
+        # DFS
+        if b not in visited:
+          find_topo_sort(b, plan_map, visited, order)
+    order.append(a)
+
+  def toposort(plan_map):
+    visited = set()
+    order = []
+    for a,b in plan_map.items():
+      if a not in visited:
+        find_topo_sort(a, plan_map, visited, order)
+    return order[::-1]
+
+  plan1 = [
+    ['C101', 'C102'],
+    ['C102', 'C201'],
+    ['C102', 'C301'],
+    ['C201', 'C301'],
+    ['C203', 'C302'],
+    ['C102', 'C203'],
+    ['C301', 'C401']
+  ]
+  assert find_prereqs(plan1, ['C101','C201','C301']) == ['C101','C102','C201','C301']
+  assert find_prereqs(plan1, ['C301','C401']) == ['C101','C102','C201','C301','C401']
