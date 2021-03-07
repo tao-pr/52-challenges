@@ -497,9 +497,10 @@ def test_quick_sort():
     pivot = arr[high]
     for n in range(low, high):
       if arr[n] <= pivot:
-        i += 1
+        i += 1 # step element for swapping 
         arr[n], arr[i] = arr[i], arr[n] # swap element smaller than pivot
 
+    # dont forget to swap the last with pivot itself
     arr[i+1], arr[high] = arr[high], arr[i+1]
     return i+1
 
