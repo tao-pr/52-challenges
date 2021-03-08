@@ -69,3 +69,4 @@
 027-array-puzzles/puzzle/.gitignore
 027-array-puzzles/puzzle/project/
 027-array-puzzles/target/
+028-puzzles-python/__pycache__/
