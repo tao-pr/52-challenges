@@ -43,6 +43,7 @@ List of challenges are collected below.
 | 025 | Crawl football data from Wikipedia       | Python           | 2 hrs      | Parser |
 | 026 | A/B Test simulation                      | Scala            | 4 hr       | Recall hypothesis testing |
 | 027 | Puzzles in scala                         | Scala            | 3 hr       | -- |
+| 028 | Puzzles from Leetcode / FB interview     | Python           | --         | Recall a lot of algorithms |
 
 ## Licence
 
