@@ -239,7 +239,7 @@ def test_heapsort_array():
     # heap sort basically heapifies "all parent nodes"
     # bottom-up direction
     last_node = len(arr)-1
-    parent_of_last = last_node//2 - 1
+    parent_of_last = (last_node-1)//2
 
     # build min-heap
     for i in range(parent_of_last, -1, -1):
