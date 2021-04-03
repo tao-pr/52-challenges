@@ -367,3 +367,39 @@ def test_route_is_bidirectional_cyclic():
     [4,1]
   ]
   assert is_strongly_connected(G2) == True
+
+
+def test_find_longest_path_without_repeat():
+  # Find longest path in the directed graph without repeating the nodes.
+  # Graph is defined with adjacency matrix.
+  from heapq import heappush, heappop
+  def longest_walk(G):
+    H = []
+    # DFS
+    N = len(G)
+    for n in range(N):
+      walk(G, [n], H)
+    L,W = heappop(H)
+    return W
+
+  def walk(G, W, H):
+    p = W[-1]
+    for a in range(len(G[p])):
+      if a!=p and G[p][a]==1 and a not in W:
+        Wx = W[:]
+        Wx.append(a)
+        heappush(H, (-len(Wx), Wx))
+        walk(G, Wx, H)
+
+  G1 = [[0,1,0,0,0],
+        [0,1,1,0,1],
+        [0,1,0,1,1],
+        [1,0,0,0,1],
+        [0,1,0,1,0]]
+  assert longest_walk(G1) == [0,1,2,3,4]
+
+  G2 = [[0,0,0,0],
+        [1,0,1,0],
+        [1,1,0,1],
+        [1,1,0,0]]
+  assert longest_walk(G2) == [1,2,3,0]
