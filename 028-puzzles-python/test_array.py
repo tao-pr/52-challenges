@@ -599,3 +599,19 @@ def test_steepest():
         [0,1,3,2,1],
         [0,1,1,1,0]]
   assert maxsteep(R2) == 2
+
+
+def test_find_min_rotate_sorted_array():
+  # REF: https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii/
+
+  def min_rotate(arr):
+    # find first element such that arr[n] > arr[n+1]
+    arr.append(arr[0])
+    for i in range(len(arr)-1):
+      if arr[i]>arr[i+1]:
+        return arr[i+1]
+
+  assert min_rotate([1,3,5]) == 1
+  assert min_rotate([2,2,2,0,1]) == 0
+  assert min_rotate([1,3,3,4,5,6,0]) == 0
+  assert min_rotate([1,3,3,4,5,6]) == 1
