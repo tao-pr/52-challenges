@@ -615,3 +615,32 @@ def test_find_min_rotate_sorted_array():
   assert min_rotate([2,2,2,0,1]) == 0
   assert min_rotate([1,3,3,4,5,6,0]) == 0
   assert min_rotate([1,3,3,4,5,6]) == 1
+
+
+def test_mini_subarray_sum():
+  # REF: https://leetcode.com/problems/minimum-size-subarray-sum/
+
+  # Find the `minimum` length of subarray
+  # of which sum is equal or greater than target
+
+  # O(n log n) is preferred
+
+  def subarray_sum(arr, target):
+    N = len(arr)
+    from heapq import heappush, heappop
+    H = []
+    # 0 1 2 3 
+    for i in range(N):
+      s = arr[i]
+      if s>=target:
+        return 1
+      for n in range(1,N-i):
+        s += arr[i+n]
+        if s>=target:
+          heappush(H, n+1)
+          break
+    return heappop(H) if len(H)>0 else 0
+
+  assert subarray_sum([2,3,1,2,4,3], 7) == 2
+  assert subarray_sum([1,4,4], 4) == 1
+  assert subarray_sum([1,1,1,1,1,1,1,1], 11) == 0
