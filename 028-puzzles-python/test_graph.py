@@ -403,3 +403,60 @@ def test_find_longest_path_without_repeat():
         [1,1,0,1],
         [1,1,0,0]]
   assert longest_walk(G2) == [1,2,3,0]
+
+
+def test_evaluate_divison():
+  # REF: https://leetcode.com/problems/evaluate-division/
+  # NOTE: very smart example of usage of graph
+  from functools import reduce
+  def eval_div(E, V, Q):
+    # create adjacency mat
+    from functools import reduce
+    vv = list(set(reduce(lambda x,y: x+y, E)))
+    A = [[0 for a in range(len(vv))] for v in range(len(vv))]
+    for (n,d),v in zip(E,V):
+      i = vv.index(n)
+      j = vv.index(d)
+      A[i][j] = v
+      A[j][i] = 1/v
+    ans = []
+    for n,d in Q:
+      if n not in vv or d not in vv:
+        ans.append(-1)
+        continue
+      if n==d:
+        ans.append(1)
+        continue
+      i = vv.index(n)
+      j = vv.index(d)
+      # calculate product of path from n -> d
+      prod = product_path(A, i, j, [i], 1)
+      prod = -1 if prod==0 else prod
+      ans.append(prod)
+    return ans
+
+  def product_path(A, start, to, walk, prod):
+    if A[start][to]!=0:
+      return prod * A[start][to]
+    for i in range(len(A)):
+      if start!=i and A[start][i] != 0 and i not in walk:
+        # DFS
+        possible_ans = product_path(A, i, to, walk+[i], A[start][i]*prod)
+        if possible_ans != 0:
+          return possible_ans
+    return 0
+
+  assert eval_div(
+    [["a","b"],["b","c"]], 
+    [2.0,3.0], 
+    [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]) == [6.00000,0.50000,-1.00000,1.00000,-1.00000]
+
+  assert eval_div(
+    [["a","b"],["b","c"],["bc","cd"]],
+    [1.5,2.5,5.0],
+    [["a","c"],["c","b"],["bc","cd"],["cd","bc"]]) == [3.75000,0.40000,5.00000,0.20000]
+
+  assert eval_div(
+    [["a","b"]],
+    [0.5],
+    [["a","b"],["b","a"],["a","c"],["x","y"]]) == [0.50000,2.00000,-1.00000,-1.00000]
