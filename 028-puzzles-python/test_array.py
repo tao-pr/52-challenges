@@ -507,3 +507,52 @@ def test_quick_sort():
   assert qsort([1,2,3]) == [1,2,3]
   assert qsort([4,3,1,5]) == [1,3,4,5]
   assert qsort([1,1,5,3]) == [1,1,3,5]
+
+
+def test_minimum_bound_rect():
+  """
+  Find area of minimum rectable covering all "1" in the matrix
+  """
+
+  """
+  0 0 0 0
+  0 1 0 0 
+  0 0 1 0
+  0 1 1 1
+  """
+  def min_rect(mat):
+    W, H = len(mat[0]), len(mat)
+
+    minx, maxx = W-1, W-1
+    miny, maxy = H-1, H-1
+
+    # identify top-left
+    for x in range(W):
+      for y in range(miny+1):
+        if mat[y][x]==1:
+          miny = y if y<miny else miny
+          minx = x if x<minx else minx
+          if x==y==0:
+            break
+
+    # identify bottom-right
+    for x in range(W-1, minx-1, -1):
+      for y in range(H-1, miny-1, -1):
+        if mat[y][x]==1:
+          maxy = y if y>maxy else maxy
+          maxx = x if x>maxx else maxx
+          if x==W-1 and y==H-1:
+            break
+    
+    print(f'TL = {minx}, {miny}')
+    print(f'BR = {maxx}, {maxy}')
+
+    area = (maxy-miny+1) * (maxx-minx+1)
+    return area
+
+  R1 = [[1,0],[0,1]]
+  assert(min_rect(R1)) == 4
+  R2 = [[0,0,0,0],[0,1,0,1],[0,0,1,0],[0,1,1,0]]
+  assert(min_rect(R2)) == 9
+  R3 = [[0,0,0,0],[0,0,1,0],[0,0,1,0],[0,1,0,1],[0,0,0,1]]
+  assert(min_rect(R3)) == 12
