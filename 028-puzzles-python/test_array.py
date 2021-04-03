@@ -556,3 +556,46 @@ def test_minimum_bound_rect():
   assert(min_rect(R2)) == 9
   R3 = [[0,0,0,0],[0,0,1,0],[0,0,1,0],[0,1,0,1],[0,0,0,1]]
   assert(min_rect(R3)) == 12
+
+
+def test_steepest():
+  """
+  Find the maximum steep of the terrain.
+  Considering 8 directions around cell
+  """
+  def maxsteep(mat):
+    from heapq import heappush, heappop
+
+    # calculate cell gradient of the whole mat
+    H, W = len(mat), len(mat[0])
+    G = []
+    for y in range(len(mat)):
+      for x in range(len(mat[0])):
+        # only calculate "*" neighbours, as x were already visited
+        # x x *
+        # x   *
+        # * * *
+        dd = [[-1,1],[0,1],[1,1],[1,0],[1,-1]] # y,x
+        for dy,dx in dd:
+          if 0<=x+dx<W and 0<=y+dy<H:
+            diff = abs(mat[y][x] - mat[y+dy][x+dx])
+            heappush(G, -diff)
+
+    return -heappop(G)
+
+  R1 = [[0,0,0],
+        [0,1,0],
+        [0,1,0]]
+  assert maxsteep(R1) == 1
+
+  R2 = [[0,0,0,0],
+        [0,1,2,0],
+        [0,1,1,0],
+        [0,1,0,0]]
+  assert maxsteep(R2) == 2
+
+  R3 = [[0,1,1,1,0],
+        [0,1,2,1,1],
+        [0,1,3,2,1],
+        [0,1,1,1,0]]
+  assert maxsteep(R2) == 2
