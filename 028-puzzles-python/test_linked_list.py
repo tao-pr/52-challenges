@@ -254,3 +254,25 @@ def test_sublist_reverse():
   assert subreverse(create([1,4,3,2,5])) == (1,3)
   assert subreverse(create([2,4,5,7,6])) == (3,4)
   assert subreverse(create([3,2,1])) == (0,2)
+
+
+def test_swap_every_two_adjacent():
+  # REF: https://leetcode.com/problems/swap-nodes-in-pairs/
+
+  def swap2(ls):
+    if ls is None:
+      return None
+    if ls.next is None:
+      return ls
+    nextup = ls.next.next
+    pre = ls.next
+    post = ls
+    pre.next = post
+    post.next = swap2(nextup)
+    return pre
+
+  assert swap2(create([1,1,2,2])).print() == "1:1:2:2"
+  assert swap2(create([1,3,3,1])).print() == "3:1:1:3"
+  assert swap2(create([1])).print() == "1"
+  assert swap2(create([4,5,3])).print() == "5:4:3"
+
