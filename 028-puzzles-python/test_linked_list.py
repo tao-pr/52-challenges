@@ -326,10 +326,6 @@ def test_swap_outside_in():
       postfix = first
       postfix.join(oldpostfix)
 
-    print('prefix = ', prefix.print())
-    print('middle = ', middle.print())
-    print('postfix = ', postfix.print())
-
     return create_swap(middle, prefix, postfix)
 
   assert swapout(create([1])).print() == "1"
