@@ -399,3 +399,39 @@ def test_reverse_k():
   assert reversek(create([1,2,3,4,5]), 1).print() == "1:2:3:4:5"
   assert reversek(create([1]), 2).print() == "1"
   assert reversek(create([1,2,3,4,5,6]), 3).print() == "3:2:1:6:5:4"
+
+def test_swap_every_odd():
+  """
+  Swap an element with the next sibling if its value is odd number
+  """
+  def swap_odd(ls):
+    if ls.is_last():
+      return ls
+    out = None
+    cur, tail = ls.pop_head()
+    while tail is not None:
+      t0, tail_next = tail.pop_head()
+      if cur.data % 2 == 1:
+        # swap
+        if out is None:
+          out = t0
+          out.join(cur)
+        else:
+          out.join(t0)
+          out.join(cur)
+        cur, tail = (None, None) if tail_next is None else tail_next.pop_head()
+      else:
+        # no swap
+        if out is None:
+          out = cur
+        else:
+          out.join(cur)
+        cur, tail = t0, tail_next
+
+    out.join(cur)
+    return out
+
+  assert swap_odd(create([1,2])).print() == "2:1"
+  assert swap_odd(create([1,2,2])).print() == "2:1:2"
+  assert swap_odd(create([1,2,2,1])).print() == "2:1:2:1"
+  assert swap_odd(create([1,2,3,5,2])).print() == "2:1:5:3:2"
