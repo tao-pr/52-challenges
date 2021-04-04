@@ -23,7 +23,6 @@ class Node:
     else:
       self.next.join(next)
 
-
 def create(ls):
   root = Node(ls[0])
   cur = root
@@ -218,4 +217,40 @@ def test_reverse_sub_linked_list_to_make_sorted():
   assert reverse_sort(create([1,4,3,2])).print() == "1:2:3:4"
   assert reverse_sort(create([1,2,4,3])).print() == "1:2:3:4"
   assert reverse_sort(create([4,3,2,1])).print() == "1:2:3:4"
-  
+
+
+def test_sublist_reverse():
+  """
+  Given a linked list L, find beginning and ending position 
+  to reverse the sub list which makes whole list sorted
+  """
+  def subreverse(ls):
+    # inspect the first element to start swapping
+    i, j = None, None
+    n = 0
+    ps = ls
+    prev = None
+    firstswap = None
+    while ps is not None:
+      # [1, a, ..... b, 7, 8] => [1, b, ..... a, 7, 8]
+
+      # identify beginning of swap
+      if prev is not None:
+        if i is None and ps.data < prev:
+          i = n-1
+          firstswap = ps.data
+          j = i-1
+        # stop as soon as we find the end
+        if j is not None and prev < ps.data:
+          j += 1
+          return (i, j)
+      n += 1
+      j = j+1 if j is not None else None
+      prev = ps.data
+      ps = ps.next
+    j += 1
+    return (i,j)
+
+  assert subreverse(create([1,4,3,2,5])) == (1,3)
+  assert subreverse(create([2,4,5,7,6])) == (3,4)
+  assert subreverse(create([3,2,1])) == (0,2)
