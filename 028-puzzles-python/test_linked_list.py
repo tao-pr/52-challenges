@@ -17,11 +17,14 @@ class Node:
       prev.next = None
     return last
 
-  def join(self, next):
+  def join(self, nxt):
     if self.next is None:
-      self.next = next 
+      self.next = nxt 
     else:
-      self.next.join(next)
+      self.next.join(nxt)
+
+  def is_last(self):
+    return self.next is None
 
 def create(ls):
   root = Node(ls[0])
@@ -276,3 +279,60 @@ def test_swap_every_two_adjacent():
   assert swap2(create([1])).print() == "1"
   assert swap2(create([4,5,3])).print() == "5:4:3"
 
+def test_swap_outside_in():
+  # swap head and tail, then go further in
+  # eg. [1,2,3,4] => [4,3,2,1]
+  #     [1,2,3,4,5] => [5,4,3,2,1]
+  
+  def swapout(ls):
+    return create_swap(ls, None, None)
+
+  def join_parts(prefix, middle, postfix):
+    if prefix is None:
+      if middle is not None:
+        middle.join(postfix)
+        return middle
+      return postfix
+    prefix.join(middle)
+    prefix.join(postfix)
+    return prefix
+
+  def create_swap(ls, prefix, postfix):
+    if ls.is_last():
+      return join_parts(prefix, ls, postfix)
+
+    # split first from middle
+    first = ls
+    middle = ls.next
+    first.next = None
+
+    if middle.is_last():
+      # just swap these two elements and done
+      middle.next = first
+      return join_parts(prefix, middle, postfix)
+
+    # remove last element from the middle, swap with first
+    last = middle.pop_last()
+
+    if prefix is None:
+      prefix = last
+    else:
+      prefix.join(last)
+
+    if postfix is None:
+      postfix = first
+    else:
+      oldpostfix = postfix
+      postfix = first
+      postfix.join(oldpostfix)
+
+    print('prefix = ', prefix.print())
+    print('middle = ', middle.print())
+    print('postfix = ', postfix.print())
+
+    return create_swap(middle, prefix, postfix)
+
+  assert swapout(create([1])).print() == "1"
+  assert swapout(create([1,2])).print() == "2:1"
+  assert swapout(create([1,2,3])).print() == "3:2:1"
+  assert swapout(create([1,4,3,2,5])).print() == "5:2:3:4:1"
