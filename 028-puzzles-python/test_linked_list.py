@@ -17,6 +17,25 @@ class Node:
       prev.next = None
     return last
 
+  def pop_head(self):
+    tail = self.next
+    head = self
+    head.next = None
+    return head, tail
+
+  def reverse(self):
+    head = None
+    prev = None
+    cur = self
+    # prev -> cur -> next
+    while cur is not None:
+      nextone = cur.next
+      cur.next = prev
+      prev = cur
+      if nextone is None:
+        return cur
+      cur = nextone
+
   def join(self, nxt):
     if self.next is None:
       self.next = nxt 
@@ -332,3 +351,51 @@ def test_swap_outside_in():
   assert swapout(create([1,2])).print() == "2:1"
   assert swapout(create([1,2,3])).print() == "3:2:1"
   assert swapout(create([1,4,3,2,5])).print() == "5:2:3:4:1"
+
+
+def test_reverse_k():
+  # REF : https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+  def reversek(ls, k):
+    return make_reverse(None, ls, k)
+
+  def join_parts(head, tail):
+    if head is None:
+      return tail
+    head.join(tail)
+    return head
+
+  def pop_n_head(ls, k):
+    n = 1
+    head = ls
+    tail = ls.next
+    head.next = None
+    while (n<k):
+      if tail is None:
+        # unable to split any further
+        return n, None, None
+      el = tail
+      tail = tail.next
+      el.next = None
+      head.join(el)
+      n += 1
+
+    return n, head, tail
+    
+
+  def make_reverse(prefix, ls, k):
+    if k==1 or ls is None or ls.is_last():
+      return join_parts(prefix, ls)
+    kx, headk, tail = pop_n_head(ls, k)
+    if kx==k:
+      return make_reverse(join_parts(prefix, headk.reverse()), tail, k)
+    else:
+      return join_parts(prefix, ls)
+
+  assert create([1,2,3]).reverse().print() == "3:2:1"
+  assert create([1,2]).reverse().print() == "2:1"
+  assert reversek(create([1,2,3,4,5]), 2).print() == "2:1:4:3:5"
+  assert reversek(create([1,2,3,4,5]), 3).print() == "3:2:1:4:5"
+  assert reversek(create([1,2,3,4,5]), 1).print() == "1:2:3:4:5"
+  assert reversek(create([1]), 2).print() == "1"
+  assert reversek(create([1,2,3,4,5,6]), 3).print() == "3:2:1:6:5:4"
