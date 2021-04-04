@@ -90,3 +90,27 @@ def test_string_compression():
 
   assert compress("aabbcc") == "a2b2c2"
   assert compress("aaabccc") == "a3bc3"
+
+
+def test_tree_parser():
+  """
+  Given string of following format:
+    (a)ab(b(c))(((c))) 
+  Create an output string showing the nested depth as follows
+    1a0a0b1b2c3c
+  """
+  def depth(str1):
+    out = ""
+    d = 0
+    for s in str1:
+      if s=='(':
+        d += 1
+      elif s==')':
+        d -= 1
+      else:
+        out += str(d) + s
+    return out
+  
+  assert depth("abc") == "0a0b0c"
+  assert depth("a(b)c") == "0a1b0c"
+  assert depth("a(b(c(d((d))e)))") == "0a1b2c3d5d3e"
