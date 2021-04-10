@@ -114,3 +114,28 @@ def test_tree_parser():
   assert depth("abc") == "0a0b0c"
   assert depth("a(b)c") == "0a1b0c"
   assert depth("a(b(c(d((d))e)))") == "0a1b2c3d5d3e"
+
+
+def test_byte_pair_encode():
+  """
+  BPE: A technique to encode a string with replacing 
+  most two frequent symbols with a single alpha,
+  and keep repeating until the remaining symbols are singular
+  """
+
+  def bpe(s):
+    from collections import Counter
+    freq = []
+    for a,b in zip(s,s[1:]):
+      freq.append(a+b)
+    freq = Counter(freq)
+    z = 'Z'
+    for mc,f in freq.most_common():
+      if f>1:
+        s = s.replace(mc, z)
+        z = chr(ord(z)-1)
+    return s
+
+  assert bpe("hey") == "hey"
+  assert bpe("foofoo") == "ZoZo"
+  assert bpe("quick squad and duck or chicken") == "YiZ sYaVanVduZ or chiZen"
