@@ -460,3 +460,59 @@ def test_evaluate_divison():
     [["a","b"]],
     [0.5],
     [["a","b"],["b","a"],["a","c"],["x","y"]]) == [0.50000,2.00000,-1.00000,-1.00000]
+
+
+def test_prune_metro():
+  """
+  Given a metro network graph with costs to maintain each link,
+  find how much cost we can reduce by removing some links 
+  while all stations are still accessible within the network.
+  """
+  def prune(G):
+    from functools import reduce
+    from heapq import heappush, heappop
+    M = {}
+    V = set(reduce(lambda m,n: m+n, [[a,b] for a,b,_ in G]))
+    total_weight = reduce(lambda x,y: x+y, [w for a,b,w in G])
+    # Prim's algorithm (suitable for undirected)
+    # - choose v in V, let S = {v}, T = {}
+    # - while S != V
+    #  - choose least e which has 
+    #   - one endpoint in S,
+    #   - another endpoint outside of S
+    #  - add e -> T
+    #  - add both endpoints to S
+    v = list(V)[0]
+    S = set([v])
+    T = []
+    while len(S) < len(V):
+      E = []
+      for a,b,w in G:
+        if a in S and b not in S:
+          heappush(E, (w,(a,b)))
+        if b in S and a not in S:
+          heappush(E, (w,(b,a)))
+      w,(a,b) = heappop(E)
+      S.add(b)
+      T.append([a,b])
+      total_weight -= w
+
+    return total_weight
+
+  def iter_prune(G, v1, edges, N):
+    pass
+
+  G1 = [
+    ('a','b',1), ('a','c',5),
+    ('b','e',3),
+    ('c','e',4),('c','d',1)
+  ]
+  assert prune(G1) == 5 # [a,c]
+
+  G2 = [
+    ('a','b',1), ('a','c',3), ('a','d',2),
+    ('b','c',3),
+    ('c','d',6)
+  ]
+  assert prune(G2) == 9 # ['a','c'],['c','d']
+
