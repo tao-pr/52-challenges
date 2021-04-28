@@ -714,3 +714,43 @@ def test_count_swap():
   assert cswap([1,2,3],[1,3,2]) == 1
   assert cswap([1,1,5,3],[1,5,3,1]) == 2
   assert cswap([1,6,7,3],[3,6,7,1]) == 1
+
+
+def test_search_word():
+  def search(M,w):
+    V = set()
+    # locate all the origins
+    cands = []
+    for i in range(len(M)):
+      for j in range(len(M[0])):
+        if M[i][j] == w[0]:
+          if walk((i,j), M, V, w[1:]):
+            return True
+    return False
+
+  def walk(pos, M, V, w):
+    if len(w)==0:
+      return True
+    i, j = pos
+
+    valid = lambda a,b: a>=0 and b>=0 and a<len(M) and b<len(M[0])
+    # expand neighbours, DFS
+    for di in [-1,0,1]:
+      for dj in [-1,0,1]:
+        if abs(di)!=abs(dj) and (i+di, j+dj) not in V and valid(i+di, j+dj):
+          if M[i+di][j+dj] == w[0]:
+            V_ = V.copy()
+            V_.add((i+di, j+dj)) # prevent from repeating the cells
+            if walk((i+di, j+dj), M, V_, w[1:]):
+              return True
+    return False
+
+  M1 = [['A','A','C','A'],
+        ['A','C','C','D'],
+        ['D','A','B','C']]
+  assert search(M1, 'CAAD') == False
+  assert search(M1, 'BCDA') == True
+  assert search(M1, 'BFBA') == False
+  assert search(M1, 'ACCB') == True
+  assert search(M1, 'ADDC') == False
+  assert search(M1, 'AADABC') == True
