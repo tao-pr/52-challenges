@@ -754,3 +754,30 @@ def test_search_word():
   assert search(M1, 'ACCB') == True
   assert search(M1, 'ADDC') == False
   assert search(M1, 'AADABC') == True
+
+
+def test_largest_rect_histogram():
+  # REF: https://leetcode.com/problems/largest-rectangle-in-histogram/
+  def lg(H):
+    largest = 0
+    for i in range(len(H)):
+      area = expand(H,i)
+      largest = max(largest, area)
+    return largest
+
+  def expand(H,i):
+    w = 1
+    # expand to left
+    j = i-1
+    while j>=0 and H[j]>=H[i]:
+      j-=1
+      w += 1
+    # expand to right
+    j = i+1
+    while j<len(H) and H[j]>=H[i]:
+      j+=1
+      w += 1
+    return w*H[i]
+
+  assert lg([2,1,5,6,2,3]) == 10
+  assert lg([2,4]) == 4
