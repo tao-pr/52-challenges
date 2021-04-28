@@ -682,3 +682,35 @@ def test_fold_spiral():
   assert fold([]) == []
   assert fold([1]) == [[1]]
   assert fold([1,2,3,4,5,6,7,8,9]) == [[1,2,3],[8,9,4],[7,6,5]]
+
+
+def test_count_swap():
+  """
+  Given two arrays, find minimum number of element swap to make them identical
+  """
+  def cswap(arr1, arr2):
+    if len(arr1)==len(arr2)==0:
+      return 0
+    if eq(arr1, arr2):
+      return 0
+    M = []
+    nswap = 0
+    for i in range(len(arr1)):
+      if arr1[i]==arr2[i]:
+        continue
+      # find an element to swap with
+      for j in range(i+1, len(arr1)):
+        if arr1[i]==arr2[j]:
+          nswap += 1
+          arr2[j] = arr2[i]
+          break
+    return nswap
+
+  def eq(arr1, arr2):
+    return all([a==b for a,b in zip(arr1,arr2)])
+
+  assert cswap([],[]) == 0
+  assert cswap([1],[1]) == 0
+  assert cswap([1,2,3],[1,3,2]) == 1
+  assert cswap([1,1,5,3],[1,5,3,1]) == 2
+  assert cswap([1,6,7,3],[3,6,7,1]) == 1
