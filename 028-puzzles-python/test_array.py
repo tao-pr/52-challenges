@@ -644,3 +644,41 @@ def test_mini_subarray_sum():
   assert subarray_sum([2,3,1,2,4,3], 7) == 2
   assert subarray_sum([1,4,4], 4) == 1
   assert subarray_sum([1,1,1,1,1,1,1,1], 11) == 0
+
+def test_fold_spiral():
+  """
+  Given a 1-d array, fold it clockwise to make a 2d matrix
+  """
+  def fold(arr):
+    import numpy as np
+    W = np.sqrt(len(arr))
+    if W!=np.round(W):
+      return [] # invalid array size, can't fold CW
+    W = int(W)
+    M = [[None for _ in range(W)] for _ in range(W)]
+
+    row,col = 0, 0
+    for a in arr:
+      M[row][col] = a
+      # next cell
+      # try R
+      if col<W-1 and M[row][col+1] is None:
+        col +=1
+      # try D
+      elif row<W-1 and M[row+1][col] is None:
+        row +=1
+      # try left
+      elif col>0 and M[row][col-1] is None:
+        col -= 1
+      # try up
+      elif row>0 and M[row-1][col] is None:
+        row -= 1
+      # nowhere to go
+      else:
+        return M
+    return M
+
+  assert fold([1,2,3,4]) == [[1,2],[4,3]]
+  assert fold([]) == []
+  assert fold([1]) == [[1]]
+  assert fold([1,2,3,4,5,6,7,8,9]) == [[1,2,3],[8,9,4],[7,6,5]]
