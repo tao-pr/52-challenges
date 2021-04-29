@@ -759,6 +759,7 @@ def test_search_word():
 def test_largest_rect_histogram():
   # REF: https://leetcode.com/problems/largest-rectangle-in-histogram/
   def lg(H):
+    # complexity : O(N^2)
     largest = 0
     for i in range(len(H)):
       area = expand(H,i)
@@ -781,3 +782,49 @@ def test_largest_rect_histogram():
 
   assert lg([2,1,5,6,2,3]) == 10
   assert lg([2,4]) == 4
+
+
+def test_interval_arrays():
+  """
+  Given a list of intervals, find total amount of overlapping time.
+  Union all overlapping
+  """
+  def overlap(intervals):
+    uni = []
+    for i,t1 in enumerate(intervals):
+      for t2 in intervals[i+1:]:
+        sec = intersect(t1,t2)
+        if len(sec)>0:
+          uni = union(uni, sec)
+    if len(uni)==0:
+      return 0
+    a,b = uni
+    return b-a
+
+  def intersect(t1,t2):
+    a1,b1 = t1
+    a2,b2 = t2
+    l = max(a1,a2)
+    u = min(b1,b2)
+    if l>=u: # no intersection
+      return []
+    else:
+      return [l,u]
+
+  def union(t1,t2):
+    if len(t1)==0:
+      return t2
+    a1,b1 = t1
+    a2,b2 = t2
+    return [min(a1,b1), max(b1,b2)]
+
+  assert intersect([0,10],[10,15]) == []
+  assert intersect([0,10],[5,10]) == [5,10]
+  assert intersect([0,10],[5,7]) == [5,7]
+  assert intersect([5,10],[7,15]) == [7,10]
+  assert intersect([5,10],[1,2]) == []
+  assert intersect([5,10],[1,6]) == [5,6]
+
+  assert overlap([[1,15],[15,60],[25,60],[45,75]]) == 35
+  assert overlap([[0,30],[45,50],[35,40]]) == 0
+  assert overlap([[30,100],[10,20],[20,40],[10,50]]) == 20
