@@ -170,3 +170,31 @@ def test_integer_to_roman():
   assert roman(19) == 'XIX'
   assert roman(1994) == 'MCMXCIV'
   assert roman(2453) == 'MMCDLIII'
+
+
+def test_longest_palindrom_substr():
+  # REF: https://leetcode.com/problems/longest-palindromic-substring/
+  def lp(s):
+    # find pattern where:
+    # 1) two subsequent elements are identical
+    # 2) mirrored elements with a middle, eg cdc
+    from heapq import heappush, heappop
+    C = []
+    for i in range(1,len(s)):
+      if s[i-1]==s[i]:
+        heappush(C, trav('', s, i-1, i))
+      if i<len(s)-1 and s[i-1]==s[i+1]:
+        heappush(C, trav(s[i], s, i-1, i+1))
+    return heappop(C)[1]
+
+  def trav(m, s, i, j):
+    while i>=0 and j<len(s) and s[i]==s[j]:
+      m = s[i] + m + s[j]
+      i -= 1
+      j += 1
+    return (-len(m), m)
+
+  assert lp('adcdc') == 'cdc'
+  assert lp('tenet') == 'tenet'
+  assert lp('etenetkeek') == 'tenet'
+  assert lp('swarasaasar') == 'rasaasar'
