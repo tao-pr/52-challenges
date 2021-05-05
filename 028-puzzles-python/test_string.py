@@ -139,3 +139,34 @@ def test_byte_pair_encode():
   assert bpe("hey") == "hey"
   assert bpe("foofoo") == "ZoZo"
   assert bpe("quick squad and duck or chicken") == "YiZ sYaVanVduZ or chiZen"
+
+
+def test_integer_to_roman():
+  """ REF: https://leetcode.com/problems/integer-to-roman/ """
+
+  def roman(num):
+    # I             1
+    # V             5
+    # X             10
+    # L             50
+    # C             100
+    # D             500
+    # M             1000
+    M = [(1000,'M'),(900,'CM'),(500,'D'),(400,'CD'),(100,'C'),
+      (90,'XC'),(50,'L'),(40,'XL'),(10,'X'),(9,'IX'),(5,'V'),(4,'IV'),(1,'I')]
+    
+    c = ''
+    while num>0:
+      if num>=M[0][0]:
+        c += M[0][1]
+        num -= M[0][0]
+      else:
+        M = M[1:]
+    return c
+
+  assert roman(3) == 'III'
+  assert roman(4) == 'IV'
+  assert roman(9) == 'IX'
+  assert roman(19) == 'XIX'
+  assert roman(1994) == 'MCMXCIV'
+  assert roman(2453) == 'MMCDLIII'
