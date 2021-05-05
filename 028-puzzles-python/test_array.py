@@ -791,6 +791,7 @@ def test_interval_arrays():
   """
   def overlap(intervals):
     uni = []
+    # O(N^2)
     for i,t1 in enumerate(intervals):
       for t2 in intervals[i+1:]:
         sec = intersect(t1,t2)
