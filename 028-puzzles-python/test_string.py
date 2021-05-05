@@ -198,3 +198,19 @@ def test_longest_palindrom_substr():
   assert lp('tenet') == 'tenet'
   assert lp('etenetkeek') == 'tenet'
   assert lp('swarasaasar') == 'rasaasar'
+
+
+def test_rotate_string_cube():
+  # REF: Applied from https://leetcode.com/problems/rotate-image/
+
+  def rot(cube):
+    nrows = len(cube)
+    ncols = len(cube[0])
+    rc = ['' for _ in range(nrows)]
+    for col in range(ncols):
+      for row in range(nrows-1, -1, -1):
+        rc[col] += cube[row][col]
+    return rc
+
+  assert rot(['abcd','efgh','jklm','opqr']) == ['ojea','pkfb','qlgc','rmhd']
+  assert rot(['ab','cd']) == ['ca','db']
