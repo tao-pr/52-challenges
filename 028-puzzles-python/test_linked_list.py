@@ -435,3 +435,39 @@ def test_swap_every_odd():
   assert swap_odd(create([1,2,2])).print() == "2:1:2"
   assert swap_odd(create([1,2,2,1])).print() == "2:1:2:1"
   assert swap_odd(create([1,2,3,5,2])).print() == "2:1:5:3:2"
+
+
+def test_swap_elem_monotonic_inc():
+  """
+  Swap any two adjacent elements to make the whole linked list monotonically increasing
+  """
+  def swp(nn):
+    head = nn
+    cur = nn
+    prev = None
+    while cur is not None:
+      # prev -> cur -> next
+      if cur.next is not None:
+        if cur.data > cur.next.data:
+          # swap
+          next2 = cur.next.next
+          cur, nx = cur.next, cur
+          # relink
+          cur.next = nx
+          nx.next = next2
+
+          # reconnect with prev
+          if prev is not None:
+            prev.next = cur
+          else:
+            # swap head
+            head = cur
+
+      prev = cur
+      cur = cur.next
+
+    return head
+
+  assert swp(create([1,2,3])).print() == "1:2:3"
+  assert swp(create([1,5,6,8,7])).print() == "1:5:6:7:8"
+  assert swp(create([4,1,5,6,8,7])).print() == "1:4:5:6:7:8"
