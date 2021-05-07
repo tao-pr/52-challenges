@@ -214,3 +214,44 @@ def test_rotate_string_cube():
 
   assert rot(['abcd','efgh','jklm','opqr']) == ['ojea','pkfb','qlgc','rmhd']
   assert rot(['ab','cd']) == ['ca','db']
+
+
+def test_cyclic_distance():
+  """
+  Define a cyclic distance by:
+    d(s1, s2) = min sum ascii code shift on each character to make them equal
+
+  Find top 2 pairs of given candidates
+  which have smallest cyclic distance
+  """
+  def cyc(a,b):
+    w = 0
+    for i,j in zip(a,b):
+      w += abs(ord(i) - ord(j))
+    return w
+
+  def top_2(cands):
+    from heapq import heappush, heappop
+    H = []
+    for i,c in enumerate(cands):
+      for j,k in enumerate(cands[i+1:]):
+        d = cyc(c,k)
+        heappush(H, (d, (c,k)))
+    Q = []
+    while len(Q)<2:
+      _, pair = heappop(H)
+      Q.append(pair)
+    return Q
+
+  assert top_2(['cat','dee','ter','bha','cau']) == [('cat','cau'),('dee','bha')]
+
+
+def test_min_pattern():
+  """
+  Given list of strings, find a pattern that matches all of them at once
+  """
+  pass
+
+
+def test_is_brackets_valid():
+  pass
