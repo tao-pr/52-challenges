@@ -246,12 +246,29 @@ def test_cyclic_distance():
   assert top_2(['cat','dee','ter','bha','cau']) == [('cat','cau'),('dee','bha')]
 
 
-def test_min_pattern():
-  """
-  Given list of strings, find a pattern that matches all of them at once
-  """
-  pass
-
-
 def test_is_brackets_valid():
-  pass
+  def isvalid(s):
+    stack = []
+    pair = {
+      '>': '<',
+      ')': '(',
+      ']': '[',
+      '}': '{'
+    }
+    for k in s:
+      if k in pair.values():
+        stack.append(k)
+      else:
+        # Check closing
+        if len(stack)>0:
+          lastopen = stack.pop()
+          if pair[k]!=lastopen:
+            return False
+        else:
+          return False
+    return True
+  
+  assert isvalid('{{}}') == True
+  assert isvalid('()()([]{{}})') == True
+  assert isvalid('(]') == False
+  assert isvalid('[<>>]') == False
