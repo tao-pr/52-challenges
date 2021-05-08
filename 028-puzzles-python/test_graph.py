@@ -529,8 +529,6 @@ def test_prune_traffic():
     S = set(range(1,len(G)))
     E = []
 
-    from heapq import heappush, heappop
-
     M = [[0 for _ in range(len(G[0]))] for _ in range(len(G))]
 
     while len(V)<len(G):
@@ -549,6 +547,68 @@ def test_prune_traffic():
       S.remove(p)
       M[p][q] = d
       M[q][p] = d
+    return M
+
+  G1 = [
+    [5,1,1],
+    [1,1,2],
+    [1,2,0]
+  ]
+  assert prune(G1) == [
+    [0,1,1],
+    [1,0,0],
+    [1,0,0]
+  ]
+
+  G2 = [
+    [0,1,0,3],
+    [1,1,2,3],
+    [0,2,0,1],
+    [3,3,1,0]
+  ]
+  assert prune(G2) == [
+    [0,1,0,0],
+    [1,0,2,0],
+    [0,2,0,1],
+    [0,0,1,0]
+  ]
+
+
+def test_prune_traffic_2():
+  """
+  Similar to previous problem
+  but reducing runtime complexity
+  by using "heap"
+  """
+
+  def prune(G):
+    from heapq import heappush, heappop
+
+    M = [[0 for _ in range(len(G[0]))] for _ in range(len(G))]
+
+    # store all edges in heap
+    H = []
+    for i in range(len(G)):
+      for j in range(i+1,len(G[i])):
+        d = G[i][j]
+        if d > 0:
+          heappush(H, (d, [i,j]))
+    
+    # Start pruning
+    V = set([0])
+    S = set(range(1, len(G)))
+    while len(V)<len(G):
+      d,p = heappop(H)
+      i,j = p
+      if j in V:
+        i,j = j,i
+
+      if j in S:
+        M[i][j] = d
+        M[j][i] = d
+        S.remove(j)
+        V.add(j)
+
     return M
 
   G1 = [
