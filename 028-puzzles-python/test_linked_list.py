@@ -471,3 +471,34 @@ def test_swap_elem_monotonic_inc():
   assert swp(create([1,2,3])).print() == "1:2:3"
   assert swp(create([1,5,6,8,7])).print() == "1:5:6:7:8"
   assert swp(create([4,1,5,6,8,7])).print() == "1:4:5:6:7:8"
+
+
+def test_zip_linked_list():
+  # Zip two link list alternatively
+
+  def head(ns):
+    if ns is None:
+      return None, None
+    else:
+      n = ns
+      ns = ns.next
+      n.next = None
+      return n, ns
+
+  def zipme(ns1, ns2):
+    h, ns1 = head(ns1)
+    cs = h
+    while ns1 is not None or ns2 is not None:
+      n, ns2 = head(ns2)
+      if n is not None:
+        cs.next = n
+        cs = cs.next
+      n, ns1 = head(ns1)
+      if n is not None:
+        cs.next = n
+        cs = cs.next
+    return h
+
+  assert zipme(create([1,3,5]), create([0])).print() == "1:0:3:5"
+  assert zipme(create([1,3,5]), create([2,4])).print() == "1:2:3:4:5"
+  assert zipme(create([1,3,5]), create([2,4,6,8])).print() == "1:2:3:4:5:6:8"
