@@ -488,6 +488,7 @@ def test_zip_linked_list():
   def zipme(ns1, ns2):
     h, ns1 = head(ns1)
     cs = h
+    # Runtime : O(N+M)
     while ns1 is not None or ns2 is not None:
       n, ns2 = head(ns2)
       if n is not None:
