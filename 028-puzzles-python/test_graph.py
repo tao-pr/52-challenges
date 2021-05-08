@@ -634,3 +634,52 @@ def test_prune_traffic_2():
     [0,2,0,1],
     [0,0,1,0]
   ]
+
+
+def test_is_okay_to_remove_edge():
+  """
+  Given a directed graph
+  Find out if we can remove an edge without losing a connectivity
+  between all nodes
+  """
+  def can_remove(G, e):
+    # We can remove if G without e is still strongly connected
+    G[e[0]][e[1]] = 0
+    return is_strongly_connected(G)
+
+  def is_strongly_connected(G):
+    for i in range(len(G)):
+      # can we access all other nodes from i ?
+      for j in range(i+1,len(G)):
+        if not can_access(G,i,j):
+          return False
+        if not can_access(G,i,j,rev=True):
+          return False
+    return True
+
+  def can_access(G,i,j,rev=False,V=set()):
+    # BFS
+    if edge(G,i,j,rev) > 0:
+      return True
+    V.add(i)
+    for k,d in enumerate(G[i]):
+      if d>0 and k not in V:
+        if can_access(G,k,j,rev,V):
+          return True
+    return False
+
+  def edge(G,i,j,rev=False):
+    if rev:
+      return G[j][i]
+    else:
+      return G[i][j]
+
+  G1 = [
+    [1,1,1],
+    [1,0,1],
+    [0,1,0],
+  ]
+  assert can_remove(G1, [1,1]) == True
+  assert can_remove(G1, [0,1]) == True
+  assert can_remove(G1, [1,0]) == False
+  assert can_remove(G1, [0,2]) == False
