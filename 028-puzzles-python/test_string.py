@@ -272,3 +272,71 @@ def test_is_brackets_valid():
   assert isvalid('()()([]{{}})') == True
   assert isvalid('(]') == False
   assert isvalid('[<>>]') == False
+
+
+def test_phone_letter_combination():
+  # REF: https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+
+  expand = ["abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"]
+
+  def comb(num):
+    # runtime complexity : O(N!)
+    out = []
+    for n in num:
+      exp = expand[ord(n)-ord('2')]
+      if len(out)==0:
+        out = list(exp)
+      else:
+        N = len(out)
+        out_ = []
+        for p in out:
+          for e in exp:
+            out_.append(p+e)
+        out = out_
+      print(out)
+    return out
+
+  exp1 = ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+  c1 = comb("23")
+  assert all([a in c1 for a in exp1])
+
+  exp2 = ["a","b","c"]
+  c2 = comb("2")
+  assert all([a in c2 for a in exp2])
+
+
+def test_substr_palindrom():
+  """
+  Given a string, find number of all possible palindroms
+  after removing 1 letter or adding 1 letter
+  """
+  def is_palin(s):
+    # Or: s == s[::-1], but always worst case O(N)
+    M = len(s)//2
+    for i in range(M):
+      if s[i] != s[len(s)-i-1]:
+        return False
+    return True
+
+  def pal(s):
+    N = 0
+    for i,c in enumerate(s): # O(N*2)
+      # if remove [i]
+      w = s[:i] + s[i+1:]
+      if is_palin(w):
+        print(w)
+        N += 1
+    # If add any missing letter to make it a palindrom
+    for i in range(len(s)):
+      if s[i] != s[len(s)-i-1]:
+        # try adding a mirrored letter [i] here
+        w = s[:i] + s[len(s)-i-1] + s[i:]
+        print(f'checking : {w}')
+        if is_palin(w):
+          print(w)
+          N += 1
+    return N
+
+  assert pal('cacaca') == 3 # cacaca[c], cacac[], []acaca
+  assert pal('wjew') == 3 # wje[j]w, w[]ew, wj[]w
+  assert pal('uli') == 0
