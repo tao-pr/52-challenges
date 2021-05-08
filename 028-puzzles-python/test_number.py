@@ -27,3 +27,37 @@ def test_gcd():
   assert gcd([3,4,7]) == 1
   assert gcd([7,21,14]) == 7
   assert gcd([6,18,42]) == 6
+
+
+def test_factorise():
+  """
+  Factorise a number
+  """
+  from functools import lru_cache # assume python 3.7 or older
+
+  @lru_cache
+  def fact(n):
+    F = set()
+    if n<=3:
+      return [n]
+
+    k = n
+    while len(F)==0: # Runtime : O(N!)
+      k -= 1
+      if k==1:
+        return [n] # n is a prime
+      if n%k==0: # n = m*k
+        m = n//k
+        # Remove any elements from F which m or k can divide
+        fm = set(fact(m))
+        fk = set(fact(k))
+        F = F.union(fm)
+        F = F.union(fk)
+        return sorted(list(F))
+
+    return [n]
+
+  assert fact(2) == [2]
+  assert fact(7) == [7]
+  assert fact(18) == [2,3]
+  assert fact(175) == [5,7]
