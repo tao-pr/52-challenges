@@ -516,3 +516,61 @@ def test_prune_metro():
   ]
   assert prune(G2) == 9 # ['a','c'],['c','d']
 
+
+def test_prune_traffic():
+  """
+  Given a traffic map, prune unnecessary links 
+  """
+  import numpy as np
+  def prune(G):
+    # Prim's algo
+    V = set([0])
+    v = 0 # Start from 1st vertex
+    S = set(range(1,len(G)))
+    E = []
+
+    from heapq import heappush, heappop
+
+    M = [[0 for _ in range(len(G[0]))] for _ in range(len(G))]
+
+    while len(V)<len(G):
+      # get smallest edge from V, which another end lies in S
+      p,q = None, None
+      d = np.inf
+      for v in V:
+        for w in S:
+          vw = G[v][w]
+          if vw < d and vw > 0:
+            d = vw
+            p = w
+            q = v
+      # register next edge
+      V.add(p)
+      S.remove(p)
+      M[p][q] = d
+      M[q][p] = d
+    return M
+
+  G1 = [
+    [5,1,1],
+    [1,1,2],
+    [1,2,0]
+  ]
+  assert prune(G1) == [
+    [0,1,1],
+    [1,0,0],
+    [1,0,0]
+  ]
+
+  G2 = [
+    [0,1,0,3],
+    [1,1,2,3],
+    [0,2,0,1],
+    [3,3,1,0]
+  ]
+  assert prune(G2) == [
+    [0,1,0,0],
+    [1,0,2,0],
+    [0,2,0,1],
+    [0,0,1,0]
+  ]
