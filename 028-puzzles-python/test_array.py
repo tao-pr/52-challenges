@@ -912,3 +912,46 @@ def test_get_closest_number_from_list():
   assert search([10,7,4,1], 4) == 4
   assert search([10,7,4,1], 9) == 10
   assert search([10,7,4,1], 0) == 1
+
+
+def test_remove_duplicates_from_sorted_matrix():
+  """
+  Replace duplicate values of sorted matrix with zeros
+  """
+
+  def redup(M):
+    p = None
+    x,y = None,None
+    for i in range(len(M)):
+      for j in range(len(M[i])):
+        if p is not None and M[i][j]==p:
+          M[i][j] = 0
+          M[x][y] = 0 # Paint the first element of duplicate
+        if M[i][j] != p: # Memo the beginning of the duplicate
+          x,y = i,j
+        p = M[i][j]
+    return M
+
+  M1 = [
+    [3]
+  ]
+  assert redup(M1) == M1
+
+  M2 = [
+    [1,4],
+    [7,8]
+  ]
+  assert redup(M2) == M2
+
+  M3 = [
+    [4,4],
+    [6,7]
+  ]
+  assert redup(M3) == [[0,0],[6,7]]
+
+  M4 = [
+    [1,3,3],
+    [4,4,5],
+    [5,7,8]
+  ]
+  assert redup(M4) == [[1,0,0],[0,0,0],[0,7,8]]
