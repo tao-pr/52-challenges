@@ -559,3 +559,24 @@ def test_reverse_sublinkedlist():
   assert rev(create([1,3,5,6,7,8]), 1, 3).tolist() == [3,1,5,6,7,8]
   assert rev(create([1,3,5,6,7,8]), 5, 7).tolist() == [1,3,7,6,5,8]
   assert rev(create([4,5,7]), 4, 7).tolist() == [7,5,4]
+
+
+def test_skip_every_other():
+  def skip(ns):
+    head = ns
+    k = 1
+    cur = ns
+    while cur is not None:
+      if cur.next is not None:
+        # skip next element
+        nx = cur.next.next
+        cur.next = nx
+        cur = nx
+      else:
+        cur.next = None
+        cur = None
+    return head
+
+  assert skip(create([1,2,3])).tolist() == [1,3]
+  assert skip(create([1])).tolist() == [1]
+  assert skip(create([1,6,7,8,9,17])).tolist() == [1,7,9]
