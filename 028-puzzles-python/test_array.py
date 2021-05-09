@@ -877,3 +877,38 @@ def test_search_2dmat():
   assert search(M2, 50) == True
   assert search(M2, 18) == False
   assert search(M2, 21) == False
+
+
+def test_get_closest_number_from_list():
+  """
+  Given a sorted list (max first)
+  find the closest number to the argument
+  """
+  def search(B, v):
+    print(B)
+    if v>=B[0]:
+      return B[0]
+    if v<=B[-1]:
+      return B[-1]
+
+    i = len(B)//2
+    if B[i]==v:
+      return v
+
+    if len(B)==2 and B[0]>v>B[1]:
+      if B[0]-v < v-B[1]:
+        return B[0]
+      else:
+        return B[1]
+
+    if B[i]<v:
+      return search(B[:i+1], v)
+    else:
+      return search(B[i:],v)
+
+  assert search([10,7,6,6,6,3,1], 4) == 3
+  assert search([10,7,6,6,6,3,1], 8) == 7
+  assert search([10,7,6,6,6,3,1], 11) == 10
+  assert search([10,7,4,1], 4) == 4
+  assert search([10,7,4,1], 9) == 10
+  assert search([10,7,4,1], 0) == 1
