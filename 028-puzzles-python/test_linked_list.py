@@ -7,6 +7,12 @@ class Node:
     nextprint = "" if self.next is None else ":" + self.next.print()
     return str(self.data) + nextprint
 
+  def tolist(self):
+    if self.next is None:
+      return [self.data]
+    else:
+      return [self.data] + self.next.tolist()
+
   def pop_last(self):
     prev = None
     last = self
@@ -503,3 +509,53 @@ def test_zip_linked_list():
   assert zipme(create([1,3,5]), create([0])).print() == "1:0:3:5"
   assert zipme(create([1,3,5]), create([2,4])).print() == "1:2:3:4:5"
   assert zipme(create([1,3,5]), create([2,4,6,8])).print() == "1:2:3:4:5:6:8"
+
+
+def test_reverse_sublinkedlist():
+  """
+  Reverse elements inside a linked list beginning from 
+  the specified value and ending value
+  """
+  def head(ns):
+    n = ns
+    nxt = ns.next
+    n.next = None
+    return n, nxt
+
+  def ljoin(ns1, ns2):
+    ns1.next = ns2
+    return ns1
+
+  def rev(ns, a, b):
+    if ns.data == a:
+      return rev_until(ns, b)
+    n, ns = head(ns)
+    if ns is not None:
+      return ljoin(n, rev(ns, a, b))
+    else:
+      return n
+
+  def rev_until(ns, b):
+    cur = ns
+    last = ns
+    prev = None
+    while cur is not None:
+      # prev -> cur -> cur.next
+      nx = cur.next
+      cur.next = prev
+      # step next
+      prev = cur
+      cur = nx
+      # break at b
+      if prev is not None and prev.data == b:
+        break
+    last.next = None # cut the end of reverse
+    head = prev
+    if cur is not None:
+      last.next = cur
+    return head
+
+  assert rev(create([1,3,5,6,7,8]), 1, 5).tolist() == [5,3,1,6,7,8]
+  assert rev(create([1,3,5,6,7,8]), 1, 3).tolist() == [3,1,5,6,7,8]
+  assert rev(create([1,3,5,6,7,8]), 5, 7).tolist() == [1,3,7,6,5,8]
+  assert rev(create([4,5,7]), 4, 7).tolist() == [7,5,4]
