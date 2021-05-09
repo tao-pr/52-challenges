@@ -831,3 +831,49 @@ def test_interval_arrays():
   assert overlap([[30,100],[10,20],[20,40],[10,50]]) == 20
 
 
+def test_search_2dmat():
+  # REF: https://leetcode.com/problems/search-a-2d-matrix/
+  # Each row is sorted from left -> right
+  # Each col is sorted from top -> bottom
+
+  def search(M, v):
+    from functools import reduce
+    # start from mid point
+    y = (len(M)-1)//2
+    x = (len(M[0])-1)//2
+
+    if v < M[0][0] or v > M[len(M)-1][len(M[0])-1]:
+      return False # OOB
+
+    # Flatten the matrix into 1-d list (Binary tree)
+    B = list(reduce(lambda x,y: x+y, M))
+
+    # 0 1 [2] 3 4
+    return bsearch(B, v)
+
+  def bsearch(B, v):
+    if len(B)==0:
+      return False
+    i = len(B)//2
+    if B[i]==v:
+      return True
+    if B[i]<v:
+      return bsearch(B[i+1:], v)
+    else:
+      return bsearch(B[:i], v)
+
+  M1 = [
+    [1,5],
+    [6,9]
+  ]
+  assert search(M1, 4) == False
+  M2 = [
+    [1,1,4,5],
+    [6,8,9,10],
+    [12,17,30,35],
+    [36,40,41,50]
+  ]
+  assert search(M2, 8) == True
+  assert search(M2, 50) == True
+  assert search(M2, 18) == False
+  assert search(M2, 21) == False
