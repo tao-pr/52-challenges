@@ -683,3 +683,50 @@ def test_is_okay_to_remove_edge():
   assert can_remove(G1, [0,1]) == True
   assert can_remove(G1, [1,0]) == False
   assert can_remove(G1, [0,2]) == False
+
+
+def test_currency_conversion():
+  """
+  Given a table of conversion rates, evaluate output currencies
+  """
+  def convert(cs, xc):
+    # create adjacency mat : O(X), X = number of currency
+    from functools import reduce
+    labels = {lbl: index for index,lbl in \
+      enumerate(set(reduce(lambda a,b: a+b, [[a,b] for a,b,v in xc])))
+    }
+    E = [[0 for _ in range(len(labels))] for _ in range(len(labels))]
+    for a,b,v in xc:
+      E[labels[a]][labels[b]] = v
+      E[labels[b]][labels[a]] = 1/v
+
+    print(E) # TAODEBUG
+
+    a,b,v = cs
+    return conv(E, labels[a], labels[b], v)
+
+  def conv(E, a, b, v, visited=set()):
+    if E[a][b] > 0:
+      return v*E[a][b]
+    else:
+      # DFS
+      for c,k in enumerate(E[a]):
+        if k>0 and c not in visited:
+          visited_ = visited.copy()
+          visited_.add(a)
+          d = conv(E, c, b, v*k, visited_)
+          if d is not None:
+            return d
+      return None
+
+  xc = [
+    ("a","b",1.5),
+    ("b","c",2.5),
+    ("b","d",4.0),
+    ("e","d",0.5)
+  ]
+  
+  assert convert(["a","c",100], xc) == 375
+  assert convert(["b","e",40], xc) == 320
+  assert convert(["a","e",200], xc) == 2400
+  assert convert(["e","c",1], xc) == 0.3125
