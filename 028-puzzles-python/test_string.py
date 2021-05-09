@@ -340,3 +340,20 @@ def test_substr_palindrom():
   assert pal('cacaca') == 3 # cacaca[c], cacac[], []acaca
   assert pal('wjew') == 3 # wje[j]w, w[]ew, wj[]w
   assert pal('uli') == 0
+
+
+def test_letter_ngram():
+  """
+  Generate letter n gram
+  """
+  def ngram(s,n):
+    grams = []
+    for i in range(len(s)):
+      if i+n > len(s):
+        return grams
+      grams.append(s[i:i+n])
+    return grams
+
+  assert ngram('bowling', 3) == ['bow','owl','wli','lin','ing']
+  assert ngram('gah', 3) == ['gah']
+  assert ngram('this is', 4) == ['this','his ','is i','s is']
