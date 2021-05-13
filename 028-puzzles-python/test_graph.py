@@ -367,3 +367,366 @@ def test_route_is_bidirectional_cyclic():
     [4,1]
   ]
   assert is_strongly_connected(G2) == True
+
+
+def test_find_longest_path_without_repeat():
+  # Find longest path in the directed graph without repeating the nodes.
+  # Graph is defined with adjacency matrix.
+  from heapq import heappush, heappop
+  def longest_walk(G):
+    H = []
+    # DFS
+    N = len(G)
+    for n in range(N):
+      walk(G, [n], H)
+    L,W = heappop(H)
+    return W
+
+  def walk(G, W, H):
+    p = W[-1]
+    for a in range(len(G[p])):
+      if a!=p and G[p][a]==1 and a not in W:
+        Wx = W[:]
+        Wx.append(a)
+        heappush(H, (-len(Wx), Wx))
+        walk(G, Wx, H)
+
+  G1 = [[0,1,0,0,0],
+        [0,1,1,0,1],
+        [0,1,0,1,1],
+        [1,0,0,0,1],
+        [0,1,0,1,0]]
+  assert longest_walk(G1) == [0,1,2,3,4]
+
+  G2 = [[0,0,0,0],
+        [1,0,1,0],
+        [1,1,0,1],
+        [1,1,0,0]]
+  assert longest_walk(G2) == [1,2,3,0]
+
+
+def test_evaluate_divison():
+  # REF: https://leetcode.com/problems/evaluate-division/
+  # NOTE: very smart example of usage of graph
+  from functools import reduce
+  def eval_div(E, V, Q):
+    # create adjacency mat
+    from functools import reduce
+    vv = list(set(reduce(lambda x,y: x+y, E)))
+    A = [[0 for a in range(len(vv))] for v in range(len(vv))]
+    for (n,d),v in zip(E,V):
+      i = vv.index(n)
+      j = vv.index(d)
+      A[i][j] = v
+      A[j][i] = 1/v
+    ans = []
+    for n,d in Q:
+      if n not in vv or d not in vv:
+        ans.append(-1)
+        continue
+      if n==d:
+        ans.append(1)
+        continue
+      i = vv.index(n)
+      j = vv.index(d)
+      # calculate product of path from n -> d
+      prod = product_path(A, i, j, [i], 1)
+      prod = -1 if prod==0 else prod
+      ans.append(prod)
+    return ans
+
+  def product_path(A, start, to, walk, prod):
+    if A[start][to]!=0:
+      return prod * A[start][to]
+    for i in range(len(A)):
+      if start!=i and A[start][i] != 0 and i not in walk:
+        # DFS
+        possible_ans = product_path(A, i, to, walk+[i], A[start][i]*prod)
+        if possible_ans != 0:
+          return possible_ans
+    return 0
+
+  assert eval_div(
+    [["a","b"],["b","c"]], 
+    [2.0,3.0], 
+    [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]) == [6.00000,0.50000,-1.00000,1.00000,-1.00000]
+
+  assert eval_div(
+    [["a","b"],["b","c"],["bc","cd"]],
+    [1.5,2.5,5.0],
+    [["a","c"],["c","b"],["bc","cd"],["cd","bc"]]) == [3.75000,0.40000,5.00000,0.20000]
+
+  assert eval_div(
+    [["a","b"]],
+    [0.5],
+    [["a","b"],["b","a"],["a","c"],["x","y"]]) == [0.50000,2.00000,-1.00000,-1.00000]
+
+
+def test_prune_metro():
+  """
+  Given a metro network graph with costs to maintain each link,
+  find how much cost we can reduce by removing some links 
+  while all stations are still accessible within the network.
+  """
+  def prune(G):
+    from functools import reduce
+    from heapq import heappush, heappop
+    M = {}
+    V = set(reduce(lambda m,n: m+n, [[a,b] for a,b,_ in G]))
+    total_weight = reduce(lambda x,y: x+y, [w for a,b,w in G])
+    # Prim's algorithm (suitable for undirected)
+    # - choose v in V, let S = {v}, T = {}
+    # - while S != V
+    #  - choose least e which has 
+    #   - one endpoint in S,
+    #   - another endpoint outside of S
+    #  - add e -> T
+    #  - add both endpoints to S
+    v = list(V)[0]
+    S = set([v])
+    T = []
+    while len(S) < len(V):
+      E = []
+      for a,b,w in G:
+        if a in S and b not in S:
+          heappush(E, (w,(a,b)))
+        if b in S and a not in S:
+          heappush(E, (w,(b,a)))
+      w,(a,b) = heappop(E)
+      S.add(b)
+      T.append([a,b])
+      total_weight -= w
+
+    return total_weight
+
+  def iter_prune(G, v1, edges, N):
+    pass
+
+  G1 = [
+    ('a','b',1), ('a','c',5),
+    ('b','e',3),
+    ('c','e',4),('c','d',1)
+  ]
+  assert prune(G1) == 5 # [a,c]
+
+  G2 = [
+    ('a','b',1), ('a','c',3), ('a','d',2),
+    ('b','c',3),
+    ('c','d',6)
+  ]
+  assert prune(G2) == 9 # ['a','c'],['c','d']
+
+
+def test_prune_traffic():
+  """
+  Given a traffic map, prune unnecessary links 
+  """
+  import numpy as np
+  def prune(G):
+    # Prim's algo
+    V = set([0])
+    v = 0 # Start from 1st vertex
+    S = set(range(1,len(G)))
+    E = []
+
+    M = [[0 for _ in range(len(G[0]))] for _ in range(len(G))]
+
+    while len(V)<len(G):
+      # get smallest edge from V, which another end lies in S
+      p,q = None, None
+      d = np.inf
+      for v in V:
+        for w in S:
+          vw = G[v][w]
+          if vw < d and vw > 0:
+            d = vw
+            p = w
+            q = v
+      # register next edge
+      V.add(p)
+      S.remove(p)
+      M[p][q] = d
+      M[q][p] = d
+    return M
+
+  G1 = [
+    [5,1,1],
+    [1,1,2],
+    [1,2,0]
+  ]
+  assert prune(G1) == [
+    [0,1,1],
+    [1,0,0],
+    [1,0,0]
+  ]
+
+  G2 = [
+    [0,1,0,3],
+    [1,1,2,3],
+    [0,2,0,1],
+    [3,3,1,0]
+  ]
+  assert prune(G2) == [
+    [0,1,0,0],
+    [1,0,2,0],
+    [0,2,0,1],
+    [0,0,1,0]
+  ]
+
+
+def test_prune_traffic_2():
+  """
+  Similar to previous problem
+  but reducing runtime complexity
+  by using "heap"
+  """
+
+  def prune(G):
+    from heapq import heappush, heappop
+
+    M = [[0 for _ in range(len(G[0]))] for _ in range(len(G))]
+
+    # store all edges in heap
+    H = []
+    for i in range(len(G)):
+      for j in range(i+1,len(G[i])):
+        d = G[i][j]
+        if d > 0:
+          heappush(H, (d, [i,j]))
+    
+    # Start pruning
+    V = set([0])
+    S = set(range(1, len(G)))
+    while len(V)<len(G):
+      d,p = heappop(H)
+      i,j = p
+      if j in V:
+        i,j = j,i
+
+      if j in S:
+        M[i][j] = d
+        M[j][i] = d
+        S.remove(j)
+        V.add(j)
+
+    return M
+
+  G1 = [
+    [5,1,1],
+    [1,1,2],
+    [1,2,0]
+  ]
+  assert prune(G1) == [
+    [0,1,1],
+    [1,0,0],
+    [1,0,0]
+  ]
+
+  G2 = [
+    [0,1,0,3],
+    [1,1,2,3],
+    [0,2,0,1],
+    [3,3,1,0]
+  ]
+  assert prune(G2) == [
+    [0,1,0,0],
+    [1,0,2,0],
+    [0,2,0,1],
+    [0,0,1,0]
+  ]
+
+
+def test_is_okay_to_remove_edge():
+  """
+  Given a directed graph
+  Find out if we can remove an edge without losing a connectivity
+  between all nodes
+  """
+  def can_remove(G, e):
+    # We can remove if G without e is still strongly connected
+    G[e[0]][e[1]] = 0
+    return is_strongly_connected(G)
+
+  def is_strongly_connected(G):
+    for i in range(len(G)):
+      # can we access all other nodes from i ?
+      for j in range(i+1,len(G)):
+        if not can_access(G,i,j):
+          return False
+        if not can_access(G,i,j,rev=True):
+          return False
+    return True
+
+  def can_access(G,i,j,rev=False,V=set()):
+    # BFS
+    if edge(G,i,j,rev) > 0:
+      return True
+    V.add(i)
+    for k,d in enumerate(G[i]):
+      if d>0 and k not in V:
+        if can_access(G,k,j,rev,V):
+          return True
+    return False
+
+  def edge(G,i,j,rev=False):
+    if rev:
+      return G[j][i]
+    else:
+      return G[i][j]
+
+  G1 = [
+    [1,1,1],
+    [1,0,1],
+    [0,1,0],
+  ]
+  assert can_remove(G1, [1,1]) == True
+  assert can_remove(G1, [0,1]) == True
+  assert can_remove(G1, [1,0]) == False
+  assert can_remove(G1, [0,2]) == False
+
+
+def test_currency_conversion():
+  """
+  Given a table of conversion rates, evaluate output currencies
+  """
+  def convert(cs, xc):
+    # create adjacency mat : O(X), X = number of currency
+    from functools import reduce
+    labels = {lbl: index for index,lbl in \
+      enumerate(set(reduce(lambda a,b: a+b, [[a,b] for a,b,v in xc])))
+    }
+    E = [[0 for _ in range(len(labels))] for _ in range(len(labels))]
+    for a,b,v in xc:
+      E[labels[a]][labels[b]] = v
+      E[labels[b]][labels[a]] = 1/v
+
+    print(E) # TAODEBUG
+
+    a,b,v = cs
+    return conv(E, labels[a], labels[b], v)
+
+  def conv(E, a, b, v, visited=set()):
+    if E[a][b] > 0:
+      return v*E[a][b]
+    else:
+      # DFS
+      for c,k in enumerate(E[a]):
+        if k>0 and c not in visited:
+          visited_ = visited.copy()
+          visited_.add(a)
+          d = conv(E, c, b, v*k, visited_)
+          if d is not None:
+            return d
+      return None
+
+  xc = [
+    ("a","b",1.5),
+    ("b","c",2.5),
+    ("b","d",4.0),
+    ("e","d",0.5)
+  ]
+  
+  assert convert(["a","c",100], xc) == 375
+  assert convert(["b","e",40], xc) == 320
+  assert convert(["a","e",200], xc) == 2400
+  assert convert(["e","c",1], xc) == 0.3125
