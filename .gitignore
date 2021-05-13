@@ -70,3 +70,6 @@
 027-array-puzzles/puzzle/project/
 027-array-puzzles/target/
 028-puzzles-python/__pycache__/
+029-classification-playground/.ipynb_checkpoints/
+029-classification-playground/classroom/
+029-classification-playground/logs/

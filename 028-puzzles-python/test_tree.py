@@ -314,3 +314,92 @@ def test_largest_triple_products():
   output_2 = findMaxProduct(arr_2)
   assert expected_2 == output_2
 
+
+def test_kd_tree():
+  """
+  Implement KD-Tree which has following methods
+  - Find N closest points
+  - Query all points which have x<?, or y>?
+  """
+  class KDN:
+    def __init__(self, x, y, level=0):
+      self.x = x
+      self.y = y
+      self.left = None
+      self.right = None
+      self.level = level
+
+    def add(self, x, y):
+      if self.level % 2==0:
+        isleft = x<=self.x
+      else:
+        isleft = y<=self.y
+
+      if isleft:
+        if self.left is None:
+          self.left = KDN(x,y)
+        else:
+          self.left.add(x,y)
+      else:
+        if self.right is None:
+          self.right = KDN(x,y)
+        else:
+          self.right.add(x,y)
+
+    def nn(self, k, x, y):
+      # BFS locate bounding box which contains the 
+      from heapq import heappush, heappop
+      H = []
+      self._nn(k, x, y, H)
+      Q = []
+      while len(Q)<k and len(H)>0:
+        _, p = heappop(H)
+        Q.append(p)
+      return Q
+
+    def dist(self, x, y):
+      import numpy as np
+      p1 = np.array([x,y])
+      p2 = np.array([self.x, self.y])
+      return np.linalg.norm(p1-p2)
+
+    def _nn(self, k, x, y, H):
+      from heapq import heappush, heappop
+      R = 10
+      d = self.dist(x,y)
+      if d<=R:
+        heappush(H, (d, (self.x, self.y)))
+        # if partition point is in range,
+        # also include both children in search
+        if self.left is not None:
+          self.left._nn(k, x, y, H)
+        if self.right is not None:
+          self.right._nn(k, x, y, H)
+      else:
+        # partition point is outside of range,
+        # only traverse into one side
+        if self.level%2==0:
+          # x
+          if self.x >= x and self.left is not None:
+            self.left._nn(k, x, y, H)
+          elif self.x < x and self.right is not None:
+            self.right._nn(k, x, y, H)
+        else:
+          # y
+          if self.y >= y and self.left is not None:
+            self.left._nn(k, x, y, H)
+          elif self.y < y and self.right is not None:
+            self.right._nn(k, x, y, H)
+
+  def make_kdn(arr):
+    kdn = KDN(arr[0].x, arr[0].y)
+    for p in arr[1:]:
+      kdn.add(p.x, p.y)
+    return kdn
+
+  from collections import namedtuple
+  P = namedtuple('P', ['x','y'])
+
+  kdn1 = make_kdn([P(x=3, y=4), P(x=10, y=15), P(x=10, y=12), P(x=6, y=0)])
+  assert kdn1.nn(k=1, x=5, y=1) == [(6,0)]
+  assert kdn1.nn(k=2, x=5, y=1) == [(6,0),(3,4)]
