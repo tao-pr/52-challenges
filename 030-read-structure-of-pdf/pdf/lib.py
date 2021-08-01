@@ -1,7 +1,35 @@
-import PyPDF2
+import fitz
 
-def read_pdf(path: str):
+def read_pdf2(path: str):
+  """
+  Read PDF pages with PyPDF2 lib
+  """
+  import PyPDF2
+
   file = PyPDF2.PdfFileReader(open(path, 'rb'))
   num_pages = file.getNumPages()
   pages = [file.getPage(n) for n in range(num_pages)]
   return pages
+
+def read_pdf(path: str):
+  """
+  Read PDF pages with PyMuPDF
+  """
+  pdf = fitz.open(path)
+  num_pages = pdf.page_count
+  metadata = pdf.metadata
+  toc = pdf.get_toc()
+  pages = [pdf.load_page(n) for n in range(num_pages)]
+  ptextblocks = map(lambda x: x.get_text_blocks(), pages)
+  """
+  [...
+    (28.346399307250977,
+    72.4287109375,
+    555.9425659179688,
+    91.57421875,
+    'Allgemeine Informationen zu Produktbezeichnungen gemäß § 15  Zahlungskontengesetz\nSoweit im Folgenden die Begrifflichkeiten „Commerzbank Girocard“, „Mastercard Debit“ oder „Virtual Debit Card“ genannt werden, entsprechen diese der standar disierten Zahlungskontenterminologie „Ausgabe einer Debitkarte“.\nSoweit im Folgenden die Begrifflichkeiten „PremiumKreditkarte“, „Young Visa Kreditkarte“, „ClassicKreditkarte“, „GoldKreditkarte“, „Prepaid Karte“ oder „Prepaid Karte Junior“ genannt werden, entsprechen diese der standardisierten Zahlungskontenterminologie „Ausgabe einer Kreditkarte“.\n',
+    138,
+    0)]
+  """
+  import IPython
+  IPython.embed()
