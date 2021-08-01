@@ -78,3 +78,56 @@ def test_spiral_walk_matrix():
     [1,4,5,7]
   ]
   assert walk(M3, 1, 2) == [5,3,7,5,4,1,1,2,2]
+
+
+def test_diagonal_walk():
+  """
+  Given a matrix M,
+  create a diagonal walk which 
+  0 1 2
+  3 4 5
+
+  becomes: 0 1 3 2 4 5
+  """
+  def diag(M):
+    w = []
+    """
+    0 1 2
+    3 4 5
+    6 7 8
+    """
+    return dwalk(M, 0, 0, [])
+
+  def dwalk(M, i, j, w):
+    a,b = i,j
+    # diagonal walk
+    while a<=len(M)-1 and b>=0: 
+      w.append(M[a][b])
+      a += 1
+      b -= 1
+
+    # all collected
+    if i==len(M)-1 and j==len(M[0])-1:
+      return w
+    # next to the right
+    if j<len(M[0])-1:
+      j += 1
+    else:
+      i += 1
+    return dwalk(M, i, j, w)
+
+  M = [[1]]
+  assert diag(M) == [1]
+
+  M = [
+    [2, 3, 4],
+    [5 ,6, 7]
+  ]
+  assert diag(M) == [2, 3, 5, 4, 6, 7]
+
+  M = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+  ]
+  assert diag(M) == [1, 2, 4, 3, 5, 7, 6, 8, 9]
