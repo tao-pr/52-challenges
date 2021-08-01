@@ -100,7 +100,11 @@ def test_diagonal_walk():
 
   def dwalk(M, i, j, w):
     a,b = i,j
-    # diagonal walk
+    """
+    Diagonal walk
+
+    time complexity : O(n*m)
+    """
     while a<=len(M)-1 and b>=0: 
       w.append(M[a][b])
       a += 1
@@ -131,3 +135,23 @@ def test_diagonal_walk():
     [7, 8, 9]
   ]
   assert diag(M) == [1, 2, 4, 3, 5, 7, 6, 8, 9]
+
+
+def test_find_missing_values():
+  """
+  Given a array,
+  Find all missing integers in between
+  """
+  def findmissing(ns):
+    ms = []
+    prev = ns[0]-1
+    for n in ns:
+      if n-prev>1:
+        ms += list(range(prev+1, n))
+      prev = n
+    return ms
+
+  assert findmissing([1]) == []
+  assert findmissing([1,2,3,4,5]) == []
+  assert findmissing([1,3,4,5,7,8,9]) == [2,6]
+  assert findmissing([1,2,3,8,9,11,12]) == [4,5,6,7,10]
