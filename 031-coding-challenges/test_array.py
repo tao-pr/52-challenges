@@ -155,3 +155,50 @@ def test_find_missing_values():
   assert findmissing([1,2,3,4,5]) == []
   assert findmissing([1,3,4,5,7,8,9]) == [2,6]
   assert findmissing([1,2,3,8,9,11,12]) == [4,5,6,7,10]
+
+def test_bar():
+  """
+  Given an array M, each element indicates the height of terrain.
+  If we drop a bar of length L,
+  find the maximum height which can support this bar
+
+  NOTE: The bar can be stable if both highest supports have the same height
+  """
+  def highest_support(M, L):
+    """
+            x
+      x     x x     x
+    x x x x x x x x x
+    """
+    from bisect import insort_left
+    longest = []
+    lopen = {} # opening left supports
+    for i,h in enumerate(M):
+      if h==0:
+        continue
+      if h in lopen:
+        # there exists opening left support of the same height
+        iopen = lopen[h]
+        length = i-iopen+1
+        if length <= L:
+          insort_left(longest, (-length, h))
+        del lopen[h]
+      else:
+        # remove all opening left which are lower than h
+        keys = list(filter(lambda k: k<h, lopen.keys()))
+        for k in keys:
+          del lopen[k]
+        # register left opening
+        lopen[h] = i
+
+    if len(longest)==0:
+      return None
+    else:
+      _,h = longest[0]
+      return h
+
+  assert highest_support([0,1,1,0,0,2,1,0,0,1], 3) == 1
+  assert highest_support([0,1,5,3,0,1,5,2], 2) == None
+  assert highest_support([0,1,5,3,0,1,5,2], 4) == None
+  assert highest_support([0,1,5,3,0,1,5,2], 5) == 5
+  assert highest_support([0,1,5,3,0,1,5,2], 7) == 5
