@@ -8,6 +8,11 @@ def test_find_longest_sequence():
   """
   def find(L):
     ans = (0,0)
+    # Complexity: O(l + m*n)
+    # l = length of array
+    # m = total length of subsequences (summed), m < l
+    # n = number of subsequences, n < l
+
     for i,p in enumerate(L):
       ansp = expand(L, p, p, i, 1)
       # update answer if a longer sequence is found
@@ -24,3 +29,60 @@ def test_find_longest_sequence():
   assert find([0,1,0]) == (1,1)
   assert find([4,3,2,5,6,3,2,1]) == (4,2)
   assert find([2,4,3,2,1,2,3,4,5]) == (1,1)
+
+
+def test_count_num_of_rectangles():
+  """
+  Given a set of points on 2d coordinates,
+  find how many right rectangles we can connect those dots
+  """
+  def count_rect(ps):
+    # create hashmap of all points : Y -> X
+    # Complexity : O(p)
+    from bisect import insort_left
+    ymap = {}
+    for x,y in ps:
+      if y not in ymap:
+        ymap[y] = [x]
+      else:
+        insort_left(ymap[y], x) # keep them sorted
+    
+    # Connect horizontal lines 
+    # Complexity : O(y), y<=p
+    hlines = {}
+    for y in ymap.keys():
+      # Generate combination of x pos 
+      hlines[y] = []
+      for i,x1 in enumerate(ymap[y]):
+        for x2 in ymap[y][i+1:]:
+          hlines[y].append((x1,x2))
+
+    # Identify matching parallel lines
+    # Complexity : O(y^2 * x)
+    nrect = 0
+    hkeys = list(hlines.keys())
+    for i,y1 in enumerate(hkeys):
+      for x1,x2 in hlines[y1]:
+        # we must look for other horizontal lines with the same begin & end
+        for y2 in hkeys[i+1:]:
+          for x1_,x2_ in hlines[y2]:
+            if x1==x1_ and x2==x2_:
+              # vertical lines matched!
+              nrect += 1
+    return nrect
+
+  ps = [(0,0), (0,1), (1,0), (1,1)]
+  assert count_rect(ps) == 1
+
+  ps = [(0,5), (5,0)]
+  assert count_rect(ps) == 0
+
+  ps = [(0,0), (0,1), 
+        (1,0), (1,1), (1,2), (1,5),
+        (2,0),        (2,2)]
+  assert count_rect(ps) == 2
+
+  ps = [(0,0), (0,1), 
+        (1,0), (1,1), (1,2), (1,5),
+        (2,0), (2,1),        (2,5)]
+  assert count_rect(ps) == 5
