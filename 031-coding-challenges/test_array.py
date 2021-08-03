@@ -202,3 +202,47 @@ def test_bar():
   assert highest_support([0,1,5,3,0,1,5,2], 4) == None
   assert highest_support([0,1,5,3,0,1,5,2], 5) == 5
   assert highest_support([0,1,5,3,0,1,5,2], 7) == 5
+
+
+def test_create_matrix_from_spiral_walk():
+  """
+  Given an array of spiral walk starting from (0,0),
+  reconstruct a square matrix back
+  """
+  def to_mat(walk):
+    from math import sqrt
+    w = int(sqrt(len(walk)))
+    M = [[None]*w for i in range(w)]
+    
+    n = 0
+    r,c = 0, 0
+    directions = [(0,1),(1,0),(0,-1),(-1,0)]
+    while n < w*w:
+      M[r][c] = walk[n]
+      n += 1
+
+      # next cell
+      dr,dc = directions[0]
+      if 0<=r+dr<w and 0<=c+dc<w and M[r+dr][c+dc] is None:
+        # keep the same direction if still in boundary, or cell not filled yet
+        r += dr
+        c += dc
+      else:
+        # change direction if hits boundary, or the cell already filled
+        directions = directions[1:] + [directions[0]]
+        dr,dc = directions[0]
+        r += dr
+        c += dc
+
+    return M
+
+  assert to_mat([1]) == [[1]]
+  assert to_mat([1,2,3,4]) == [[1,2],[4,3]]
+  M = [
+    [0,0,0,0,1]
+    [3,4,4,4,1]
+    [3,5,5,4,1]
+    [3,5,5,5,1]
+    [3,2,2,2,2]
+  ]
+  assert to_mat([0]*4+[1]*4+[2]*4+[3]*4+[4]*4+[5]*4) == M
