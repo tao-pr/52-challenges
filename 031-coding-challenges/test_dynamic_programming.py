@@ -86,3 +86,33 @@ def test_count_num_of_rectangles():
         (1,0), (1,1), (1,2), (1,5),
         (2,0), (2,1),        (2,5)]
   assert count_rect(ps) == 5
+
+
+def test_min_coins():
+  """
+  Given a set of coins, eg [5,5,2,1, 0.25]
+  find the combination which can pay for a product at specified price
+  which leaves minimal "number" of coins left in the pocket
+  """
+  def getbest(a,b):
+    return a if len(a)>len(b) else b
+
+  def min_coins(coins, price, pre=[], best=[]):
+    # greedy algorithm
+    for i,c in enumerate(coins):
+      if c==price: 
+        # last coin
+        best = getbest(pre+[c], best)
+      else:
+        # generate tail combination
+        tail = coins[:i] + coins[i+1:]
+        if len(tail)==0:
+          # no way to sum up to price
+          continue
+        else:
+          best = getbest(min_coins(tail, price-c, pre=pre+[c], best=best), best)
+    return best
+
+  assert min_coins([10,5,5,5,1,1], 12) == [5,5,1,1] # 2 coins left
+  assert min_coins([5,5,2,1,0.5,0.5], 7) == [5,1,0.5,0.5] # 2 coins left
+  assert min_coins([2,2,2,1,0.5,0.25,0.25], 5) == [2,2,0.5,0.25,0.25] # 2 coins left
