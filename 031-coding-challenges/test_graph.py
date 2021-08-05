@@ -54,3 +54,44 @@ def test_longest_increasing_path():
   assert lip(M) == [0,1,3,4,5,7]
 
 
+def test_ininerary():
+  """
+  Given a list of SRC-DEST,
+  figure out the shortest (fewest connections) of the given trip
+  """
+  def shortest(it, a, b):
+    from heapq import heappush, heappop
+    # Dijkstra
+    Q = [(0,a)]
+    H = {a: 0}
+    prev = {}
+    while len(Q)>0:
+      w,p = heappop(Q)
+      for q in it[p]:
+        # p -> q
+        if q not in H or H[q] > w:
+          H[q] = w+1
+          heappush(Q, (w+1,q))
+          prev[q] = p
+
+    # Done!
+    pp = [b]
+    while pp[-1] != a:
+      pp.append(prev[pp[-1]])
+    return pp[::-1]
+
+
+  it = {
+    'a': ['b','c','e','g'],
+    'b': ['a','c','g'],
+    'c': ['a','b','d'],
+    'd': ['g','h'],
+    'e': ['a','b','g'],
+    'g': ['a','c'],
+    'h': ['c','d']
+  }
+
+  assert shortest(it, 'a','b') == ['a','b']
+  assert shortest(it, 'a','h') == ['a','c','d','h']
+  assert shortest(it, 'h','a') == ['h','c','a']
+
