@@ -1,3 +1,5 @@
+from functools import reduce
+
 def test_find_longest_sequence():
   """
   Given an array L,
@@ -116,3 +118,62 @@ def test_min_coins():
   assert min_coins([10,5,5,5,1,1], 12) == [5,5,1,1] # 2 coins left
   assert min_coins([5,5,2,1,0.5,0.5], 7) == [5,1,0.5,0.5] # 2 coins left
   assert min_coins([2,2,2,1,0.5,0.25,0.25], 5) == [2,2,0.5,0.25,0.25] # 2 coins left
+
+
+def test_pair_tasks():
+  """
+  Given a list of people with maximum capacity
+  and a list of tasks with amount of effort,
+
+  pair people with tasks, such that:
+    - everyone has at least 1 task to do
+    - all tasks are assigned
+    - no one takes more tasks than their capacity
+    - a task cannot be assigned to more than 1 people
+    - no one takes more than 3 tasks
+  """
+  def assign(pp, tasks):
+    # greedy, assign heavy tasks first
+    # sort complexity : O(Tlog(T))
+    tasks = sorted(tasks, reverse=True)
+    return gassign(pp[:], tasks, [[] for _ in pp])
+
+  def gassign(pp, tasks, assigned):
+    # complexity : O(T * P)
+    for t in tasks:
+      for i in range(len(pp)):
+        if pp[i]>=t and len(assigned[i])<3:
+          pp[i] -= t
+          assigned[i].append(t)
+          break
+    return assigned
+
+
+  def is_valid(assigned, pp, tasks):
+    print(f'pp = {pp}')
+    print(f'tasks = {tasks}')
+    print(f'assigned = {assigned}')
+    assert sorted(tasks) == sorted(reduce(lambda a,b: a+b, assigned))
+    assert len(assigned) == len(pp)
+    for p,t in zip(pp, assigned):
+      assert p>=sum(t)
+
+  # 1 -> 1
+  # 3 -> 1,1,1
+  # 2 -> 1,1
+  # 4 -> 3,1
+  pp = [1,3,2,4]
+  tasks = [1,1,1,1,1,1,3]
+  is_valid(assign(pp, tasks), pp, tasks)
+  # 5 -> 1,1,4
+  # 4 -> 2,2
+  # 1 -> 1
+  # 3 -> 2,1
+  pp = [5,4,1,3]
+  tasks = [1,2,1,4,2,1,2]
+  is_valid(assign(pp, tasks), pp, tasks)
+  # 6 -> 4,1
+  # 3 -> 1,1,1
+  pp = [6,3]
+  tasks = [4,1,1,1,1]
+  is_valid(assign(pp, tasks), pp, tasks)
