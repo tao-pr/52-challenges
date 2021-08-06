@@ -245,5 +245,58 @@ def test_create_matrix_from_spiral_walk():
     [3,5,5,5,1],
     [3,2,2,2,2]
   ]
-  print(M) # TAODEBUG
   assert to_mat([0]*4+[1]*4+[2]*4+[3]*4+[4]*4+[5]*5) == M
+
+
+def test_find_max_in_partial_sorted_matrix():
+  """
+  Given a matrix M which:
+    - all elements in the same row are split into 2 parts at k
+    - left part, all elements are sorted descendingly: M[_][i] <= M[_][i+1], i<=k
+    - right part, all elements are sorted ascendingly: M[_][i] >= M[_][i+1], i>=k
+    - split index [i] of each row is not necessarily the same position
+  """
+  def findm(M):
+    mx = M[0][0]
+    r,c = 0,0
+    # complexity :
+    # worst case : O(R * C)
+    # best case  : O(R)
+    while r<len(M):
+      # find pivot position (max)
+      while 0 <= c < len(M[r]):
+        # x, y, z
+        x = M[r][c-1] if c>0 else M[r][c]
+        y = M[r][c]
+        z = M[r][c+1] if c<len(M[r])-1 else M[r][c]
+
+        if x<=y and y>z:
+          # pivot found
+          mx = max(mx, y)
+          break
+        else:
+          c += 1
+
+      mx = max(mx, M[r][len(M[r])-1])
+
+      r += 1 # next row
+      c = 0 # starting from the left most
+    return mx
+
+  M = [
+    [1,3,1],
+    [0,0,1],
+    [1,2,3]
+  ]
+  assert findm(M) == 3
+
+  M = [
+    [1,1,3,5,4,3],
+    [0,1,0,0,0,0],
+    [1,1,3,2,1,1],
+    [0,4,4,5,7,3]
+  ]
+  assert findm(M) == 7
+
+  M = [[4]]
+  assert findm(M) == 4
