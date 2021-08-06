@@ -137,7 +137,7 @@ def test_optimise_itinerary():
       if x in M:
         for y in M[x].keys():
           c = cost(M[x][y])
-          if y not in H or H[y] > w:
+          if y not in H or H[y] > w + c:
             H[y] = w + c
             heappush(Q, (y, w + c))
             prev[y] = x
@@ -164,4 +164,13 @@ def test_optimise_itinerary():
   assert find_shortest(P, 'A', 'B') == ['A','B',1]
   assert find_cheapest(P, 'A', 'B') == ['A','B',100]
   assert find_fastest(P, 'A', 'B') == ['A','B',1]
+
+  assert find_shortest(P, 'A', 'D') == ['A','B','D',2]
+  assert find_cheapest(P, 'A', 'D') == ['A','B','D',200]
+  assert find_fastest(P, 'A', 'D') == ['A','B','D',3]
+
+  assert find_shortest(P, 'B', 'E') == ['B','E',1]
+  assert find_cheapest(P, 'B', 'E') == ['B','C','E',70]
+  assert find_fastest(P, 'B', 'E') == ['B','E',2]
+
 
