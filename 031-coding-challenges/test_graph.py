@@ -137,7 +137,7 @@ def test_optimise_itinerary():
       if x in M:
         for y in M[x].keys():
           c = cost(M[x][y])
-          if y not in H or H[y] > w + c:
+          if y not in H or H[y] > w + c: # NOTE: do not forget "w + c"
             H[y] = w + c
             heappush(Q, (y, w + c))
             prev[y] = x
@@ -173,4 +173,66 @@ def test_optimise_itinerary():
   assert find_cheapest(P, 'B', 'E') == ['B','C','E',70]
   assert find_fastest(P, 'B', 'E') == ['B','E',2]
 
+
+def test_trading():
+  """
+  Given a list of routes with price
+    (A -> B) which a reverse route costs 10% more due to the fee
+  Find the itinerary which visits all required nodes
+  which sums up to the least cost (always has to start from 0)
+  """
+  def itin(R, A):
+    # create graph
+    G = {}
+    for a,b,c in R:
+      if a not in G:
+        G[a] = {}
+      if b not in G:
+        G[b] = {}
+      G[a][b] = c
+      G[b][a] = c*1.1
+
+    # DFS + greedy
+    H = [
+      (0, [0]) # initial path
+    ]
+    return recon(G, A, H, [])
+
+  def recon(G, A, H, C):
+    """
+    G -> Graph of routes
+    A -> List of remaining nodes yet to visit
+    H -> Active heap (only incomplete paths)
+    C -> Completed heap (only complete paths)
+    """
+    from heapq import heappush, heappop
+    while len(H)>0:
+      w,ps = heappop(H)
+      # generate next stop of this best path
+      for q,c in G[ps[-1]].items():
+        if q not in ps:
+          # not to repeat the same route
+          ps_ = ps + [q]
+          w_  = w + c
+          # finish if the path is complete
+          if all(map(lambda a: a in ps_, A)):
+            heappush(C, (w_, ps_))
+          else:
+            heappush(H, (w_, ps_))
+    
+    c,best = heappop(C)
+    return best
+
+  R = [
+    (0,1,100),
+    (0,2,200),
+    (0,4,100),
+    (2,3,500),
+    (2,4,250),
+    (4,1,50),
+    (4,3,500)
+  ]
+  assert itin(R, [1,2,3,4]) == [0,1,4,2,3]
+  assert itin(R, [2,3,4]) == [0,4,2,3]
+  assert itin(R, [3,4]) == [0,4,3]
 
