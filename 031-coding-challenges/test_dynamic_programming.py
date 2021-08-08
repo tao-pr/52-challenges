@@ -177,3 +177,30 @@ def test_pair_tasks():
   pp = [6,3]
   tasks = [4,1,1,1,1]
   is_valid(assign(pp, tasks), pp, tasks)
+
+
+def test_staircase():
+  """
+  Given a staircase of n steps,
+  find how many ways a person can go to the top
+  within following criteria:
+    - max number of steps
+    - largest step he/she can take
+  """
+  def stair(s, max_steps, largest_step):
+    H = [(s, [])]
+    C = []
+    while len(H)>0:
+      w, hs = H.pop()
+      # generate next step
+      for step in range(1,max(largest_step+1, s-w)):
+        if step + w == s: # finished!
+          C.append(hs + [step])
+        else:
+          if 1+len(hs) < max_steps:
+            H.append((w+step, hs+[step]))
+    return len(C)
+
+  stair(5, 2, 4) == 4
+  stair(3, 3, 3) == 4
+  stair(6, 3, 3) == 8
