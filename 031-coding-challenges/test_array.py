@@ -300,3 +300,75 @@ def test_find_max_in_partial_sorted_matrix():
 
   M = [[4]]
   assert findm(M) == 4
+
+
+def test_parse_expression():
+  """
+  Given a string containing mathemetical expression with or without parantheses
+    e.g.
+      (1+15)*2
+      2*3+1
+      5+(1*30)-1
+
+  Parse and generate integer output
+  """
+  opr = {
+    '+': lambda a,b: a+b,
+    '-': lambda a,b: a-b,
+    '*': lambda a,b: a*b
+  }
+
+  def tokenise(exp):
+    """
+    Parse expression string into tokens
+    (3+15)*2 ==> [[3,'+',15],'*',2]
+    """
+    tokens = []
+    # complexity : O(p), p = expression length
+    while len(exp)>0:
+      p = exp[0]
+      if '0'<=p<='9':
+        if len(tokens)>0 and isinstance(tokens[-1], int):
+          tokens[-1] = tokens[-1]*10+int(p)
+        else:
+          tokens.append(int(p))
+      elif p=='(':
+        exp,subtokens = tokenise(exp[1:])
+        tokens.append(subtokens)
+      elif p==')':
+        return exp, tokens
+      elif p in opr.keys():
+        tokens.append(p)
+      exp = exp[1:]
+    return exp, tokens
+
+  def calc(tokens):
+    # keep pruning tokens until empty
+    N = 0
+    op = '+'
+    while len(tokens)>0:
+      t = tokens[0]
+      if isinstance(t, list):
+        t = calc(t)
+        N = t if N is None else opr[op](N, t)
+      elif isinstance(t, str):
+        op = t
+      else:
+        N = t if N is None else opr[op](N, t)
+
+      tokens = tokens[1:]
+    return N
+
+
+  def parse(exp):
+    _,tokens = tokenise(exp)
+    return calc(tokens)
+
+  assert tokenise('7+10')[1] == [7,'+',10]
+  assert tokenise('82+1*25')[1] == [82,'+',1,'*',25]
+  assert tokenise('(1*24)+(22+1)')[1] == [[1,'*',24],'+',[22,'+',1]]
+
+  assert parse('7+10') == 17
+  assert parse('(1*20)+1') == 21
+  assert parse('(3*4*2)-4+1')==21
+  assert parse('(1+3)*(2*5+1)')==44
