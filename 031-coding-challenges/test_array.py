@@ -372,3 +372,52 @@ def test_parse_expression():
   assert parse('(1*20)+1') == 21
   assert parse('(3*4*2)-4+1')==21
   assert parse('(1+3)*(2*5+1)')==44
+
+
+def test_spiral_sum():
+  """
+  Given a matrix of NxM,
+  start walking spiral from (0,0) for K blocks and get a sum
+  """
+  def sum_spiral(M, K):
+    n = 0
+    tot = 0
+    r,c = 0, 0
+    d = [(0,1),(1,0),(0,-1),(-1,0)] # direction vector
+    N = len(M) * len(M[0])
+    collected = set()
+    arr = []
+    while n<N and n<K:
+      tot += M[r][c]
+      collected.add((r,c))
+      # next block
+      nr = r + d[0][0]
+      nc = c + d[0][1]
+      # check if next block is valid?
+      if 0<=nr<len(M) and 0<=nc<len(M[0]) and (nr,nc) not in collected:
+        r, c = nr, nc
+      else:
+        # change direction
+        d = d[1:] + [d[0]]
+        r += d[0][0]
+        c += d[0][1]
+      n += 1
+    return tot
+
+  assert sum_spiral([
+    [1,1,1],
+    [2,4,5],
+    [0,1,5]
+  ], 4) == 8
+
+  assert sum_spiral([
+    [1,1,1],
+    [2,4,5],
+    [0,1,5]
+  ], 10) == 20
+
+  assert sum_spiral([
+    [1,1,1,2],
+    [2,4,5,1],
+    [0,1,5,0]
+  ], 10) == 14
