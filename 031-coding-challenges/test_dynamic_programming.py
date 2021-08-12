@@ -204,3 +204,7 @@ def test_staircase():
   stair(5, 2, 4) == 4
   stair(3, 3, 3) == 4
   stair(6, 3, 3) == 8
+
+
+
+
