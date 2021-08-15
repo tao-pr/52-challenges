@@ -1,5 +1,6 @@
 .DS_Store
 *.lock
+*__pycache__*
 001-mandelbrot-with-opencv/build/*
 003-waste-disposal-plots-germany/003/
 003-waste-disposal-plots-germany/google_api_key
