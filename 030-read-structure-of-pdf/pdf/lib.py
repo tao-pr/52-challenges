@@ -1,4 +1,14 @@
+from collections import namedtuple
+from functools import partial
+from io import StringIO
+
 import fitz
+from lxml import etree
+
+BLOCK_IMAGE = 1
+BLOCK_TEXT = 0
+
+Block = namedtuple("Block", ['tl','br','w','h','content', 'type'])
 
 def read_pdf2(path: str):
   """
@@ -20,7 +30,15 @@ def read_pdf(path: str):
   metadata = pdf.metadata
   toc = pdf.get_toc()
   pages = [pdf.load_page(n) for n in range(num_pages)]
-  ptextblocks = map(lambda x: x.get_text_blocks(), pages)
+  
+  # Read as textblocks
+  ptextblocks = map(lambda x: \
+    map(parse_text_block, x.get_text_blocks()), pages) # pages -> blocks
+
+  # Read as HTML
+  phtmls = map(lambda p: parse_html(p.get_textpage().extractHTML()), pages) # pages -> html
+
+
   """
   [...
     (28.346399307250977,
@@ -31,5 +49,21 @@ def read_pdf(path: str):
     138,
     0)]
   """
+  p = next(ptextblocks)
+
   import IPython
   IPython.embed()
+
+def parse_text_block(bl):
+  x0, y0, x1, y1, obj, bl_no, bl_type = bl
+  w = x1-x0
+  h = y1-y0
+  # NOTE: dimension of textblock may not accurately infer how big or small
+  # the whole text is. The whole block may be rotated and its bounding rect 
+  # will get bigger than expected.
+  b = Block(tl=(x0,y0), br=(x1,y1), w=w, h=h, content=obj, type=bl_type)
+  return b
+
+def parse_html(ht):
+  tree = etree.parse(StringIO(ht))
+  return tree
