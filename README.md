@@ -46,6 +46,8 @@ List of challenges are collected below.
 | 028 | Puzzles from Leetcode / FB interview     | Python           | --         | Recall a lot of algorithms |
 | 029 | Practice DNN/BERT/NLP/AB Test            | Python, TensorFlow, BERT | -- | BERT, A/B Test |
 | 030 | Read structure of digital PDF            | Python | ?? |
+| 031 | Puzzles from Leetcode / FB interview (2) | Python           | -- | Recall a lot of algorithms |
+>>>>>>> master
 
 ## Licence
 
