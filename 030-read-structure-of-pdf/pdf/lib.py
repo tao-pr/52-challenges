@@ -9,6 +9,7 @@ BLOCK_IMAGE = 1
 BLOCK_TEXT = 0
 
 Block = namedtuple("Block", ['tl','br','w','h','content', 'type', 'density'])
+SBlock = namedtuple("SBlock", ['page','content','priority'])
 
 def read_pdf2(path: str):
   """
@@ -21,14 +22,15 @@ def read_pdf2(path: str):
   pages = [file.getPage(n) for n in range(num_pages)]
   return pages
 
-def read_pdf(path: str):
+def read_pdf(path: str, verbose: bool=False):
   """
   Read PDF pages with PyMuPDF
   """
+  if verbose:
+    print(f'Reading : {path}')
   pdf = fitz.open(path)
   num_pages = pdf.page_count
   metadata = pdf.metadata
-  toc = pdf.get_toc()
   pages = [pdf.load_page(n) for n in range(num_pages)]
   
   # Read as textblocks
@@ -37,17 +39,10 @@ def read_pdf(path: str):
     filter(only_text, map(parse_text_block, x.get_text_blocks())), 
     pages) # pages -> blocks
 
-  # Read as HTML
-  phtmls = map(lambda p: parse_html(p.get_textpage().extractHTML()), pages) # pages -> html
-
   # Create content tree
-  content = gen_content_tree(toc, ptextblocks)
+  ctree = gen_content_tree(ptextblocks)
 
-
-  p = list(next(ptextblocks))
-
-  import IPython
-  IPython.embed()
+  return ctree
 
 def parse_text_block(bl):
   x0, y0, x1, y1, obj, bl_no, bl_type = bl
@@ -69,7 +64,11 @@ def parse_html(ht):
   tree = etree.parse(StringIO(ht))
   return tree
 
-def gen_content_tree(toc, blocks):
-  # TAOTODO
-
-  pass
+def gen_content_tree(blocks):
+  # Build chain of titles-paragraphs
+  chain = []
+  for p, page in enumerate(blocks):
+    for block in page:
+      is_title = False
+      chain.push(SBlock(page=p, content=block.content, priority=is_title))
+  return chain
