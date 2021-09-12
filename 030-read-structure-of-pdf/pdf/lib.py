@@ -11,6 +11,12 @@ BLOCK_TEXT = 0
 Block = namedtuple("Block", ['tl','br','w','h','content', 'type', 'density'])
 SBlock = namedtuple("SBlock", ['page','content','priority'])
 
+def save_to(sbs, path):
+  with open(path, 'w') as f:
+    f.write(f'page,priority,content\n')
+    for s in sbs:
+      f.write(f'{s.page},{s.priority},{s.content}\n')
+
 def read_pdf2(path: str):
   """
   Read PDF pages with PyPDF2 lib
@@ -69,6 +75,8 @@ def gen_content_tree(blocks):
   chain = []
   for p, page in enumerate(blocks):
     for block in page:
-      is_title = False
-      chain.push(SBlock(page=p, content=block.content, priority=is_title))
+      if len(block.content.strip())<=3:
+        continue
+      pr = block.density
+      chain.append(SBlock(page=p, content=block.content.replace('\n','').strip(), priority=pr))
   return chain
