@@ -38,22 +38,26 @@ def read_pdf(path: str, verbose: bool=False):
   """
   if verbose:
     print(f'Reading : {path}')
-  pdf = fitz.open(path)
-  num_pages = pdf.page_count
-  metadata = pdf.metadata
-  pages = [pdf.load_page(n) for n in range(num_pages)]
-  
-  # Read as textblocks
-  filename = os.path.basename(path)
-  only_text = lambda b: b.type == BLOCK_TEXT
-  ptextblocks = map(lambda x: \
-    filter(only_text, map(parse_text_block(filename), x.get_text_blocks())), 
-    pages) # pages -> blocks
+  try:
+    pdf = fitz.open(path)
+    num_pages = pdf.page_count
+    metadata = pdf.metadata
+    pages = [pdf.load_page(n) for n in range(num_pages)]
+    
+    # Read as textblocks
+    filename = os.path.basename(path)
+    only_text = lambda b: b.type == BLOCK_TEXT
+    ptextblocks = map(lambda x: \
+      filter(only_text, map(parse_text_block(filename), x.get_text_blocks())), 
+      pages) # pages -> blocks
 
-  # Create content tree
-  ctree = gen_content_tree(ptextblocks)
+    # Create content tree
+    ctree = gen_content_tree(ptextblocks)
 
-  return ctree
+    return ctree
+  except RuntimeError:
+    print(f'... failed to read {path}, probably unsupported PDF media')
+    return None
 
 def parse_text_block(filename):
   def internal(bl):

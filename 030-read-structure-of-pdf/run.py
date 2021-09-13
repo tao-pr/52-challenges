@@ -11,5 +11,6 @@ if __name__=="__main__":
   for i,f in enumerate(ls):
     print(f'({i}) processing : {f}')
     ctree = read_pdf(f)
-    save_to(ctree, output + '/' + ctree[0].filename.split('.')[0] + '.csv')
-    break
+    if ctree is not None and len(ctree)>0:
+      save_to(ctree, output + '/' + ctree[0].filename.split('.')[0] + '.csv')
+    #break
