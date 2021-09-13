@@ -89,5 +89,5 @@ def gen_content_tree(blocks):
       if len(block.content.strip())<=3:
         continue
       pr = block.density
-      chain.append(SBlock(filename=block.filename, page=p, content=block.content.replace('\n','').strip(), priority=pr))
+      chain.append(SBlock(filename=block.filename, page=p, content=block.content.replace('\n','. ').strip(), priority=pr))
   return chain
