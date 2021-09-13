@@ -1,4 +1,7 @@
 import os
+import scipy
+import scipy.stats
+import numpy as np
 from collections import namedtuple
 from functools import partial
 from io import StringIO
@@ -85,9 +88,18 @@ def gen_content_tree(blocks):
   # Build chain of titles-paragraphs
   chain = []
   for p, page in enumerate(blocks):
+    a = len(chain)
+    ds = []
     for block in page:
       if len(block.content.strip())<=3:
         continue
-      pr = block.density
-      chain.append(SBlock(filename=block.filename, page=p, content=block.content.replace('\n','. ').strip(), priority=pr))
+      ds.append(block.density)
+      chain.append(SBlock(filename=block.filename, page=p, content=block.content.replace('\n','. ').strip(), priority=None))
+    
+    # Reconsile priority field with percentile values (file-level)
+    dss = sorted(ds)
+    ds = map(lambda d: scipy.stats.percentileofscore(dss, d), ds)
+    for i,d in enumerate(ds):
+      # NOTE: Requires a copy, probably there's a better way to update attribute
+      chain[i+a] = chain[i+a]._replace(priority = d/100.)
   return chain
