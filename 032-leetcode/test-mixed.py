@@ -52,3 +52,31 @@ def test_group_division():
     (2,4),
   ]
   assert bipart(G) == True
+
+
+def test_count_unique_permutation():
+  """
+  Given a string of length at least 3,
+  find the number of possible permutations where each is unique
+  """
+  def cpermu(w):
+    P = set()
+    return len(permu(P, '', w))
+
+  def permu(P, pre, w):
+    for i in range(len(w)):
+      a = w[i]
+      bb = w[:i] + w[i+1:]
+      if len(bb)==0:
+        P.add(pre + a)
+      else:
+        permu(P, pre+a, bb)
+
+    print(P) # TAODEBUG
+    return P
+
+  assert cpermu('aaa') == 1
+  assert cpermu('aba') == 3 # aba, aab,baa
+  assert cpermu('aaaa') == 1
+  assert cpermu('abca') == 12
+  assert cpermu('kkka') == 4
