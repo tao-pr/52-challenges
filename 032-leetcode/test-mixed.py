@@ -72,7 +72,6 @@ def test_count_unique_permutation():
       else:
         permu(P, pre+a, bb)
 
-    print(P) # TAODEBUG
     return P
 
   assert cpermu('aaa') == 1
@@ -80,3 +79,24 @@ def test_count_unique_permutation():
   assert cpermu('aaaa') == 1
   assert cpermu('abca') == 12
   assert cpermu('kkka') == 4
+
+
+def test_count_number_of_missings():
+  """
+  Given an array of positive integers,
+  Figure out how many integers are missing if it is supposed 
+  to begin with 1
+  """
+  def count_miss(M):
+    prev = 0
+    c = 0
+    for m in M:
+      if m > prev + 1:
+        c += m - prev - 1
+      prev = m
+    return c
+
+  assert count_miss([2,3,4]) == 1
+  assert count_miss([1,2]) == 0
+  assert count_miss([1,15,17]) == 14
+  assert count_miss([7,8,10,12,15,16]) == 10
