@@ -100,3 +100,54 @@ def test_count_number_of_missings():
   assert count_miss([1,2]) == 0
   assert count_miss([1,15,17]) == 14
   assert count_miss([7,8,10,12,15,16]) == 10
+
+
+def test_roll_array_as_matrix():
+  """
+  Given an array of N elements,
+  roll it CCW so it becomes a square matrix
+  (go up first)
+  """
+  def roll(N):
+    from math import sqrt
+    w = int(sqrt(len(N)))
+    M = [[None for _ in range(w)] for _ in range(w)]
+
+    k = w if w%2==0 else w-1
+    r,c = int(k/2), int(k/2)
+    D = [(-1,0),(0,-1),(1,0),(0,1)] # go up first, followed by left, ..
+    M[r][c] = N[0]
+    N = N[1:]
+
+    # Walk patterns:
+    # U - L - D - D - R - R - U - U - U - L - L - L - D - D - D - D
+    # meaning every time we go "D", we repeat 1 more
+    max_momentum = 1
+    momentum = 0
+
+    while len(N)>0:
+      # step next
+      if momentum >= max_momentum:
+        momentum = 0
+        D = D[1:] + [D[0]]
+        if D[0] == (1,0):
+          max_momentum += 1 # longer momentum everytime we go down
+      dr, dc = D[0]
+      r, c = r+dr, c+dc
+      M[r][c] = N[0]
+      N = N[1:]
+      momentum += 1
+    
+    return M
+
+
+  # assert roll([1,2,3,4]) == [
+  #   [3,2],
+  #   [4,1]
+  # ]
+  # assert roll([1]) == [[1]]
+  assert roll([5,4,1,2,0,1,3,1,3]) == [
+    [1,4,3],
+    [2,5,1],
+    [0,1,3]
+  ]
