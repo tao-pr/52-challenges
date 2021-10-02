@@ -141,13 +141,16 @@ def test_roll_array_as_matrix():
     return M
 
 
-  # assert roll([1,2,3,4]) == [
-  #   [3,2],
-  #   [4,1]
-  # ]
-  # assert roll([1]) == [[1]]
+  assert roll([1,2,3,4]) == [
+    [3,2],
+    [4,1]
+  ]
+  assert roll([1]) == [[1]]
   assert roll([5,4,1,2,0,1,3,1,3]) == [
     [1,4,3],
     [2,5,1],
     [0,1,3]
   ]
+
+
+def test_
