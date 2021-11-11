@@ -48,6 +48,7 @@ List of challenges are collected below.
 | 030 | Read structure of digital PDF            | Python | ?? |
 | 031 | Puzzles from Leetcode / FB interview (2) | Python           | -- | Recall a lot of algorithms |
 | 032 | Puzzles from Leetcode / FB interview (3) | Python           | -- | -- |
+| 033 | Julia set with OpenCV                    | C++17            | 3 hrs      | Recall Julia sets |
 
 ## Licence
 
