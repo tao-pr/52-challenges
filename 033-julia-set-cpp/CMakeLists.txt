@@ -35,7 +35,7 @@ set(BUILD_DEPENDENCIES
 # Targets to build
 add_executable(${TARGET_APP} ${SOURCES})
 set_target_properties(${TARGET_APP} PROPERTIES 
-  OUTPUT_NAME "mandelbrot"
+  OUTPUT_NAME "julia"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/build")
 
 # Build recipe
