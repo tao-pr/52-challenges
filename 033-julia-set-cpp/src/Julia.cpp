@@ -52,5 +52,13 @@ MandelbrotSet::MandelbrotSet(int nMaxIters, double bound)
 
 int MandelbrotSet::convergence(Complex<double>& z, Complex<double>& c, int nIter) const
 {
-  // TAOTODO:
+  Complex<double> z_ = Cx::sqr(z) + c;
+  if (Cx::abs(z_) <= this->bound)
+  {
+    if (nIter + 1 < this->nMaxIters)
+      return convergence(z_, c, nIter+1);
+    else 
+      return nIter+1;
+  }
+  else return nIter;
 }
