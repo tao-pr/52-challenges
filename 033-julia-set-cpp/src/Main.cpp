@@ -61,7 +61,5 @@ int main(int argc, char** argv)
 
   auto c = Complex<double>(a,b);
   JuliaSet m = JuliaSet(c, nMaxIters, bound);
-
-  // TAOTODO: Generate zoom here( iterative)?
   m.render(reMin, reMax, imMin, imMax, resolution);
 }
