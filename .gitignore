@@ -75,3 +75,8 @@
 029-classification-playground/classroom/
 030-read-structure-of-pdf/pdf/__pycache__/lib.cpython-37.pyc
 029-classification-playground/logs/
+033-julia-set-cpp/build/CMakeCache.txt
+033-julia-set-cpp/build/CMakeFiles/
+033-julia-set-cpp/build/Makefile
+033-julia-set-cpp/build/cmake_install.cmake
+033-julia-set-cpp/build/julia
