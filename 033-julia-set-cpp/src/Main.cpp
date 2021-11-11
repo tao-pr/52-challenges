@@ -26,11 +26,16 @@ int main(int argc, char** argv)
   signal(SIGSEGV, exceptionHandle);
 
   int nMaxIters;
+  int stype;
   double bound = 1.6;
   double reMin, reMax, imMin, imMax;
   double resolution;
 
   cout << "Julia set generator" << endl;
+  cout << "Please choose which set to generate:" << endl;
+  cout << " 1 = Mandelbrot" << endl;
+  cin >> stype;
+
   cout << "Please enter the range of Z" << endl;
   cout << endl;
   cout << "Real component from : "; cin >> reMin;
@@ -41,7 +46,12 @@ int main(int argc, char** argv)
   cout << "Num iterations : "; cin >> nMaxIters;
 
   cout << endl;
-  cout << "Generating ..." << endl;
-  auto m = MandelbrotSet(nMaxIters, bound);
-  m.render(reMin, reMax, imMin, imMax, resolution);
+  JuliaSet* m = nullptr;
+  if (stype==1){
+    cout << "Generating Mandelbrot set ... " << endl;
+    m = new MandelbrotSet(nMaxIters, bound);
+  }
+  else
+    cout << "UNKNOWN Julia set to generate??" << endl;
+  m->render(reMin, reMax, imMin, imMax, resolution);
 }
