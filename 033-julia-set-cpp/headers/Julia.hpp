@@ -17,21 +17,14 @@ class JuliaSet
 protected:
   int nMaxIters;
   double bound;
-  JuliaSet(int nMaxIters=10, double bound=2);
-  virtual int convergence(Complex<double>& z, Complex<double>& c, int nIter=0) const = 0;
+  Complex<double> c;
+  int convergence(Complex<double>& z, int nIter=0) const;
 
 public:
+  JuliaSet(Complex<double>& c, int nMaxIters=10, double bound=2);
   ~JuliaSet() {};
 
   void render(double reMin, double reMax, double imMin, double imMax, double resolution) const;
-};
-
-class MandelbrotSet : public JuliaSet 
-{
-protected:
-  int convergence(Complex<double>& z, Complex<double>& c, int nIter=0) const;
-public:
-  MandelbrotSet(int nMaxIters=10, double bound=2);
 };
 
 
