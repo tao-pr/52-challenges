@@ -5,6 +5,8 @@
 #include <iostream>
 
 #include "Julia.hpp"
+#include "Complex.hpp"
+
 
 // REF: https://stackoverflow.com/a/77336/4154262
 void exceptionHandle(int sig)
@@ -26,32 +28,40 @@ int main(int argc, char** argv)
   signal(SIGSEGV, exceptionHandle);
 
   int nMaxIters;
-  int stype;
+  double a, b;
   double bound = 1.6;
   double reMin, reMax, imMin, imMax;
   double resolution;
 
+  /*
+  * Julia sets are referred from : https://mathworld.wolfram.com/JuliaSet.html
+  */
+
   cout << "Julia set generator" << endl;
-  cout << "Please choose which set to generate:" << endl;
-  cout << " 1 = Mandelbrot" << endl;
-  cin >> stype;
+  cout << "z[n+1] = z[n]^2 + c" << endl << endl;
+  cout << "Please choose c = a + bi" << endl;
+  cout << "... a = ";
+  cin >> a;
+  cout << "... b = ";
+  cin >> b;
+
+  cout << endl;
+  cout << "You chose c = " << a << " + " << b << "i" << endl;
+  cout << endl;
 
   cout << "Please enter the range of Z" << endl;
   cout << endl;
-  cout << "Real component from : "; cin >> reMin;
-  cout << "Real component to   : "; cin >> reMax;
-  cout << "Imaginary component from : "; cin >> imMin;
-  cout << "Imaginary component to   : "; cin >> imMax;
-  cout << "Resolution : "; cin >> resolution;
-  cout << "Num iterations : "; cin >> nMaxIters;
-
+  cout << "... Real component from : "; cin >> reMin;
+  cout << "... Real component to   : "; cin >> reMax;
+  cout << "... Imaginary component from : "; cin >> imMin;
+  cout << "... Imaginary component to   : "; cin >> imMax;
+  cout << "... Resolution : "; cin >> resolution;
+  cout << "... Num iterations : "; cin >> nMaxIters;
   cout << endl;
-  JuliaSet* m = nullptr;
-  if (stype==1){
-    cout << "Generating Mandelbrot set ... " << endl;
-    m = new MandelbrotSet(nMaxIters, bound);
-  }
-  else
-    cout << "UNKNOWN Julia set to generate??" << endl;
-  m->render(reMin, reMax, imMin, imMax, resolution);
+
+  auto c = Complex<double>(a,b);
+  JuliaSet m = JuliaSet(c, nMaxIters, bound);
+
+  // TAOTODO: Generate zoom here( iterative)?
+  m.render(reMin, reMax, imMin, imMax, resolution);
 }

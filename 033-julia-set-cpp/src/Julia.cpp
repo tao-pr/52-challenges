@@ -1,15 +1,13 @@
 #include "Julia.hpp"
 
 
-JuliaSet::JuliaSet(int nMaxIters, double bound) 
-  : nMaxIters(nMaxIters), bound(bound)
+JuliaSet::JuliaSet(Complex<double>& c, int nMaxIters, double bound) 
+  : nMaxIters(nMaxIters), bound(bound), c(c)
 {
 }
 
 void JuliaSet::render(double reMin, double reMax, double imMin, double imMax, double resolution) const
 {
-  int prevPercent = -1;
-
   int w = ceil((reMax - reMin) / resolution)+1;
   int h = ceil((imMax - imMin) / resolution)+1;
 
@@ -26,8 +24,8 @@ void JuliaSet::render(double reMin, double reMax, double imMin, double imMax, do
       int x = floor((a-reMin)/resolution);
       int y = floor((b-imMin)/resolution);
       int percent = floor(100.0f * cnt / (float)tot);
-      auto c = Complex<double>(a,b);
-      auto v = convergence(Cx::zero, c);
+      auto z = Complex<double>(a,b);
+      const auto v = convergence(z, 0);
       int _b = 0;
       int _g = floor(std::min(255.0f, floor(255.0f * powf((this->nMaxIters - v)/20.0f, 2.0f))));
       int _r = floor(255.0f * (this->nMaxIters - v)/20.0f);
@@ -35,7 +33,6 @@ void JuliaSet::render(double reMin, double reMax, double imMin, double imMax, do
       px[2] = _b;
       px[1] = _g;
       px[0] = _r;
-      cout << percent << "% : convergence (" << x << ", " << y <<") = " << v << endl; // TAODEBUG:
     }
 
   cout << "Displaying the results" << endl;
@@ -44,19 +41,13 @@ void JuliaSet::render(double reMin, double reMax, double imMin, double imMax, do
   waitKey(0);
 }
 
-
-MandelbrotSet::MandelbrotSet(int nMaxIters, double bound)
-  : JuliaSet(nMaxIters, bound)
+int JuliaSet::convergence(Complex<double>& z, int nIter) const
 {
-}
-
-int MandelbrotSet::convergence(Complex<double>& z, Complex<double>& c, int nIter) const
-{
-  Complex<double> z_ = Cx::sqr(z) + c;
+  Complex<double> z_ = Cx::sqr(z) + this->c;
   if (Cx::abs(z_) <= this->bound)
   {
     if (nIter + 1 < this->nMaxIters)
-      return convergence(z_, c, nIter+1);
+      return convergence(z_, nIter+1);
     else 
       return nIter+1;
   }
