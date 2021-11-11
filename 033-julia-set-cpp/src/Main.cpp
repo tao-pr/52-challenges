@@ -42,6 +42,6 @@ int main(int argc, char** argv)
 
   cout << endl;
   cout << "Generating ..." << endl;
-  auto m = JuliaSet(nMaxIters, bound);
+  auto m = MandelbrotSet(nMaxIters, bound);
   m.render(reMin, reMax, imMin, imMax, resolution);
 }

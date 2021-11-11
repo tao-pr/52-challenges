@@ -5,7 +5,7 @@ export OPENCV_INCLUDE_DIR=$OPENCV_DIR/include/opencv4/
 export OPENCV_LIB_DIR=$OPENCV_DIR/lib/
 
 # Clean up build dir
-# TAOTODO
+rm -rf build/*
 
 cd build
 
