@@ -14,7 +14,7 @@ kiwisolver==1.1.0
 -e git+git@github.com:starcolon/52-challenges.git@418fce098ac55206dd115c980d9897d80ad00573#egg=libdata&subdirectory=004-skewed-data-classification/libdata
 matplotlib==3.1.1
 munch==2.3.2
-numpy==1.17.2
+numpy==1.21.0
 pandas==0.25.1
 pip-init==0.3.0
 pipreqs==0.4.9
