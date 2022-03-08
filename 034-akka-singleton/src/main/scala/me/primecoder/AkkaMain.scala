@@ -2,70 +2,34 @@
 package me.primecoder
 
 
-import akka.actor.typed.ActorRef
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.ActorRef
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.actor.Cancellable
 
-object MainActor {
-  private [primecoder] trait IOSignal
-  final case object StartUpSignal extends IOSignal
-  final case object ShutdownSignal extends IOSignal
-  final case class UpdateSignal(key: String, value: Int) extends IOSignal
-  final case class GetSignal(key: String) extends IOSignal
+import com.typesafe.config.ConfigFactory
+import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.duration._
 
-  def apply(): Behavior[IOSignal] = 
-    Behaviors.setup { context =>
-        Behaviors.receiveMessage { signal => 
-          // TODO:
-          context.log.info(s"MainActor receiving signal : ${signal}")
-          Behaviors.same
-        }
-    }
-}
-
-// -object GreeterBot {
-// -
-// -  def apply(max: Int): Behavior[Greeter.Greeted] = {
-// -    bot(0, max)
-// -  }
-// -
-// -  private def bot(greetingCounter: Int, max: Int): Behavior[Greeter.Greeted] =
-// -    Behaviors.receive { (context, message) =>
-// -      val n = greetingCounter + 1
-// -      context.log.info("Greeting {} for {}", n, message.whom)
-// -      if (n == max) {
-// -        Behaviors.stopped
-// -      } else {
-// -        message.from ! Greeter.Greet(message.whom, context.self)
-// -        bot(n, max)
-// -      }
-
-
-// object GreeterMain {
-
-//   final case class SayHello(name: String)
-
-//   def apply(): Behavior[SayHello] =
-//     Behaviors.setup { context =>
-//       //#create-actors
-//       val greeter = context.spawn(Greeter(), "greeter")
-//       //#create-actors
-
-//       Behaviors.receiveMessage { message =>
-//         //#create-actors
-//         val replyTo = context.spawn(GreeterBot(max = 3), message.name)
-//         //#create-actors
-//         greeter ! Greeter.Greet(message.name, replyTo)
-//         Behaviors.same
-//       }
-//     }
-// }
-
-//#main-class
-object MainRun extends App {
-  implicit val actorSystem: ActorSystem[MainActor.IOSignal] = ActorSystem(MainActor(), "MainRun")
+object MainRun extends App {  
+  lazy val appConfig = ConfigFactory.load()
+  implicit val actorSystem = ActorSystem("MainActor")
+  implicit lazy val ec: ExecutionContextExecutor = actorSystem.dispatcher
 
   Console.println("Starting app ...")
+
+  // Start scheduler
+  val tick = actorSystem.actorOf(Props(classOf[MutableSingleton], this))
+  val scheduler: Cancellable = actorSystem.scheduler.scheduleWithFixedDelay(
+    5.seconds, // delay of first run
+    10.seconds, // frequency
+    tick,
+    AddKeySignal
+  )
+
+  sys.addShutdownHook{
+    scheduler.cancel
+    actorSystem.terminate
+  }
 }
 
