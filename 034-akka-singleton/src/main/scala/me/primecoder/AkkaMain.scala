@@ -20,11 +20,18 @@ object MainRun extends App {
   // Start scheduler
   val tick = actorSystem.actorOf(Props(classOf[ScheduledActor]))
   val scheduler: Cancellable = actorSystem.scheduler.scheduleWithFixedDelay(
-    5.seconds, // delay of first run
-    10.seconds, // frequency
+    1.seconds, // delay of first run
+    3.seconds, // frequency
     tick,
     AddKeySignal
   )
+
+  // Delayed loop which keeps reading singleton object
+  while (true){
+    Thread.sleep(1000)
+    val keysize = MutableSingleton.size
+    Console.println(s"[Deferred] checking singleton map: ${keysize}")
+  }
 
   sys.addShutdownHook{
     scheduler.cancel
