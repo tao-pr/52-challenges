@@ -36,7 +36,7 @@ class ScheduledActor extends Actor with akka.actor.ActorLogging {
 }
 
 object ScheduledActor {
-  val MAX_KEYS = 1.3e6
+  val MAX_KEYS = 2.4e6
   val CONCURRENT_UPDATE_SIZE = 50000
 }
 

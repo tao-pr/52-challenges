@@ -20,16 +20,16 @@ object MainRun extends App {
   // Start schedulers
   val tickUpdate = actorSystem.actorOf(Props(classOf[ScheduledActor]))
   val schedulerUpdate: Cancellable = actorSystem.scheduler.scheduleWithFixedDelay(
-    1.seconds, // delay of first run
-    1.seconds, // frequency
+    appConfig.getInt("schedulers.update.start").milliseconds, // delay of first run
+    appConfig.getInt("schedulers.update.freq").milliseconds, // frequency
     tickUpdate,
     AddKeySignal
   )
 
   val tickBulkUpdate = actorSystem.actorOf(Props(classOf[ScheduledActor]))
   val schedulerBulkUpdate: Cancellable = actorSystem.scheduler.scheduleWithFixedDelay(
-    4.seconds, // delay of first run
-    3.seconds, // frequency
+    appConfig.getInt("schedulers.bulk-update.start").milliseconds, // delay of first run
+    appConfig.getInt("schedulers.bulk-update.start").milliseconds, // frequency
     tickBulkUpdate,
     BulkReplaceSignal
   )
