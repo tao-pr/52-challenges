@@ -1,4 +1,4 @@
-all: src/daemon.c
+all: daemon.c
 	$(CC) -o bin/daemon36 $?
 
 start:

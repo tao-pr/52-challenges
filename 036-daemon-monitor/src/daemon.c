@@ -22,7 +22,7 @@ void sigHandler(int sig){
 
 int main(){
 
-
+  printf("Initialising daemon36");
   while (1){
     time_t now;
     time(&now);
