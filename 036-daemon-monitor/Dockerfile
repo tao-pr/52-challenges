@@ -1,6 +1,15 @@
 FROM centos:7
 COPY src/daemon.c mydaemon/
 COPY Makefile mydaemon/
-COPY make-run.sh mydaemon/
-RUN yum update && mydaemon/make-run.sh
+WORKDIR mydaemon
+RUN \
+  yum install make gcc -y && \
+  mkdir -p bin &&  \
+  echo "make all ..." && \
+  echo 'pwd    = ' $(pwd) && \
+  echo 'whoami =' $(whoami) && \
+  ls -l && \
+  make all && \
+  echo "make start ..." && \
+  make start
 
