@@ -7,6 +7,9 @@ check:
 log:
 	journalctl -u daemon36
 
+logerr:
+	journalctl -p 3 -u daemon36
+
 start:
 	systemctl daemon-reload
 	systemctl start daemon36

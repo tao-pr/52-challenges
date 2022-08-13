@@ -9,7 +9,6 @@
 #include <time.h>
 #include <dirent.h>
 #include <errno.h>
-#include <systemd/sd-journal.h>
 
 void sigHandler(int sig){
   if (sig==SIGTERM){
@@ -28,7 +27,7 @@ int main(){
   char monitorDir[] = "/home/monitor/";
 
   // add signal handler
-  printf("Initialising daemon36");
+  printf("Initialising daemon36\n");
   struct sigaction action;
   action.sa_handler = sigHandler;
   sigfillset(&action.sa_mask);
@@ -37,15 +36,16 @@ int main(){
   sigaction(SIGUSR1, &action, NULL);
   sigaction(SIGHUP, &action, NULL);
 
+  printf("Ready\n");
   while (1){
     time_t now;
     time(&now);
 
     // check dir
-    printf("%s [iteration]", ctime(now));
+    printf("%s [iteration]\n", ctime(&now));
     DIR* dir = opendir(monitorDir);
     if (dir){
-      closedir(dir);
+      printf("Monitoring %s", monitorDir);
       // check files inside
       char fullpath[256];
       struct dirent *p;
@@ -53,10 +53,11 @@ int main(){
         snprintf(fullpath, sizeof(fullpath), "%s%s", monitorDir, p->d_name);
         printf("--> %s\n", fullpath); // taodebug:
       }
+      closedir(dir);
     }
     else {
       // fail to opendir for some reason
-      fprintf(stderr, "%s cannot be opened", monitorDir);
+      fprintf(stderr, "%s cannot be opened\n", monitorDir);
     }
 
     fflush(stdout);
