@@ -54,7 +54,7 @@ int main(){
         if (p->d_name[0] == '.')
           continue;
         snprintf(fullpath, sizeof(fullpath), "%s%s", monitorDir, p->d_name);
-        printf("seen ==> %s\n", fullpath);
+        printf("     ---> %s\n", fullpath);
       }
       closedir(dir);
     }
@@ -63,9 +63,8 @@ int main(){
       fprintf(stderr, "%s cannot be opened\n", monitorDir);
     }
 
-    printf("end of iteration");
     fflush(stdout);
-    sleep(500);
+    sleep(5);
   }
 
   return 0;
