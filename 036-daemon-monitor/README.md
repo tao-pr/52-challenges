@@ -17,6 +17,13 @@ This code is crafted for Linux. You can simply build and run this inside docker 
 
 ```bash
 docker build .
+docker run -it --rm centos /bin/bash
+```
+
+check whether the daemon is running
+
+```bash
+
 ```
 
 ## References

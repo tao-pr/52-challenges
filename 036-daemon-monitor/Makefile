@@ -1,8 +1,8 @@
-all: daemon.c
+all: src/daemon.c
 	$(CC) -o bin/daemon36 $?
 
 start:
-	bin/daemon36
+	systemctl start daemon36
 
 check:
 	ps xj | head -1
