@@ -1,0 +1,9 @@
+[Unit]
+Description=Sample daemon process
+
+[Service]
+Type=simple
+ExecStart=/mydaemon/bin/daemon36
+
+[Install]
+WantedBy=multi-user.target

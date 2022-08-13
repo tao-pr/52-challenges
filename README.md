@@ -51,6 +51,7 @@ List of challenges are collected below.
 | 033 | Julia set with OpenCV                    | C++17            | 3 hrs      | Recall Julia sets |
 | 034 | Akka schedule and mutable singleton      | Scala Akka       | 6 hrs      | Akka classic and Threadsafety |
 | 035 | Akka schedule and mutable singleton (again) but with large shared memory and heavy access | Scala Akka | ?? | Akka classic and Threadsafety |
+| 036 | Build systemd daemon (forkless)          | C systemd        | 12 hrs | Systemd anatomy + provisioning docker |
 
 ## Licence
 
