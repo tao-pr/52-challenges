@@ -35,7 +35,13 @@ docker exec -it {CONTAINER_ID} /bin/sh
 You can simply inspect log with
 
 ```bash
-make log
+make log | tail -5
+
+# Aug 13 20:42:48 df8c3fbf5d49 daemon36[46]: [iteration]
+# Aug 13 20:42:48 df8c3fbf5d49 daemon36[46]: Monitoring /home/monitor/
+# Aug 13 20:42:48 df8c3fbf5d49 daemon36[46]: ---> /home/monitor/1
+# Aug 13 20:42:48 df8c3fbf5d49 daemon36[46]: ---> /home/monitor/ikkka
+# Aug 13 20:42:48 df8c3fbf5d49 daemon36[46]: ---> /home/monitor/hhj
 
 # or follow with
 journalctl -u daemon36 -f
@@ -57,4 +63,4 @@ make stop
 
 ## Licence
 
-TBD
+MIT
