@@ -45,13 +45,16 @@ int main(){
     printf("%s [iteration]\n", ctime(&now));
     DIR* dir = opendir(monitorDir);
     if (dir){
-      printf("Monitoring %s", monitorDir);
+      printf("Monitoring %s\n", monitorDir);
       // check files inside
       char fullpath[256];
       struct dirent *p;
       while ((p = readdir(dir)) != NULL) {
+        // skip . and ..
+        if (p->d_name[0] == '.')
+          continue;
         snprintf(fullpath, sizeof(fullpath), "%s%s", monitorDir, p->d_name);
-        printf("--> %s\n", fullpath); // taodebug:
+        printf("seen ==> %s\n", fullpath);
       }
       closedir(dir);
     }
@@ -60,6 +63,7 @@ int main(){
       fprintf(stderr, "%s cannot be opened\n", monitorDir);
     }
 
+    printf("end of iteration");
     fflush(stdout);
     sleep(500);
   }
