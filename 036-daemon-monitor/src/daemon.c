@@ -9,6 +9,7 @@
 #include <time.h>
 #include <dirent.h>
 #include <errno.h>
+#include <systemd/sd-journal.h>
 
 void sigHandler(int sig){
   if (sig==SIGTERM){
@@ -26,13 +27,22 @@ int main(){
 
   char monitorDir[] = "/home/monitor/";
 
+  // add signal handler
   printf("Initialising daemon36");
+  struct sigaction action;
+  action.sa_handler = sigHandler;
+  sigfillset(&action.sa_mask);
+  action.sa_flags = SA_RESTART;
+  sigaction(SIGTERM, &action, NULL);
+  sigaction(SIGUSR1, &action, NULL);
+  sigaction(SIGHUP, &action, NULL);
+
   while (1){
     time_t now;
     time(&now);
 
     // check dir
-    printf("[iteration]");
+    printf("%s [iteration]", ctime(now));
     DIR* dir = opendir(monitorDir);
     if (dir){
       closedir(dir);

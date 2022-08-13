@@ -9,28 +9,49 @@ Experiment with monitoring from kernel, following style of [systemd daemon](http
 - Backward compatible with SysV
 - Designed for higher parallelism
 
-
-
 ## Build & Run
 
-This code is crafted for Linux. You can simply build and run this inside docker like so:
+The project is crafted to build and run on Linux distro, so first off, you need to build the docker with following
 
 ```bash
-docker build .
-docker run -it --rm centos /bin/bash
+docker build -t centos .
 ```
 
-check whether the daemon is running
+Then start the docker with privilege so it can run daemon with `systemd` and bind TTY. 
+Note that the daemon is started with name `daemon36`.
 
 ```bash
+docker run -it --rm -d --privileged centos
+````
 
+Once container started, you can tunnel TTY normally and start the daemon
+
+```bash
+docker exec -it {CONTAINER_ID} /bin/sh
+> make start
+> systemctl list-units
 ```
+
+You can simply inspect log with
+
+```bash
+make log
+
+# or follow with
+journalctl -u daemon36 -f
+```
+
+And stop the process with
+
+```bash
+make stop
+```
+
 
 ## References
 
 - [Systemd design blog post](http://0pointer.de/blog/projects/systemd.html)
 - [Systemd info from Suse documentation](https://documentation.suse.com/sles/12-SP4/html/SLES-all/cha-systemd.html#)
-- https://lloydrochester.com/post/c/unix-daemon-example/
 - https://subscription.packtpub.com/book/programming/9781789951288/7/ch07lvl1sec74/creating-a-more-modern-daemon-for-systemd
 
 

@@ -1,13 +1,16 @@
 all: src/daemon.c
 	$(CC) -o bin/daemon36 $?
 
-start:
-	systemctl start daemon36
-
 check:
-	ps xj | head -1
-	@ps xj | grep daemon36
+	systemctl -l status daemon36
 
 log:
-	grep daemon36 /var/log/syslog | tail
+	journalctl -u daemon36
+
+start:
+	systemctl daemon-reload
+	systemctl start daemon36
+
+stop:
+	systemctl stop daemon36
 
