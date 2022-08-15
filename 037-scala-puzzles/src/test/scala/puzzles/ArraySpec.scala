@@ -2,7 +2,9 @@ package puzzles
 
 import org.scalatest.flatspec.AnyFlatSpec
 
+import java.util
 import scala.annotation.tailrec
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 
 class ArraySpec extends AnyFlatSpec {
 
@@ -57,5 +59,49 @@ class ArraySpec extends AnyFlatSpec {
     assert(deepest(0::15::12::3::4::3::0::Nil) == 12)
     assert(deepest(12::9::12::7::4::2::2::4::1::Nil) == 10)
     assert(deepest(1::1::1::2::2::3::Nil) == 0)
+  }
+
+  it should "merge N sorted list together" in {
+    def merge(ns: List[Int]*): List[Int] = {
+      val all = new ArrayBuffer[List[Int]]
+      all.addAll(ns) // O(N)
+      val buff = new ArrayBuffer[Int]()
+      // O(max(L))
+      while (all.nonEmpty){
+        var min: Option[Int] = None
+        var index: Option[Int] = None
+        var i = 0
+        while (i < all.length){
+          if (all(i).isEmpty)
+            all.remove(i)
+          else {
+            if (min.isEmpty || min.exists(_ > all(i).head)){
+              min = Some(all(i).head)
+              index = Some(i)
+            }
+            i += 1
+          }
+        }
+
+        (min, index) match {
+          case (Some(m), Some(k)) =>
+            buff.addOne(m)
+            if (all(k).length > 1)
+              all(k) = all(k).tail
+            else
+              all.remove(k)
+
+          case _ => all.empty
+        }
+      }
+
+      buff.toList
+    }
+
+    assert(merge(List(1), List(1,5,15), List(2,3,6)) == List(1,1,2,3,5,6,15))
+    assert(merge(List(0,10), List(2,5), List(3,7,11)) == List(0,2,3,5,7,10,11))
+    assert(merge(List.empty, List(1,10)) == List(1,10))
+    assert(merge(List(8), List(7), List(6)) == List(6,7,8))
+    assert(merge(List.empty, List.empty) == List.empty)
   }
 }

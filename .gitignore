@@ -80,3 +80,15 @@
 033-julia-set-cpp/build/Makefile
 033-julia-set-cpp/build/cmake_install.cmake
 033-julia-set-cpp/build/julia
+.bsp/
+.metals/
+034-akka-singleton/project/
+034-akka-singleton/src/test/
+034-akka-singleton/target/
+035-akka-large-singleton/project/
+035-akka-large-singleton/target/
+036-daemon-monitor/bin/
+037-scala-puzzles/.bsp/
+037-scala-puzzles/.idea/
+037-scala-puzzles/project/
+037-scala-puzzles/target/
