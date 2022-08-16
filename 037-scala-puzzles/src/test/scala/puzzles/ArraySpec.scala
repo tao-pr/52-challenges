@@ -104,4 +104,36 @@ class ArraySpec extends AnyFlatSpec {
     assert(merge(List(8), List(7), List(6)) == List(6,7,8))
     assert(merge(List.empty, List.empty) == List.empty)
   }
+
+  it should "cut circular array at max value" in {
+    def cut(cc: Array[Int]): Iterable[Int] = {
+      var i = 0
+      var cand = cc
+      var n = cc
+      var tail = cc
+      while (n.nonEmpty){ // O(L)
+        if (cand.head < n.head){
+          tail = cand
+          cand = n
+          i += 1
+        }
+        n = n.tail
+      }
+
+      if (i==0) // first is largest OR empty input
+        cc
+      else {
+        // cut at @i
+        cc.slice(i, cc.length) ++ cc.take(i) // O(N)
+      }
+      // total: O(N) + O(N)
+    }
+
+    assert(cut(Array(1,3,5,1,2)) == List(5,1,2,1,3))
+    assert(cut(Array(1)) == List(1))
+    assert(cut(Array(10,2,3,1)) == List(10,2,3,1))
+    assert(cut(Array(5,0,1,2,5,1)) == List(5,0,1,2,5,1))
+    assert(cut(Array(1,5)) == List(5,1))
+    assert(cut(Array(3,3,3)) == List(3,3,3))
+  }
 }
