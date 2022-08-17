@@ -136,4 +136,47 @@ class ArraySpec extends AnyFlatSpec {
     assert(cut(Array(1,5)) == List(5,1))
     assert(cut(Array(3,3,3)) == List(3,3,3))
   }
+
+  it should "locate max value in a matrix which sorted within a row" in {
+    def max(mat: Array[Array[Int]]): Int = {
+      // R x C
+      // locate max value of each row
+      val max = mat.foldLeft(Int.MinValue){ case (max, row) => // O(R)
+        // locate max
+        max.max(row.head.max(row.last))
+      }
+      max
+    }
+
+    val m1 = Array(
+      Array(1,5,6),
+      Array(2,7,7),
+      Array(6,3,1)
+    )
+    assert(max(m1) == 7)
+
+    val m2 = Array(
+      Array(1,10),
+      Array(2,0),
+      Array(3,5),
+      Array(0,0)
+    )
+    assert(max(m2) == 10)
+
+    val m3 = Array(
+      Array(0,1,1,5,7),
+      Array(1,2,5,7,7),
+      Array(2,5,6,6,8),
+      Array(10,2,1,1,1)
+    )
+    assert(max(m3) == 10)
+
+    val m4 = Array(
+      Array(0,1,1,2,5),
+      Array(3,2,1,1,0),
+      Array(6,4,4,2,2),
+      Array(4,5,5,5,5)
+    )
+    assert(max(m4) == 6)
+  }
 }
