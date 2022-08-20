@@ -58,4 +58,51 @@ class NumberTest extends AnyFlatSpec {
     assert(eval(5418) == Set(2,3,7,43))
     assert(eval(264407) == Set(11,13,43))
   }
+
+  it should "convert hexademical to octal" in {
+
+    val H = ('0' to '9') ++ ('a' to 'f')
+    val T = ('0' to '7')
+
+    def eval(hex: String): String = {
+      /*
+             LSB
+       N =   c0*b0 + c1*b1 + c2*b2 + ...
+       */
+      var N = 0
+      var bhex = hex.toBuffer
+      var i = 0
+      while (bhex.nonEmpty){ // O(L)
+        N += H.indexOf(bhex.last) * Math.pow(16, i).toInt
+        bhex.dropRightInPlace(1)
+        i += 1
+      }
+
+      // input value ~ 16^L
+      // max = fff...fL
+      // min = 111...1L -> 16^(L-1) + 16^(L-2) ..
+
+      // output value
+      // max = 16^(L-1) + 16^(L-2) ..
+      //     = 2^(L-1)*8^(L-1) + 2^(L-2)*8^(L-2) ..
+      //     =
+
+      // LSB first
+      val buf = new StringBuffer
+      i = 1
+      while (N>0){
+        val m = N % 8
+        buf.append(T(m))
+        N -= m
+        N /= 8
+        i += 1
+      }
+      buf.reverse().toString
+
+    }
+
+    assert(eval("ffe1") == "177741")
+    assert(eval("12a11") == "225021")
+    assert(eval("ff") == "377")
+  }
 }
