@@ -327,4 +327,5 @@ class ArraySpec extends AnyFlatSpec {
       Array(3) :: Array(1,2,5) :: Array(6,5,7,1,2,5) :: Nil
     ).toList == Nil)
   }
+
 }

@@ -198,4 +198,46 @@ class StringSpec extends AnyFlatSpec {
     assert(eval("0001001") == 2) // [1]000100[0]1
     assert(eval("akkaaakka") == 0)
    }
+
+  it should "translate word (0-999) into number" in {
+    val digit = Seq("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    val map = Map(
+      "ten" -> 10,
+      "twenty" -> 20,
+      "thirty" -> 30,
+      "fifty" -> 50,
+      "eleven" -> 11,
+      "twelve" -> 12,
+      "thirteen" -> 13,
+      "hundred" -> 100
+    ) ++ digit.zipWithIndex.map{ case (d,i) => d -> i }.toMap
+
+    def eval(w: String): Int = {
+      tran(w.split(" ").toList) // O(L)
+    }
+
+    def tran(w: List[String]): Int = {
+      if (w.isEmpty) 0
+      else w match {
+        case d::Nil => map(d)
+        case d::ds =>
+          val (v,next) = map.get(d)
+            .map{ k => if (ds.head == "hundred") (k*100,ds.tail) else (k,ds) }
+            .getOrElse{
+              if (d.endsWith("teen"))
+                (map(d.dropRight(4))+10, ds)
+              else if (d.endsWith("ty"))
+                (map(d.dropRight(2))*10, ds)
+              else
+                (0,ds)
+            }
+          v + tran(next)
+      }
+    }
+
+    assert(eval("zero") == 0)
+    assert(eval("hundred thirteen") == 113)
+    assert(eval("five hundred fifty nine") == 559)
+    assert(eval("seventy five") == 75)
+  }
 }
