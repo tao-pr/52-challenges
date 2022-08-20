@@ -5,6 +5,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import java.util
 import scala.annotation.tailrec
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.mutable
 
 class ArraySpec extends AnyFlatSpec {
 
@@ -178,5 +179,55 @@ class ArraySpec extends AnyFlatSpec {
       Array(4,5,5,5,5)
     )
     assert(max(m4) == 6)
+  }
+
+  it should "find gaps of missing values in array" in {
+    // eg
+    // [1,3,5,6,7,8,9]
+    // => [1,1]
+
+    // [0,15,16,19,25,40,41,43]
+    // => [14,2,5,14,1]
+    def eval(arr: Array[Int]): Array[Int] = {
+      var prev = arr.head
+      val gap = new mutable.ArrayBuffer[Int]()
+      for (a <- arr) { // O(L)
+        if (a - prev > 1)
+          gap.addOne(a - prev - 1)
+        prev = a
+      }
+      gap.toArray
+    }
+
+    assert(eval(Array(1, 3, 5, 6, 7, 8, 9)).toList == List(1, 1))
+    assert(eval(Array(0,15,16,19,25,40,41,43)).toList == List(14,2,5,14,1))
+    assert(eval(Array(0,1,2,3,4,5,6)).isEmpty)
+  }
+
+  it should "remove all ascending elements (more than 2 adjacent) from array" in {
+    def eval(arr: List[Int]): List[Int] = {
+      if (arr.length <= 2) arr
+      else {
+        var pre = arr.head
+        var i = 0
+        val tail = arr.tail.dropWhile{ a =>
+          val isAsc = a > pre
+          if (isAsc)
+            i+=1
+          pre = a
+          isAsc
+        }
+
+        if (i>=2)
+          eval(tail)
+        else{
+          arr.slice(0, i+1) ++ eval(tail)
+        }
+      }
+    }
+
+    assert(eval(List(1,15,19,16,17,2,15)) == List(16,17,2,15))
+    assert(eval(List(15,13,12,13,15,12,13,15)) == List(15,13))
+    assert(eval(List(1,2,3,40,57)).isEmpty)
   }
 }
