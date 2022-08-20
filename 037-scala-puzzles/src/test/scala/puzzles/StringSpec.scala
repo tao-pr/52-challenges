@@ -123,4 +123,42 @@ class StringSpec extends AnyFlatSpec {
     assert(eval("((2+(2-3))*50)+10") == 60)
   }
 
+  it should "find shortest string that matches all search patterns" in {
+    def split(s: String): Seq[String] ={
+      if (s.endsWith("*"))
+        s.split('*') :+ ""
+      else
+        s.split('*')
+    }
+
+    def max(a: String, b: String) = if (a.length>=b.length) a else b
+
+    def eval(patterns: List[String]): String = {
+      val splits = patterns.map(split) // O(P*L)
+      var h = "" // head
+      var t = "" // tail
+      var m = "" // mid
+      for (s <- splits){
+        h = max(h, s.head)
+        if (s.tail.nonEmpty){
+          t = max(t, s.tail.last)
+          val mid = s.tail.dropRight(1)
+          if (mid.nonEmpty){
+            m += mid.mkString("")
+          }
+        }
+      }
+
+      h + m + t
+
+      // splits look like:
+      // ['',1]
+      // [1,'']
+      // [123,'']
+    }
+
+    assert(eval("*1" :: "1*" :: "123*" :: Nil) == "1231")
+    assert(eval("a*b*c*" :: "abc*e" :: "*bk*" :: Nil) == "abcbcbke" )
+
+  }
 }
