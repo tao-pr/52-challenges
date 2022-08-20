@@ -123,7 +123,7 @@ class StringSpec extends AnyFlatSpec {
     assert(eval("((2+(2-3))*50)+10") == 60)
   }
 
-  it should "find shortest string that matches all search patterns" in {
+  it should "find a string that matches all search patterns" in {
     def split(s: String): Seq[String] ={
       if (s.endsWith("*"))
         s.split('*') :+ ""
@@ -161,4 +161,41 @@ class StringSpec extends AnyFlatSpec {
     assert(eval("a*b*c*" :: "abc*e" :: "*bk*" :: Nil) == "abcbcbke" )
 
   }
+
+  it should "find minimum inserts to make a string a palindrome" in {
+    def eval(s: String): Int = {
+      var w = s
+      var num = 0
+      while (w.nonEmpty){
+        if (w.head != w.last) {
+          num += 1
+          w = trim(w)
+        }
+        else w = w.tail.dropRight(1) // trim both sides
+      }
+      num
+    }
+
+    def trim(s: String): String = { // remove odd from a likely palindrome
+      // h:mid:l
+      if (s.length <= 1)
+        s
+      else{
+        val l = s.last
+        val m = s.tail.dropRight(1)
+        m match {
+          case "" => s.tail // empty middle, doesn't matter which end to drop
+          case mm if mm.head == l => s.tail
+          case _ => s.dropRight(1)
+        }
+      }
+    }
+
+    assert(eval("aa") == 0)
+    assert(eval("abc") == 2) // abc[ba]
+    assert(eval("1k13") == 1) // [3]1k13
+    assert(eval("*13*") == 1) // *13[1]*
+    assert(eval("0001001") == 2) // [1]000100[0]1
+    assert(eval("akkaaakka") == 0)
+   }
 }
