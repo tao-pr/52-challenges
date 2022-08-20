@@ -294,4 +294,37 @@ class ArraySpec extends AnyFlatSpec {
       Array(3))
     assert(eval(m5).toList == List(1,2,3))
   }
+
+  it should "find longest subarray in all arrays" in {
+    def eval(arr: List[Array[Int]]): List[Int] = {
+      val ns = arr.sortBy(_.length).map(_.toBuffer)
+      sub(ns.head, ns.tail, Nil, Nil)
+    }
+
+    def sub(b: mutable.Buffer[Int], arr: Iterable[mutable.Buffer[Int]], pre: List[Int], longest: List[Int]): List[Int] = {
+      if (b.isEmpty) if (longest.length > pre.length) longest else pre
+      else {
+        val barr = arr.map{_.dropWhile(_ != b.head)}
+        if (barr.exists(_.isEmpty)){
+          // no match, clear pre & start over
+          val ls = if (longest.length > pre.length) longest else pre
+          sub(b.tail, arr, Nil, ls)
+        }
+        else {
+          // still match further
+          sub(b.tail, barr.map(_.tail), pre :+ b.head, longest)
+        }
+      }
+    }
+
+    assert(eval(
+      Array(1,2,3) :: Array(2,3,5,3) :: Array(0,3,3,2,3) :: Nil
+    ).toList == List(2,3))
+    assert(eval(
+      Array(1,1,1,1,1,1,1,1,1) :: Array(0,1,1,5,3,1,1,1) :: Array(1,1,1,5,1,1,1) :: Nil
+    ).toList == List(1,1,1))
+    assert(eval(
+      Array(3) :: Array(1,2,5) :: Array(6,5,7,1,2,5) :: Nil
+    ).toList == Nil)
+  }
 }
