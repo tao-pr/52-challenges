@@ -230,4 +230,68 @@ class ArraySpec extends AnyFlatSpec {
     assert(eval(List(15,13,12,13,15,12,13,15)) == List(15,13))
     assert(eval(List(1,2,3,40,57)).isEmpty)
   }
+
+  it should "zigzag walk matrix" in {
+    def eval(mat: Array[Array[Int]]): Array[Int] = {
+      walk(mat, Some(0), None)
+    }
+
+    def walk(mat:Array[Array[Int]], beginCol: Option[Int], beginRow: Option[Int]): Array[Int] = {
+      (beginCol, beginRow) match {
+        case (Some(col), _) =>
+          var (i,j) = (0,col)
+          val buff = new ArrayBuffer[Int]()
+          while (j>=0 && i<=mat.length-1){
+            buff.addOne(mat(i)(j))
+            i += 1
+            j -= 1
+          }
+          if (col==mat.head.length-1) {
+            // end of cols, walk from next row instead
+            buff.toArray ++ (if (mat.length>1) walk(mat, None, Some(1)) else Array.empty)
+          } else
+            buff.toArray ++ walk(mat, Some(col+1), None)
+
+        case (None, Some(row)) =>
+          var (i,j) = (row, mat.head.length-1)
+          val buf = new ArrayBuffer[Int]()
+          while (j>=0 && i<=mat.length-1){
+            buf.addOne(mat(i)(j))
+            i += 1
+            j -= 1
+          }
+          if (row>=mat.length-1)
+            buf.toArray
+          else
+            buf.toArray ++ walk(mat, None, Some(row+1))
+
+        case _ => Array.empty
+      }
+    }
+
+    val m1 = Array(
+      Array(1,2,3),
+      Array(4,5,6),
+      Array(7,8,9))
+    assert(eval(m1).toList == List(1,2,4,3,5,7,6,8,9))
+
+    val m2 = Array(Array(1))
+    assert(eval(m2).toList == List(1))
+
+    val m3 = Array(
+      Array(1,2,3,4,5),
+      Array(1,2,3,4,5))
+    assert(eval(m3).toList == List(1,2,1,3,2,4,3,5,4,5))
+
+    val m4 = Array(
+      Array(1,2,3,4,5)
+    )
+    assert(eval(m4).toList == List(1,2,3,4,5))
+
+    val m5 = Array(
+      Array(1),
+      Array(2),
+      Array(3))
+    assert(eval(m5).toList == List(1,2,3))
+  }
 }
