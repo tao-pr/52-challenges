@@ -2,10 +2,9 @@ package puzzles
 
 import org.scalatest.flatspec.AnyFlatSpec
 
-import java.util
 import scala.annotation.tailrec
-import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 class ArraySpec extends AnyFlatSpec {
 
@@ -326,6 +325,42 @@ class ArraySpec extends AnyFlatSpec {
     assert(eval(
       Array(3) :: Array(1,2,5) :: Array(6,5,7,1,2,5) :: Nil
     ).toList == Nil)
+  }
+
+  it should "evaluate vol of trapped rain water" in {
+    def eval(cell: Array[Int]): Int = {
+
+      if (cell.isEmpty)
+        0
+      else {
+        val level = cell.head
+        var vol = 0
+        var maxRight = 0
+        val tail = cell.tail.dropWhile{ c =>
+          if (c<level){
+            vol += level-c
+          }
+          maxRight = maxRight.max(c)
+          c<level
+        }
+
+        if (vol==0) { // left most cell is not the wall
+          eval(cell.tail)
+        }
+        else if (tail.isEmpty && vol>0){ // left wall is too high, cannot find higher right wall
+          eval(maxRight +: cell.tail)
+        }
+        else
+          vol + eval(tail)
+      }
+    }
+
+
+    assert(eval(Array(0,0,0,0)) == 0)
+    assert(eval(Array(1,1,1,0,1,1,2,0,1))==2)
+    assert(eval(Array(1,0,2,1,0,3,3,4,1,3)) == 1+3+2)
+    assert(eval(Array(0,1,3,5,2,1)) == 0)
+    assert(eval(Array(3,2,1,2,3,1)) == 1+2+1)
   }
 
 }
