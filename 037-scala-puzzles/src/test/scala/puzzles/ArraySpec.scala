@@ -363,4 +363,23 @@ class ArraySpec extends AnyFlatSpec {
     assert(eval(Array(3,2,1,2,3,1)) == 1+2+1)
   }
 
+  it should "find matching position of sequence of subarray" in {
+    // -1 means wildcard
+    def eval(arr: Array[Int], pat: Array[Int], index: Int = 0): Int = {
+      if (pat.length > arr.length || arr.isEmpty)
+        -1
+      else {
+        if (pat.lazyZip(arr).exists{ case (p,a) => p!=a && p != -1 })
+          eval(arr.tail, pat, index+1)
+        else
+          index
+      }
+    }
+
+    assert(eval(Array(1,2,3,4), Array(2,-1)) == 1)
+    assert(eval(Array(1,2,3,2,3,5), Array(2,-1,-1)) == 1)
+    assert(eval(Array(0,3,5,3,2,5,5,1), Array(-1,5,-1,1)) == 4)
+    assert(eval(Array(1,1,3,1), Array(-1,-1)) == 0)
+  }
+
 }
