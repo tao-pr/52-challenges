@@ -105,4 +105,45 @@ class NumberTest extends AnyFlatSpec {
     assert(eval("12a11") == "225021")
     assert(eval("ff") == "377")
   }
+
+  it should "find sum of base blocks of pascal tiangle at N-th row" in {
+    //    1
+    //   1 1
+    //  1 2 1
+    // 1 3 3 1
+    // ..
+
+    // C(r)(i) = C(r-1)(i-1) + C(r-1)(i)
+    //
+    def eval(R: Int): Int = {
+      val precal = new mutable.HashMap[(Int,Int),Int]()
+
+      if (R==0) 1
+      else 2 + (1 until R).map(c => value(R,c,precal)).sum
+    }
+
+    def value(R: Int, C: Int, precal: mutable.HashMap[(Int,Int),Int]): Int = {
+      if (R==0) 1
+      else if (C==0 || C==R) 1
+      else {
+        def take(r: Int, c: Int): Int = {
+          precal.get((r,c)) match {
+            case Some(v) => v
+            case None =>
+              val v = value(r, c, precal)
+              precal.addOne((r,c), v)
+              v
+          }
+        }
+        val t1 = take(R-1, C-1)
+        val t2 = take(R-1, C)
+        t1 + t2
+      }
+    }
+
+    assert(eval(0) == 1)
+    assert(eval(1) == 2)
+    assert(eval(3) == 8)
+    assert(eval(7) == 128)
+  }
 }
