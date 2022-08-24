@@ -240,4 +240,64 @@ class StringSpec extends AnyFlatSpec {
     assert(eval("five hundred fifty nine") == 559)
     assert(eval("seventy five") == 75)
   }
+
+  it should "do pattern matching" in {
+    /**
+     * defines:
+     *   *  = any letters (at least 1 letter)
+     *   [] = optional pattern
+     */
+    def eval(paths: Iterable[String], pattern: String): Iterable[String] = {
+      paths.filter(matchMe(pattern, _))
+    }
+
+    def matchMe(pattern: String, str: String): Boolean = {
+      (pattern, str) match {
+        case ("", _) => str.isEmpty
+        case (_, "") => false
+        case ("*",_) => true
+        case (p,s) =>
+          if (p.head==s.head) matchMe(p.tail, s.tail)
+          else if (p.head=='*'){
+            // locate next part of string which matches [p.tail]
+            var tail = s.tail // leave at least 1 head to match with *
+            var tailMatch = false
+            while (tail.nonEmpty && !tailMatch){
+              tailMatch = matchMe(p.tail, tail)
+              tail = tail.tail
+            }
+            tailMatch
+          }
+          else if (p.head=='['){
+            // locate next part of string which matches [p.tail]
+            val subpattern = p.tail.takeWhile(_ != ']')
+            val tailPattern = p.tail.dropWhile(_ != ']').tail // of course still optimisable along with line above
+            var i = 0 // where to cut for tail pattern match
+            var tail = s
+            var tailMatch = tailPattern.isEmpty
+            while (tail.nonEmpty && !tailMatch){
+              tailMatch = matchMe(tailPattern, tail)
+              tail = tail.tail
+              if (!tailMatch)
+                i += 1
+            }
+            val substr = s.slice(0, i) // [] allows substr to be empty
+            tailMatch && (substr.isEmpty || matchMe(subpattern, substr))
+          }
+          else false
+      }
+    }
+
+    val p1 = "ab" :: "abc" :: "abbc" :: "abbccc" :: Nil
+    assert(eval(p1, "abc")==List("abc"))
+
+    val p2 = "ab" :: "cab" :: "zzab" :: "ppb" :: "paazb" :: Nil
+    assert(eval(p2, "*ab") == List("cab", "zzab"))
+
+    val p3 = "pp" :: "ppe1" :: "e" :: "eep" :: "ppee3" :: Nil
+    assert(eval(p3, "[pp]e*") == List("ppe1", "eep", "ppee3"))
+
+    val p4 = "kb5" :: "kkb3" :: "kckbk" :: "ak3kb3" :: "kbkb" :: "kbkbk" :: "kbkbkp" :: Nil
+    assert(eval(p4, "[k*]kb*") == List("kb5", "kckbk", "kbkb", "kbkbk", "kbkbkp"))
+  }
 }
