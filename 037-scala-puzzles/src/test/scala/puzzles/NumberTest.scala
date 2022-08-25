@@ -1,0 +1,149 @@
+package puzzles
+
+import org.scalatest.flatspec.AnyFlatSpec
+import scala.collection.mutable
+
+class NumberTest extends AnyFlatSpec {
+
+  it should "expand prime factorisation of a number" in {
+
+    val knownPrimes = Seq(2,3,5,7,11,13,17,19,23,29)
+
+    def eval(N: Int): Set[Int] = {
+      // test with known primes first
+      val primes = knownPrimes.filter(_ <= N)
+      prune(N, primes)
+    }
+
+    def prune(N: Int, primes: Seq[Int]): Set[Int] = {
+      if (primes.nonEmpty){
+        // test with known primes
+        if (N<=1) Set.empty[Int]
+        else if (N % primes.last == 0) {
+          var M = N
+          while (M % primes.last == 0)
+            M = M / primes.last
+          Set(primes.last) ++ prune(M, primes.dropRight(1))
+        }
+        else {
+          prune(N, primes.dropRight(1))
+        }
+      }
+      else {
+        if (N>2)
+          // prime sieve
+          sieve(N, N-1)
+        else
+          Set.empty
+      }
+
+    }
+
+    def sieve(N: Int, d: Int): Set[Int] = {
+      if (d<=1) Set(N)
+      else {
+        if (N % d == 0)
+          sieve(N/d, N/d-1) ++ sieve(d, d-1)
+        else{
+          sieve(N, d-1)
+        }
+      }
+    }
+
+    assert(eval(2) == Set(2))
+    assert(eval(15) == Set(3,5))
+    assert(eval(49) == Set(7))
+    assert(eval(28) == Set(2,7))
+    assert(eval(6662) == Set(2,3331))
+    assert(eval(5418) == Set(2,3,7,43))
+    assert(eval(264407) == Set(11,13,43))
+  }
+
+  it should "convert hexademical to octal" in {
+
+    val H = ('0' to '9') ++ ('a' to 'f')
+    val T = ('0' to '7')
+
+    def eval(hex: String): String = {
+      /*
+             LSB
+       N =   c0*b0 + c1*b1 + c2*b2 + ...
+       */
+      var N = 0
+      var bhex = hex.toBuffer
+      var i = 0
+      while (bhex.nonEmpty){ // O(L)
+        N += H.indexOf(bhex.last) * Math.pow(16, i).toInt
+        bhex.dropRightInPlace(1)
+        i += 1
+      }
+
+      // input value ~ 16^L
+      // max = fff...fL
+      // min = 111...1L -> 16^(L-1) + 16^(L-2) ..
+
+      // output value
+      // max = 16^(L-1) + 16^(L-2) ..
+      //     = 2^(L-1)*8^(L-1) + 2^(L-2)*8^(L-2) ..
+      //     =
+
+      // LSB first
+      val buf = new StringBuffer
+      i = 1
+      while (N>0){
+        val m = N % 8
+        buf.append(T(m))
+        N -= m
+        N /= 8
+        i += 1
+      }
+      buf.reverse().toString
+
+    }
+
+    assert(eval("ffe1") == "177741")
+    assert(eval("12a11") == "225021")
+    assert(eval("ff") == "377")
+  }
+
+  it should "find sum of base blocks of pascal tiangle at N-th row" in {
+    //    1
+    //   1 1
+    //  1 2 1
+    // 1 3 3 1
+    // ..
+
+    // C(r)(i) = C(r-1)(i-1) + C(r-1)(i)
+    //
+    def eval(R: Int): Int = {
+      val precal = new mutable.HashMap[(Int,Int),Int]()
+
+      if (R==0) 1
+      else 2 + (1 until R).map(c => value(R,c,precal)).sum
+    }
+
+    def value(R: Int, C: Int, precal: mutable.HashMap[(Int,Int),Int]): Int = {
+      if (R==0) 1
+      else if (C==0 || C==R) 1
+      else {
+        def take(r: Int, c: Int): Int = {
+          precal.get((r,c)) match {
+            case Some(v) => v
+            case None =>
+              val v = value(r, c, precal)
+              precal.addOne((r,c), v)
+              v
+          }
+        }
+        val t1 = take(R-1, C-1)
+        val t2 = take(R-1, C)
+        t1 + t2
+      }
+    }
+
+    assert(eval(0) == 1)
+    assert(eval(1) == 2)
+    assert(eval(3) == 8)
+    assert(eval(7) == 128)
+  }
+}
