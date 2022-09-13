@@ -435,4 +435,23 @@ class ArraySpec extends AnyFlatSpec {
     )) == List(1,2,3,4,8,3,2,1,9,5,6,7))
   }
 
+  it should "identify number of buildings with at least 1 story without blocked view on left" in {
+    def eval(W: List[Int]): Int = {
+      var maxLeft = W.head
+      var cnt = 1
+      W.tail.foreach{ w => 
+        if (w>maxLeft){
+          cnt +=1 
+          maxLeft = w
+        }
+      }
+      cnt
+    }
+
+    assert(eval(List(1)) == 1)
+    assert(eval(List(1,1,1,1))==1)
+    assert(eval(List(1,5,1,1,3,2))==2)
+    assert(eval(List(1,5,1,1,5,4,6,3))==3)
+    assert(eval(List(5,2,5,3,3,1,5))==1)
+  }
 }
