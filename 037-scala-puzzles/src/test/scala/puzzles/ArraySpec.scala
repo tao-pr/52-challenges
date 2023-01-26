@@ -382,4 +382,76 @@ class ArraySpec extends AnyFlatSpec {
     assert(eval(Array(1,1,3,1), Array(-1,-1)) == 0)
   }
 
+  it should "walk matrix spirally (right first)" in {
+    def eval(M: Array[Array[Int]]): List[Int] = {
+      val (minR, minC, maxR, maxC) = (0, 0, M.length-1, M.head.length-1)
+      walk(M, 'R', minR, minC, maxR, maxC).toList
+    }
+
+    def walk(M: Array[Array[Int]], d: Char, minR: Int, minC: Int, maxR: Int, maxC: Int): ArrayBuffer[Int] = {
+      if (M.isEmpty || M.head.isEmpty || minR>maxR || minC>maxC) ArrayBuffer.empty
+      else {
+        val (r0,c0,dr,dc) = d match {
+          case 'R' => (minR,minC,0,1)
+          case 'D' => (minR,maxC,1,0)
+          case 'L' => (maxR,maxC,0,-1)
+          case 'U' => (maxR,minC,-1,0)
+        }
+
+        val w = new mutable.ArrayBuffer[Int]()
+        var (r,c) = (r0,c0)
+        while (r>=minR && r<=maxR && c>=minC && c<=maxC) {
+          w.addOne(M(r)(c))
+          r += dr
+          c += dc
+        }
+
+        val (d_, minR_, minC_, maxR_, maxC_) = d match {
+          case 'R' => ('D', minR+1, minC, maxR, maxC)
+          case 'D' => ('L', minR, minC, maxR, maxC-1)
+          case 'L' => ('U', minR, minC, maxR-1, maxC)
+          case 'U' => ('R', minR, minC+1, maxR, maxC)
+        }
+        w ++ walk(M, d_, minR_, minC_, maxR_, maxC_)
+      }
+    }
+
+    assert(eval(Array(Array(1))) == List(1))
+    assert(eval(Array(
+      Array(1,2,3),
+      Array(4,5,6)
+    )) == List(1,2,3,6,5,4))
+
+    assert(eval(Array(
+      Array(1,2,3),
+      Array(4,5,6),
+      Array(7,8,9)
+    )) == List(1,2,3,6,9,8,7,4,5))
+
+    assert(eval(Array(
+      Array(1,2,3,4),
+      Array(5,6,7,8),
+      Array(9,1,2,3)
+    )) == List(1,2,3,4,8,3,2,1,9,5,6,7))
+  }
+
+  it should "identify number of buildings with at least 1 story without blocked view on left" in {
+    def eval(W: List[Int]): Int = {
+      var maxLeft = W.head
+      var cnt = 1
+      W.tail.foreach{ w => 
+        if (w>maxLeft){
+          cnt +=1 
+          maxLeft = w
+        }
+      }
+      cnt
+    }
+
+    assert(eval(List(1)) == 1)
+    assert(eval(List(1,1,1,1))==1)
+    assert(eval(List(1,5,1,1,3,2))==2)
+    assert(eval(List(1,5,1,1,5,4,6,3))==3)
+    assert(eval(List(5,2,5,3,3,1,5))==1)
+  }
 }

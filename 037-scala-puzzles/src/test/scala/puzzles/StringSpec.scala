@@ -300,4 +300,50 @@ class StringSpec extends AnyFlatSpec {
     val p4 = "kb5" :: "kkb3" :: "kckbk" :: "ak3kb3" :: "kbkb" :: "kbkbk" :: "kbkbkp" :: Nil
     assert(eval(p4, "[k*]kb*") == List("kb5", "kckbk", "kbkb", "kbkbk", "kbkbkp"))
   }
+
+  it should "create a minimum character replace map in string which makes a string a complete palindrome" in {
+    def eval(str: String): Map[Char,Char] = {
+      // count occurence : O(N)
+      val occ = new mutable.HashMap[Char,Int]
+      str.foreach{ c => 
+        if (occ.contains(c))
+          occ(c) += 1
+        else occ.addOne(c -> 1)
+      }
+
+      val dontReplace = new mutable.HashSet[Char]
+      val map = new mutable.HashMap[Char,Char]
+      var (l,r) = (0,str.length-1)
+
+      // O(N)
+      while (l < r){
+        if (str(l) == str(r))
+          dontReplace.addOne(str(l))
+        else {
+          // replace one
+          if (dontReplace.contains(str(l)) || occ(str(r)) < occ(str(l))){
+            // replace right
+            map.addOne(str(r) -> str(l))
+            dontReplace.addOne(str(l))
+          }
+          else {
+            //replace left
+            map.addOne(str(l) -> str(r))
+            dontReplace.addOne(str(r))
+          }
+        }
+        l +=1
+        r -=1
+      }
+
+      map.toMap
+    } 
+
+    assert(eval("aaa") == Map.empty)
+    assert(eval("aba") == Map.empty)
+    assert(eval("aabb") == Map('a' -> 'b'))
+    assert(eval("abaa") == Map('b' -> 'a'))
+    assert(eval("acbba") == Map('c' -> 'b'))
+    assert(eval("acapkak") == Map('k' -> 'a', 'c' -> 'a'))
+  }
 }
