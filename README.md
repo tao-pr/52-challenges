@@ -54,6 +54,7 @@ List of challenges are collected below.
 | 036 | Build systemd daemon (forkless)          | C systemd        | 12 hrs | Systemd anatomy + provisioning docker |
 | 037 | Puzzles in scala                         | Scala            | -- | -- |
 | 038 | Kalman Tracking video in C++20           | C++20 Kalman     | 6 hrs      | -- | 
+| 039 | REST API with Haskell                    | Haskell          | ?? | ?? | 
 
 
 ## Licence
