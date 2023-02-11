@@ -38,7 +38,8 @@ int main(int argc, char** argv){
     cv::Mat resized;
     cv::Mat gray;
     cv::resize(frame, resized, cv::Size(), 1/scaleFactor, 1/scaleFactor, cv::INTER_LINEAR);
-    cv::extractChannel(resized, gray, 1); // take green channel
+    //cv::extractChannel(resized, gray, 1); // take green channel
+    cv::cvtColor(resized, gray, cv::COLOR_BGR2GRAY);
 
     if (!hasReportedDim){
       int type = gray.type();
@@ -54,7 +55,7 @@ int main(int argc, char** argv){
     // Extract features from grayscale
     std::vector<cv::Point2f> features;
     std::vector<unsigned char> status;
-    cv::goodFeaturesToTrack(gray, features, 500, 0.01, 10);
+    cv::goodFeaturesToTrack(gray, features, 500, 0.005, 5);
 
     // Track features
     if (!prevFeatures.empty()){
@@ -80,7 +81,7 @@ int main(int argc, char** argv){
 
     // store prev state
     prevFeatures.assign(features.begin(), features.end());
-    prev = gray;
+    prev = gray.clone();
 
     // Hit c to break
     if (cv::waitKey(1) == 'c')
