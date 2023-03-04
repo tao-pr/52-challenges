@@ -25,7 +25,8 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      MC
+      Sample
   other-modules:
       Paths_monte
   hs-source-dirs:
@@ -33,6 +34,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , normaldistribution >=1.1
+    , random
   default-language: Haskell2010
 
 executable monte-exe
@@ -45,6 +48,8 @@ executable monte-exe
   build-depends:
       base >=4.7 && <5
     , monte
+    , normaldistribution >=1.1
+    , random
   default-language: Haskell2010
 
 test-suite monte-test
@@ -58,4 +63,6 @@ test-suite monte-test
   build-depends:
       base >=4.7 && <5
     , monte
+    , normaldistribution >=1.1
+    , random
   default-language: Haskell2010
