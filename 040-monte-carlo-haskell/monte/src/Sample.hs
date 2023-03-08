@@ -1,5 +1,16 @@
 module Sample where
 
-import System.Random(Random)
+import Data.Geometry.Point (Point, Point(Point2))
 
-data (Random a, Floating a) => Sample a = S a a
+class Sample s where
+  inScope :: s a -> Bool
+  gen :: s a -- generate a sample
+  genPar :: Int -> [s a] -- generate multiple samples in parallel
+
+instance Sample (Point p) where
+  inScope p = error ""
+  gen = error ""
+  genPar = error ""
+
+
+

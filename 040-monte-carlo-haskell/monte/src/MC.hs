@@ -1,14 +1,14 @@
+{-# LANGUAGE MultiParamTypeClasses #-}
+
 module MC where
 
-import Data.Random.Normal
-import qualified Sample
+import Sample (Sample())
 
+class MC m where
+  simulate :: m -> Int -> Float
 
--- generate random sample
-gen :: a
-gen = error ""
-
--- sampling
-sampl :: [a] -> a 
-sampl space = error ""
-
+-- Simulators with a tolerance parameter
+data Simulator = PiMC | EulerMC
+  
+instance MC Simulator where
+  simulate p n = error "" 
