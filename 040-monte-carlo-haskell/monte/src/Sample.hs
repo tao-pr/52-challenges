@@ -1,16 +1,14 @@
 module Sample where
 
-import Data.Geometry.Point (Point, Point(Point2))
+import Control.Parallel.Strategies
+import GHC.Base(returnIO)
 
-class Sample s where
-  inScope :: s a -> Bool
-  gen :: s a -- generate a sample
-  genPar :: Int -> [s a] -- generate multiple samples in parallel
+data Point = Point Float Float 
+  deriving Show
 
-instance Sample (Point p) where
-  inScope p = error ""
-  gen = error ""
-  genPar = error ""
+genPar :: Int -> [IO Point]
+genPar num = [] -- taotodo
 
-
+gen :: IO Point
+gen = returnIO $ Point 0 0 -- taotodo
 
