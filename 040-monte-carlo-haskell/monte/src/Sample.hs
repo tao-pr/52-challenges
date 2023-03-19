@@ -1,7 +1,7 @@
 module Sample
   ( Point(..),
     genPar,
-    foldCount
+    foldSplit
   )
   where
 
@@ -23,11 +23,11 @@ gen _ = do
     let p = Point a b
     return p
 
-foldCount :: (Point -> Bool) -> (Int, Int) -> [Point] -> (Int, Int)
-foldCount predicate (a0, b0) [] = (a0, b0)
-foldCount predicate (a0, b0) (x:xs) = 
-  foldCount predicate ab xs
+foldSplit :: (Point -> Bool) -> ([Point], [Point]) -> [Point] -> ([Point], [Point])
+foldSplit predicate (a0, b0) [] = (a0, b0)
+foldSplit predicate (a0, b0) (x:xs) = 
+  foldSplit predicate ab xs
     where
       ab = if predicate x 
-      then (a0+1, b0)
-      else (a0, b0+1)
+      then (x:a0, b0)
+      else (a0, x:b0)
