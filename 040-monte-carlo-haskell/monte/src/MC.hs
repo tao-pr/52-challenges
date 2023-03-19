@@ -2,9 +2,11 @@
 
 module MC where
 
-import Sample (genPar)
+import Sample (genPar, foldCount, Point(..))
 import GHC.Base(returnIO)
 import Control.Concurrent.ParallelIO.Global(parallel)
+import GHC.Float
+import Text.Printf
 
 class MC m where
   simulate :: m -> Int -> IO Float 
@@ -22,7 +24,15 @@ instance MC Simulator where
 simulatePi :: Int -> IO Float
 simulatePi n = do 
   samples <- parallel $ genPar n
-  returnIO 1.0 -- taotodo
+  -- print samples
+  let size = int2Float $ length samples
+  let x = int2Float . snd $ foldCount inUCircle (0,0) samples
+  printf "num in unit circle : %f\n" x
+  returnIO $ 4 * x / size 
 
 simulateEuler :: Int -> IO Float
 simulateEuler n = returnIO 1.0 -- taotodo
+
+inUCircle :: Point -> Bool
+inUCircle (Point x y) = 1 >= sqrt (x**2 + y**2)
+
