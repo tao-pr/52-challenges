@@ -40,7 +40,7 @@ simulatePi n = do
   returnIO $ 4 * x / size 
 
 simulateEuler :: Int -> IO Float
-simulateEuler n = returnIO 1.0 -- taotodo
+simulateEuler n = returnIO 1.0 -- todo: for another simulation
 
 inUCircle :: Point -> Bool
 inUCircle (Point x y) = 1 > sqrt (x**2 + y**2)

@@ -2,10 +2,6 @@
 
 For fun, this will do in Haskell
 
-## Prerequisites
-
-TBD
-
 ## Build & Run
 
 Just do 
