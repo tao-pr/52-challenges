@@ -74,7 +74,7 @@ class ApiService(pb2_grpc.StreamServicer):
                 'uri': request.uri,
                 'offset': request.offset,
                 'isEOF': True,
-                'body': chunk
+                'body': None
             }
             return pb2.StreamResponse(**result)
 

@@ -83,7 +83,9 @@ grpcurl -plaintext -d '{"uid":"111", "uri":"test-file", "offset": 1}' localhost:
 
 ## Run the client
 
-TBD
+```sh
+python client/python/client.py
+```
 
 ## Stop dependencies
 

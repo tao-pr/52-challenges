@@ -56,7 +56,7 @@ List of challenges are collected below.
 | 038 | Kalman Tracking video in C++20           | C++20 Kalman     | 6 hrs      | -- | 
 | 039 | REST API with Haskell                    | Haskell          | 8 hrs | String, ByteString, Text in Haskell | 
 | 040 | Monte Carlo with Haskell                 | Haskell          | ?? | IO Monad |
-| 041 | gRPC with background process             | Python           | ?? | ?? |
+| 041 | gRPC with background process             | Python           | 7 hrs | gRPC, asyncio |
 
 ## Licence
 
