@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package unary;
+
+// Simple streaming service
+service Stream {
+  
+  rpc InitiateStream(Package) returns (StreamTicket) {} // Initiate streaming ticket
+  rpc GetStream(StreamTicket) returns (StreamResponse) {} // Get the stream 
+}
+
+message Package {
+  string uid = 1;
+  string uri = 2; // content URI to request
+}
+
+message StreamTicket {
+  string uid = 1;
+  string uri = 2;
+  int32 offset = 3; // used when request GetStream
+  string status = 4; // used in response of InitiateStream
+}
+
+message StreamResponse {
+  string uri = 1;
+  int32 offset = 2;
+  bool isEOF = 3;
+  bytes body = 4; // base64 encoded
+}

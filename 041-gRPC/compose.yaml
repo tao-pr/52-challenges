@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  # In default settings of various kernels,
+  # Transparent huge pages (THP) might be enabled by default 
+  # and this is not optimal for redis (https://www.mongodb.com/docs/manual/tutorial/transparent-huge-pages/)
+  # When starting up the docker, the warning will suggest to turn it off.
+  redis:
+    image: 'redis:4-alpine'
+    container_name: redis-for41
+    command: redis-server --requirepass testpwd
+    ports:
+      - '6555:6379'
