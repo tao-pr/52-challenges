@@ -76,6 +76,9 @@ grpcurl -plaintext -d '{"uid":"unauth", "uri":"test-file"}' localhost:2345 unary
 
 # Test legit request (need to generate data file beforehand)
 grpcurl -plaintext -d '{"uid":"111", "uri":"test-file"}' localhost:2345 unary.Stream.InitiateStream
+
+# Test legic request
+grpcurl -plaintext -d '{"uid":"111", "uri":"test-file", "offset": 1}' localhost:2345 unary.Stream.GetStream
 ```
 
 ## Run the client

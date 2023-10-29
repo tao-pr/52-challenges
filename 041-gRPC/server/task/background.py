@@ -38,12 +38,31 @@ async def gen_chunks(uri):
         while True:
             chunk = f.read(CHUNK_SIZE)
             if chunk:
-                print(f'[async] Reading chunk #{offset+1} of {uri} ({len(chunk)/1024} KB)')
+                print(
+                    f'[async] Reading chunk #{offset+1} of {uri} ({len(chunk)/1024} KB)')
                 rchunk.mset({chunk_key(uri, offset): chunk})
                 rchunk.expire(uri, TTL_CHUNK)
                 offset += 1
             else:
                 break
+
+
+async def get_chunk(uid, uri, offset):
+    print(f'Getting chunk #{offset} of {uri} for {uid}')
+    global rchunk
+
+    if uid == TEST_UNAUTH:
+        return Status.UNAUTH
+
+    chunk = rchunk.mget(chunk_key(uri, offset))[0]
+    if chunk is None:
+        print(
+            f'[async] Chunk #{offset} of {uri} not found, returning invalid resource')
+        return Status.UNKNOWN_URI
+
+    else:
+        print(f'[async] Chunk #{offset} of {uri} found: {len(chunk)} bytes')
+        return chunk
 
 
 async def spawn(uri):

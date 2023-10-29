@@ -17,13 +17,13 @@ message Package {
 message StreamTicket {
   string uid = 1;
   string uri = 2;
-  string status = 3;
+  int32 offset = 3; // used when request GetStream
+  string status = 4; // used in response of InitiateStream
 }
 
 message StreamResponse {
-  string uid = 1;
+  string uri = 1;
   int32 offset = 2;
-  int32 nextOffset = 3;
-  bool isEOF = 4;
-  bytes body = 5; // base64 encoded
+  bool isEOF = 3;
+  bytes body = 4; // base64 encoded
 }

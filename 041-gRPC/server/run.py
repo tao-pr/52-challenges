@@ -20,7 +20,8 @@ class ApiService(pb2_grpc.StreamServicer):
 
         print('... Receiving stream initialization request: ', request)
 
-        status = asyncio.run(background.check_progress(request.uid, request.uri, offset=0))
+        status = asyncio.run(background.check_progress(
+            request.uid, request.uri, offset=0))
         if status == background.Status.PENDING:
             # Still pending, returns idempotent offset
             result = {
@@ -55,14 +56,27 @@ class ApiService(pb2_grpc.StreamServicer):
 
         print('[API] Receiving message: ', request)
 
-        # taotodo
-        # - how to generate HTTP error codes
-        # - how to spawn background process / io-blocking thread?
+        chunk = asyncio.run(background.get_chunk(
+            request.uid, request.uri, request.offset))
 
-        result = {}
-
-        # taotodo: generate streaming response
-        return pb2.StreamResponse(**result)
+        if not isinstance(chunk, background.Status):
+            # valid
+            result = {
+                'uri': request.uri,
+                'offset': request.offset,
+                'isEOF': False,
+                'body': chunk
+            }
+            return pb2.StreamResponse(**result)
+        else:
+            # invalid, returns as EOF
+            result = {
+                'uri': request.uri,
+                'offset': request.offset,
+                'isEOF': True,
+                'body': chunk
+            }
+            return pb2.StreamResponse(**result)
 
 
 async def serve():
@@ -80,7 +94,7 @@ async def serve():
     reflection.enable_server_reflection(service_ref, server)
 
     print('... Server listening to port 2345')
-    server.add_insecure_port('[::]:2345') # without TLS
+    server.add_insecure_port('[::]:2345')  # without TLS
     server.start()
     await server.wait_for_termination()
 
