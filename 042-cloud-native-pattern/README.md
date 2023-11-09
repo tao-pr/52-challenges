@@ -36,14 +36,33 @@ minikube image ls # should show the loaded image
 
 ## Samples
 
-- Rolling deployment: `mk apply -f v1/rolling-deploy.yaml`
-- TBD
+Run a sample RESTful service deployment with:
+
+```sh
+# Rolling deployment
+mk apply -f v1/rolling-deploy.yaml
+
+# Service deployment
+mk apply -f v1/service.yaml
+```
+
+Then you can get and access the service via
+
+```sh
+mk -n 042 get service # list the service
+
+minikube -n 042 service my-service-api # open in browser
+```
 
 ## Tear down
 
 After use, do not forget to clear all deployment down
 
 ```sh
+# Delete service & deployment
+mk -n 042 delete service my-service-api
+mk -n 042 delete deploy my-service
+
 minikube stop
 ```
 

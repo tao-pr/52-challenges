@@ -2,12 +2,6 @@
 #
 #   mk apply -f v1/rolling-deploy.yaml
 # 
-# Rollback previous deployment
-#   mk rollout undo deployment/my-service
-# 
-# Restart deployment
-#   mk rollout restart deployment/my-service
-#
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,8 +35,8 @@ spec:
           httpGet:
             path: /
             port: 9191
-          initialDelaySeconds: 2 # delay before pod starts
+          initialDelaySeconds: 3 # delay before pod starts
           periodSeconds: 10 # how often (second) to call endpoint to probe
           timeoutSeconds: 3 # probe timeout
           successThreshold: 1 # how many consecutive success probes
-          failureThreshold: 1 # how many retry probe
+          failureThreshold: 4 # how many retry probe
