@@ -57,6 +57,7 @@ List of challenges are collected below.
 | 039 | REST API with Haskell                    | Haskell          | 8 hrs | String, ByteString, Text in Haskell | 
 | 040 | Monte Carlo with Haskell                 | Haskell          | ?? | IO Monad |
 | 041 | gRPC with background process             | Python           | 7 hrs | gRPC, asyncio |
+| 042 | Cloud native patterns                    | Kubernetes       | ??? | Kubernetes |
 
 ## Licence
 
