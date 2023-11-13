@@ -34,13 +34,14 @@ minikube image load prebuilt/my-service # load from local docker
 minikube image ls # should show the loaded image
 ```
 
-## Samples
+## 1. Basic Deployment
 
-Run a sample RESTful service deployment with:
+Deploy the sample RESTful service
 
 ```sh
-# Rolling deployment
+# Choose any of these deployment 
 mk apply -f v1/rolling-deploy.yaml
+mk apply -f v1/recreate-deploy.yaml
 
 # Service deployment
 mk apply -f v1/service.yaml
@@ -50,8 +51,49 @@ Then you can get and access the service via
 
 ```sh
 mk -n 042 get service # list the service
+minikube -n 042 service my-service-api # open in browser (with the correct port)
+```
 
-minikube -n 042 service my-service-api # open in browser
+Try restarting the deployment. This will apply the deployment policy.
+
+```sh
+mk -n 042 rollout restart deploy/my-service
+```
+
+## 2. Green-Blue Deployment
+
+Deploy both green & blue
+
+```sh
+mk apply -f v1/blue-deploy.yaml
+mk apply -f v1/green-deploy.yaml
+
+# When checking pods with app=my-service, it should show all from both
+mk -n042 get pod -l app=my-service
+```
+
+Then deploy loadbalancer for sending 100% of traffic to blue deployment 
+
+```sh
+mk apply -f v1/blue-green-service.yaml # load balancer 
+```
+
+Try accessing the (blue) service via
+
+```sh
+minikube -n 042 service my-service-loadbalancer # should always see 'blue'
+```
+
+Now switch the traffic to green deployment by patching the load balancer
+
+```sh
+mk -n 042 patch service my-service-loadbalancer -p '{"spec": {"selector": {"version": "green"}}}'
+```
+
+Try accessing the (green) service via
+
+```sh
+minikube -n 042 service my-service-loadbalancer # should always see 'green'
 ```
 
 ## Tear down
@@ -59,9 +101,8 @@ minikube -n 042 service my-service-api # open in browser
 After use, do not forget to clear all deployment down
 
 ```sh
-# Delete service & deployment
-mk -n 042 delete service my-service-api
-mk -n 042 delete deploy my-service
+mk -n 042 delete service -l foo=bar
+mk -n 042 delete deploy -l foo=bar
 
 minikube stop
 ```

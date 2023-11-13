@@ -1,0 +1,22 @@
+# With loadbalancer
+#
+# applicable for:
+# - blue-deployment
+# - green-deployment
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-loadbalancer
+  namespace: "042"
+  labels:
+    foo: bar
+spec:
+  selector: 
+    app: my-service
+    version: blue # patch this to switch the green-blue
+  ports:
+    - protocol: TCP
+      port: 9191
+      targetPort: 9191
+  type: LoadBalancer

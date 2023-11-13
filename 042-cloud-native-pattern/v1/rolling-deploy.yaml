@@ -2,6 +2,9 @@
 #
 #   mk apply -f v1/rolling-deploy.yaml
 # 
+# Deployment without downtime. Replacing old with new one, one by one.
+#
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:

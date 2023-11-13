@@ -1,6 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 import random
+import os
 
 app = FastAPI()
 
@@ -9,7 +10,7 @@ def get_root():
     # 15% chance of failing
     if random.random() < 0.15:
         raise RuntimeError('Simulated failure')
-    return {'version': 1.0}
+    return {'version': os.environ.get('TAG') or 'default'}
 
 # Run with 
 # python -m uvicorn server:app

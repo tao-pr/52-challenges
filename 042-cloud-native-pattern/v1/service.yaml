@@ -1,0 +1,21 @@
+# Without loadbalancer
+#
+# applicable for:
+# - recreate-deployment
+# - rolling-deployment
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-api
+  namespace: "042"
+  labels:
+    foo: bar
+spec:
+  selector: 
+    app: my-service
+  ports:
+    - protocol: TCP
+      port: 9191
+      targetPort: 9191
+  type: NodePort
