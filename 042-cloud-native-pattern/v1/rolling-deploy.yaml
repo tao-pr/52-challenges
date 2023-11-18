@@ -9,7 +9,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: my-service
-  namespace: "042"
+  namespace: "42"
   labels:
     foo: bar
 spec:

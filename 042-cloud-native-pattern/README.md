@@ -1,6 +1,8 @@
 
 # Cloud Native PatternPlayground of Cloud native pattern in Kubernetes
 
+Playing with basic design patterns of deployments in k8s.
+
 
 ## Prerequisites
 
@@ -50,14 +52,14 @@ mk apply -f v1/service.yaml
 Then you can get and access the service via
 
 ```sh
-mk -n 042 get service # list the service
-minikube -n 042 service my-service-api # open in browser (with the correct port)
+mk -n42 get service # list the service
+minikube -n42 service my-service-api # open in browser (with the correct port)
 ```
 
 Try restarting the deployment. This will apply the deployment policy.
 
 ```sh
-mk -n 042 rollout restart deploy/my-service
+mk -n42 rollout restart deploy/my-service
 ```
 
 ## 2. Green-Blue Deployment
@@ -69,7 +71,7 @@ mk apply -f v1/blue-deploy.yaml
 mk apply -f v1/green-deploy.yaml
 
 # When checking pods with app=my-service, it should show all from both
-mk -n042 get pod -l app=my-service
+mk -n42 get pod -l app=my-service
 ```
 
 Then deploy loadbalancer for sending 100% of traffic to blue deployment 
@@ -81,28 +83,56 @@ mk apply -f v1/blue-green-service.yaml # load balancer
 Try accessing the (blue) service via
 
 ```sh
-minikube -n 042 service my-service-loadbalancer # should always see 'blue'
+minikube -n42 service my-service-loadbalancer # should always see 'blue'
 ```
 
 Now switch the traffic to green deployment by patching the load balancer
 
 ```sh
-mk -n 042 patch service my-service-loadbalancer -p '{"spec": {"selector": {"version": "green"}}}'
+mk -n42 patch service my-service-loadbalancer -p '{"spec": {"selector": {"version": "green"}}}'
 ```
 
 Try accessing the (green) service via
 
 ```sh
-minikube -n 042 service my-service-loadbalancer # should always see 'green'
+minikube -n42 service my-service-loadbalancer # should always see 'green'
 ```
+
+## 3. Secured Deployment
+
+Create an [opaque secret](https://kubernetes.io/docs/concepts/configuration/secret/#opaque-secrets) (password)
+
+```sh
+mk create secret generic pass --from-literal=admin=passtest # replace with your wanted password
+```
+
+Check the created (opaque) secret
+
+```sh
+mk get secret pass -o jsonpath='{}' # render whole config (JSON)
+
+mk get secret pass -o jsonpath='{.data}' # {"admin":"cGFzc3Rlc3Q="}
+
+mk get secret pass -o jsonpath='{.data.*}' # "cGFzc3Rlc3Q="
+
+mk get secret pass -o jsonpath='{.data.*}' | base64 -d # "passtest"
+```
+
+Test deploying pod which knows the secret for the service
+
+```sh
+mk apply -f v1/secured-deploy.yaml # this deployment knows secret
+```
+
+TBD
 
 ## Tear down
 
 After use, do not forget to clear all deployment down
 
 ```sh
-mk -n 042 delete service -l foo=bar
-mk -n 042 delete deploy -l foo=bar
+mk -n42 delete service -l foo=bar
+mk -n42 delete deploy -l foo=bar
 
 minikube stop
 ```
