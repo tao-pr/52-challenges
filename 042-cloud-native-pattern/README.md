@@ -20,7 +20,7 @@ minikube start # needs a docker daemon to run
 mk get po -A # test displaying the cluster
 minikube dashboard # show the cluster dashboard UI
 
-mk create namespace 042 # create the test namespace
+mk create namespace 42 # create the test namespace
 ```
 
 ## Setting up
@@ -103,7 +103,7 @@ minikube -n42 service my-service-loadbalancer # should always see 'green'
 Create an [opaque secret](https://kubernetes.io/docs/concepts/configuration/secret/#opaque-secrets) (password)
 
 ```sh
-mk create secret generic pass --from-literal=admin=passtest # replace with your wanted password
+mk -n42 create secret generic pass --from-literal=admin=passtest # replace with your wanted password
 ```
 
 Check the created (opaque) secret

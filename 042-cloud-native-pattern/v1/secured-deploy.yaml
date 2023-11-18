@@ -1,0 +1,36 @@
+# Deployment with Secret
+#
+#   mk apply -f v1/secured-deploy.yaml
+# 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-secured-service
+  namespace: "42"
+  labels:
+    foo: bar
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-secured-service
+  template:
+    metadata:
+      labels:
+        app: my-secured-service
+    spec:
+      containers:
+      - name: secured-service
+        image: prebuilt/my-service
+        imagePullPolicy: IfNotPresent # use locally built image if available 
+        ports: 
+          - containerPort: 9191
+        volumeMounts:
+        - name: my-pass
+          mountPath: "/etc/secret"
+          readOnly: true
+      volumes:
+      - name: my-pass # must match volueMounts
+        secret:
+          secretName: pass # created manually
