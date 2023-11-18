@@ -1,0 +1,32 @@
+# Rolling Deployment
+#
+#   mk apply -f v1/recreate-deploy.yaml
+# 
+# Kill all old and deploy new ones
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service
+  namespace: "42"
+  labels:
+    foo: bar
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: my-service
+  template:
+    metadata:
+      labels:
+        app: my-service
+    spec:
+      containers:
+      - image: prebuilt/my-service
+        imagePullPolicy: IfNotPresent # use locally built image if available
+        name: my-service
+        ports: 
+          - containerPort: 9191

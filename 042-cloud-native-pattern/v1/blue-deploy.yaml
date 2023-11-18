@@ -1,0 +1,37 @@
+# Blue Deployment
+#
+#   mk apply -f v1/blue-deploy.yaml
+# 
+# Deploy switchable identical deployments
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service-blue # unique name (for blue)
+  namespace: "42"
+  labels:
+    foo: bar
+spec:
+  replicas: 4
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: my-service # same app as green
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: my-service
+        version: blue
+    spec:
+      containers:
+      - image: prebuilt/my-service
+        imagePullPolicy: IfNotPresent # use locally built image if available
+        name: my-service
+        ports: 
+          - containerPort: 9191
+        env:
+          - name: TAG
+            value: blue

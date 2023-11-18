@@ -1,0 +1,45 @@
+# Rolling Deployment
+#
+#   mk apply -f v1/rolling-deploy.yaml
+# 
+# Deployment without downtime. Replacing old with new one, one by one.
+#
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-service
+  namespace: "42"
+  labels:
+    foo: bar
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 25
+  selector:
+    matchLabels:
+      app: my-service
+  template:
+    metadata:
+      labels:
+        app: my-service
+    spec:
+      containers:
+      - image: prebuilt/my-service
+        imagePullPolicy: IfNotPresent # use locally built image if available
+        name: my-service
+        ports: 
+          - containerPort: 9191
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9191
+          initialDelaySeconds: 3 # delay before pod starts
+          periodSeconds: 10 # how often (second) to call endpoint to probe
+          timeoutSeconds: 3 # probe timeout
+          successThreshold: 1 # how many consecutive success probes
+          failureThreshold: 4 # how many retry probe
