@@ -52,8 +52,8 @@ mk apply -f v1/service.yaml
 Then you can get and access the service via
 
 ```sh
-mk -n42 get service # list the service
-minikube -n42 service my-service-api # open in browser (with the correct port)
+mk -n42 get svc # list the service
+minikube -n42 svc my-service-api # open in browser (with the correct port)
 ```
 
 Try restarting the deployment. This will apply the deployment policy.
@@ -83,19 +83,19 @@ mk apply -f v1/blue-green-service.yaml # load balancer
 Try accessing the (blue) service via
 
 ```sh
-minikube -n42 service my-service-loadbalancer # should always see 'blue'
+minikube -n42 svc my-service-loadbalancer # should always see 'blue'
 ```
 
 Now switch the traffic to green deployment by patching the load balancer
 
 ```sh
-mk -n42 patch service my-service-loadbalancer -p '{"spec": {"selector": {"version": "green"}}}'
+mk -n42 patch svc my-service-loadbalancer -p '{"spec": {"selector": {"version": "green"}}}'
 ```
 
 Try accessing the (green) service via
 
 ```sh
-minikube -n42 service my-service-loadbalancer # should always see 'green'
+minikube -n42 svc my-service-loadbalancer # should always see 'green'
 ```
 
 ## 3. Secured Deployment
@@ -124,14 +124,12 @@ Test deploying pod which knows the secret for the service
 mk apply -f v1/secured-deploy.yaml # this deployment knows secret
 ```
 
-TBD
-
 ## Tear down
 
 After use, do not forget to clear all deployment down
 
 ```sh
-mk -n42 delete service -l foo=bar
+mk -n42 delete svc -l foo=bar
 mk -n42 delete deploy -l foo=bar
 
 minikube stop
