@@ -21,8 +21,9 @@ using ContentVariant = std::variant<std::monostate, std::vector<std::string>>;
 ContentVariant readFile(const int pid, const std::string &path, bool verbose)
 try
 {
+  auto tid = std::this_thread::get_id();
   if (verbose)
-    std::cout << "[PID :" << pid << "] Reading file: " << path << std::endl;
+    std::cout << "[PID:" << pid << " | ThreadID : " << tid << "] Reading file: " << path << std::endl;
   std::ifstream file(path);
   std::vector<std::string> lines;
 
@@ -34,7 +35,7 @@ try
 }
 catch (...)
 {
-  std::cout << RED << "[PID :" << pid << "] Unable to read file " << path << RESET << std::endl;
+  std::cout << RED << "[PID:" << pid << "] Unable to read file " << path << RESET << std::endl;
   return std::monostate{};
 }
 

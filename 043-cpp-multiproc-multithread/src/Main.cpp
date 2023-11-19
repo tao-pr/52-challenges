@@ -25,7 +25,7 @@ int runIOBoundTask()
     auto v = f.get();
     if (std::holds_alternative<std::vector<std::string>>(v))
     {
-      std::cout << "[PID: " << getpid() << "] read file completed" << NL;
+      std::cout << "[PID: " << getpid() << "] " << GREEN << "read file completed" << RESET << NL;
       for (const auto &ln : std::get<std::vector<std::string>>(v))
       {
         std::cout << "   " << ln << NL;
@@ -34,13 +34,15 @@ int runIOBoundTask()
     }
   }
 
+  std::cout << "[PID: " << getpid() << " ] " << GREEN << nFinished << " IO threads finished" << std::endl;
+
   return nFinished;
 }
 
 int runCPUBoundTask(int n)
 {
   // taotodo
-  std::cout << "PID: " << getpid() << "] Running CPU bounded task (" << n << " of " << NUM_CPU_TASKS << ")" << NL;
+  std::cout << "[PID: " << getpid() << "] Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
 }
 
 /**

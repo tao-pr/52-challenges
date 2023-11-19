@@ -29,24 +29,28 @@ Generate sample data files for IO-bound tasks
 ```sh
 # num files
 N=10
-CHARS="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 mkdir -p data
-rm -f data/*
+rm -f data/*.txt
 for (( i=1; i<=N; i++ ))
 do
   # Generate a file with a unique name
   FILENAME="./data/file_$i.txt"
 
-  MAX=25
+  # Num lines (random)
+  MAX=13
   MIN=3
   LINES=$((MIN+RANDOM%(MAX-MIN+1)))
+
+  # Length of line (random)
+  MAX=10
+  MIN=5
+  LENGTH=$((MIN+RANDOM%(MAX-MIN+1)))
 
   # Generate LINES lines of random text and write them to the file
   for (( j=1; j<=LINES; j++ ))
   do
-    INDEX=$((RANDOM % ${#CHARS}))
-    RANDOM_STRING="${RANDOM_STRING}${CHARS:$INDEX:1}"
+    RANDOM_STRING=$(openssl rand -base64 $LENGTH | tr -dc 'a-zA-Z0-9' | head -c $LENGTH)
     echo $RANDOM_STRING >> $FILENAME
   done
 done
@@ -67,6 +71,12 @@ cd bin
 cmake -DCMAKE_CXX_COMPILER=$(which g++) \
       -DCMAKE_CXX_FLAGS="-std=c++20 -Wall -g -O1" -LAH ..
 make
+```
+
+Then it is recommended to **run from root dir**.
+
+```sh
+./bin/mk43
 ```
 
 ## What does the program do?
