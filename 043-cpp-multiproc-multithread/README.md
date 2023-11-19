@@ -2,17 +2,18 @@
 
 Playground of C++ features like following. Some are since 11.
 
-- [x] [Monostate](https://en.cppreference.com/w/cpp/utility/variant/monostate)
+- [x] [Variant](https://en.cppreference.com/w/cpp/utility/variant), [Monostate](https://en.cppreference.com/w/cpp/utility/variant/monostate)
+- [x] [asctime, localtime, time_t](https://en.cppreference.com/w/cpp/chrono/c/time)
 - [Bit cast](https://en.cppreference.com/w/cpp/numeric/bit_cast)
 - [Range](https://en.cppreference.com/w/cpp/ranges/range)
 - [Unordered Map](https://en.cppreference.com/w/cpp/container/unordered_map)
 - [Constexpr](https://en.cppreference.com/w/cpp/language/constexpr)
-- [Future](https://en.cppreference.com/w/cpp/thread/future)
-- [Async](https://en.cppreference.com/w/cpp/thread/async)
+- [x] [Future](https://en.cppreference.com/w/cpp/thread/future)
+- [x] [Async](https://en.cppreference.com/w/cpp/thread/async)
 - [Coroutine](https://en.cppreference.com/w/cpp/language/coroutines)
 - [x] [Function Try Block](https://en.cppreference.com/w/cpp/language/function-try-block)
 - [Three-way Comparison](https://en.cppreference.com/w/cpp/language/operator_comparison#Three-way_comparison)
-- 
+- [x] [Lockguard / Mutex](https://en.cppreference.com/w/cpp/thread/lock_guard)
 
 ## Prerequisites
 
@@ -21,11 +22,42 @@ Make sure you have the following in place.
 - CMake
 - GCC (needs to support C++20)
 
+## Pre-run
+
+Generate sample data files for IO-bound tasks
+
+```sh
+# num files
+N=10
+CHARS="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
+mkdir -p data
+rm -f data/*
+for (( i=1; i<=N; i++ ))
+do
+  # Generate a file with a unique name
+  FILENAME="./data/file_$i.txt"
+
+  MAX=25
+  MIN=3
+  LINES=$((MIN+RANDOM%(MAX-MIN+1)))
+
+  # Generate LINES lines of random text and write them to the file
+  for (( j=1; j<=LINES; j++ ))
+  do
+    INDEX=$((RANDOM % ${#CHARS}))
+    RANDOM_STRING="${RANDOM_STRING}${CHARS:$INDEX:1}"
+    echo $RANDOM_STRING >> $FILENAME
+  done
+done
+```
+
 ## Build & Run
 
 Just Cmake it with C++ 20 compiler
 
 ```sh
+# Optional, cmake will overwrite the compiled binary anyways
 mkdir -p bin
 if [ -d bin ]; then
   rm -rf bin/*
@@ -36,3 +68,11 @@ cmake -DCMAKE_CXX_COMPILER=$(which g++) \
       -DCMAKE_CXX_FLAGS="-std=c++20 -Wall -g -O1" -LAH ..
 make
 ```
+
+## What does the program do?
+
+The program forks `N` processes which each of them will run the following in parallel.
+
+- Randomly run `M` IO-bounded tasks or CPU-bounded tasks. These tasks are run in multi threading.
+- For IO-bounded tasks, it reads all .txt files in the directory (with async future).
+- For CPU-bounded tasks, it runs **coroutines**.

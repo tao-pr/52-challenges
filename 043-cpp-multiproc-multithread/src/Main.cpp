@@ -3,25 +3,38 @@
 #include <sys/wait.h>
 #include <random>
 #include <unordered_map>
+#include <variant>
 
 #include "Const.hpp"
-#include "Class.hpp"
-
-// Params / Consts
-const unsigned int NUM_PROCESSES = 5;
-const unsigned int NUM_CPU_TASKS = 5;
-const std::string PATH_IO_TASKS = "./data";
-const float probIOBound = 0.25;
+#include "Shareable.hpp" // Variants for sharable data type
+#include "IO.hpp"        // File reader
 
 int runIOBoundTask()
 {
-  // taotodo
   std::cout << "[PID: " << getpid() << "] Running IO bounded task" << NL;
 
   // Load files from the dir
-  std::unordered_map<std::string, std::string> files;
+  // Number of threads = number of .txt files
 
+  const bool verbose = true;
+  auto futures = readFiles(getpid(), PATH_IO_TASKS, verbose);
 
+  int nFinished{};
+  for (auto &f : futures)
+  {
+    auto v = f.get();
+    if (std::holds_alternative<std::vector<std::string>>(v))
+    {
+      std::cout << "[PID: " << getpid() << "] read file completed" << NL;
+      for (const auto &ln : std::get<std::vector<std::string>>(v))
+      {
+        std::cout << "   " << ln << NL;
+      }
+      nFinished++;
+    }
+  }
+
+  return nFinished;
 }
 
 int runCPUBoundTask(int n)
@@ -59,13 +72,13 @@ int forkProcess(int i)
     auto unif = std::uniform_real_distribution<>(0.0, 1.0);
     if (unif(gen) < probIOBound)
     {
-      // Run IO bounded task
+      // Run IO bounded tasks (num threads = num files to read)
       runIOBoundTask();
     }
     else
     {
-      // Run CPU bounded task
-      for (auto n=0; n<NUM_CPU_TASKS; n++)
+      // Run CPU bounded tasks
+      for (auto n = 0; n < NUM_CPU_TASKS; n++)
         runCPUBoundTask(n);
     }
 

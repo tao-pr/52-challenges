@@ -3,12 +3,28 @@
  *
  */
 
-#include <variant>
+#pragma once
 
+#include <variant>
+#include <vector>
+#include <mutex>
+#include <ctime>
+
+// Thread-safe shareable data
 struct Shareable
 {
-  int data;
+  std::time_t ts; // timestamp
+  std::vector<int> data;
   int fromPid;
+
+  Shareable(std::vector<int> data, int fromPid) : data(data), fromPid(fromPid), ts(std::time(nullptr)) {}
+
+  // Thread-safely add an element to [data]
+  void add(const int d, std::mutex& m)
+  {
+    const std::lock_guard<std::mutex> lock(m);
+    data.push_back(d);
+  }
 };
 
 /**
@@ -18,6 +34,7 @@ using ShareableVariant = std::variant<std::monostate, Shareable, std::string>;
 
 /**
  * Print value of ShareableVariant (without Newline)
+ * Wrapped in Function-try-block
  */
 void printVariant(const ShareableVariant &sv)
 try
@@ -32,7 +49,13 @@ try
   {
     // Shareable
     Shareable s = std::get<Shareable>(sv);
-    cout << "Shareable data () from pID=" << s.fromPid; // taotodo
+    auto strTimestamp = std::asctime(std::localtime(&s.ts));
+    
+    // Print all elements in [data]
+    cout << "[PID: " << s.fromPid << "] data (";
+    for (const auto& v : s.data) 
+      cout << v << ", ";
+    cout << ") @" << strTimestamp;
   }
   else if (std::holds_alternative<std::string>(sv))
   {
@@ -43,4 +66,5 @@ try
 catch (...)
 {
   std::cout << RED << "Unable to parse shareable data" << std::endl;
+  throw;
 }
