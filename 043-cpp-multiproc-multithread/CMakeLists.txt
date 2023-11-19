@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 # Dependencies
 include_directories(/usr/local/include)
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/hpp")
 link_directories(/usr/local/lib)
 
 # Project
@@ -9,6 +10,7 @@ project("043" CXX C)
 set(TARGET_APP "m43")
 
 # Source files
+message("Including source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
 file(GLOB SOURCES 
   "${CMAKE_CURRENT_SOURCE_DIR}/hpp/*.hpp"
   "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"

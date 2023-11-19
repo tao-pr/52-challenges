@@ -2,26 +2,32 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <random>
+#include <unordered_map>
+
+#include "Const.hpp"
+#include "Class.hpp"
 
 // Params / Consts
 const unsigned int NUM_PROCESSES = 5;
+const unsigned int NUM_CPU_TASKS = 5;
+const std::string PATH_IO_TASKS = "./data";
 const float probIOBound = 0.25;
-
-const std::string RED = "\033[31m";
-const std::string BLUE = "\033[34m";
-const std::string RESET = "\033[0m";
-const std::string NL = "\n"; // Use this instead of std::endl to avoid flushing the buffer
 
 int runIOBoundTask()
 {
   // taotodo
   std::cout << "[PID: " << getpid() << "] Running IO bounded task" << NL;
+
+  // Load files from the dir
+  std::unordered_map<std::string, std::string> files;
+
+
 }
 
-int runCPUBoundTask()
+int runCPUBoundTask(int n)
 {
   // taotodo
-  std::cout << "PID: " << getpid() << "] Running CPU bounded task" << NL;
+  std::cout << "PID: " << getpid() << "] Running CPU bounded task (" << n << " of " << NUM_CPU_TASKS << ")" << NL;
 }
 
 /**
@@ -59,7 +65,8 @@ int forkProcess(int i)
     else
     {
       // Run CPU bounded task
-      runCPUBoundTask();
+      for (auto n=0; n<NUM_CPU_TASKS; n++)
+        runCPUBoundTask(n);
     }
 
     std::cout << "[PID " << getpid() << "] exiting" << NL;
@@ -76,6 +83,7 @@ int forkProcess(int i)
 int main()
 {
   std::srand(std::time(nullptr));
+
   for (int i = 0; i < NUM_PROCESSES; ++i)
   {
     forkProcess(i);
