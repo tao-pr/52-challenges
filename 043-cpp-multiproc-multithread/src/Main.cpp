@@ -32,6 +32,12 @@ int forkProcess(int i)
 {
   pid_t pid = fork();
 
+  // NOTE: In multi-process app, each process must have its own random generator
+
+  // https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution
+  std::random_device rd;  // Will be used to obtain a seed for the random number engine
+  std::mt19937 gen(rd()); // Standard mersenne_twister_engine seeded with rd()
+
   if (pid < 0)
   {
     // Error occurred
@@ -44,7 +50,8 @@ int forkProcess(int i)
     std::cout << BLUE << "Forked process: " << RESET << "Child process created. PID: " << getpid() << NL;
 
     // Run multiple threads
-    if (std::rand() < probIOBound)
+    auto unif = std::uniform_real_distribution<>(0.0, 1.0);
+    if (unif(gen) < probIOBound)
     {
       // Run IO bounded task
       runIOBoundTask();
@@ -55,6 +62,7 @@ int forkProcess(int i)
       runCPUBoundTask();
     }
 
+    std::cout << "[PID " << getpid() << "] exiting" << NL;
     _exit(0); // Child process exits
   }
   else
