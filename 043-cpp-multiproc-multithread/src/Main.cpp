@@ -107,6 +107,7 @@ int main()
   // Parent waits for all child processes to finish
   for (int i = 0; i < NUM_PROCESSES; ++i)
   {
+    std::cout << "Waiting for process: " << i << std::endl;
     wait(NULL);
   }
 

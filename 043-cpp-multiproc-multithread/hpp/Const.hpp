@@ -3,10 +3,10 @@
 #include <string>
 
 const std::string FILE_EXTENSION = ".txt";
-const unsigned int NUM_PROCESSES = 3;
+const unsigned int NUM_PROCESSES = 1;
 const unsigned int NUM_CPU_TASKS = 2;
 const std::string PATH_IO_TASKS = "./data";
-const float probIOBound = 0.25;
+const float probIOBound = 1.0;
 
 const std::string RED = "\033[31m";
 const std::string BLUE = "\033[34m";

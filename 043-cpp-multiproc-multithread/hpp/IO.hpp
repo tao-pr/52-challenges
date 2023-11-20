@@ -31,6 +31,7 @@ try
   for (std::string ln; std::getline(file, ln);)
     lines.push_back(ln);
 
+  std::cout << "[PID:" << pid << " | ThreadID : " << tid << "] Done reading" << std::endl;
   return lines;
 }
 catch (...)
@@ -51,4 +52,5 @@ std::vector<std::future<ContentVariant>> readFiles(int pid, const std::string di
       futures.push_back(std::move(future));
     }
   }
+  return std::move(futures);
 }
