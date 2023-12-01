@@ -8,6 +8,7 @@
 #include "Const.hpp"
 #include "Shareable.hpp" // Variants for sharable data type
 #include "IO.hpp"        // File reader
+#include "CPU.hpp"      // Cpu bound task
 
 int runIOBoundTask()
 {
@@ -39,10 +40,16 @@ int runIOBoundTask()
   return nFinished;
 }
 
-int runCPUBoundTask(int n)
+int runCPUBoundTask(std::mt19937& gen, int n)
 {
-  // taotodo
   std::cout << "[PID: " << getpid() << "] Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
+
+  // Create n Coroutines (lightweight thread, deferred)
+  runTasks(gen, getpid(), n);
+
+  // Wait for coroutines to all finish
+
+  // taotodo
 }
 
 /**
@@ -81,7 +88,7 @@ int forkProcess(int i)
     {
       // Run CPU bounded tasks
       for (auto n = 0; n < NUM_CPU_TASKS; n++)
-        runCPUBoundTask(n);
+        runCPUBoundTask(gen, n);
     }
 
     std::cout << "[PID " << getpid() << "] exiting" << NL;

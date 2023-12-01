@@ -10,7 +10,6 @@ Playground of C++ features like following. Some are since 11.
 - [Constexpr](https://en.cppreference.com/w/cpp/language/constexpr)
 - [x] [Future](https://en.cppreference.com/w/cpp/thread/future)
 - [x] [Async](https://en.cppreference.com/w/cpp/thread/async)
-- [Coroutine](https://en.cppreference.com/w/cpp/language/coroutines)
 - [x] [Function Try Block](https://en.cppreference.com/w/cpp/language/function-try-block)
 - [Three-way Comparison](https://en.cppreference.com/w/cpp/language/operator_comparison#Three-way_comparison)
 - [x] [Lockguard / Mutex](https://en.cppreference.com/w/cpp/thread/lock_guard)
@@ -20,7 +19,17 @@ Playground of C++ features like following. Some are since 11.
 Make sure you have the following in place.
 
 - CMake
-- GCC (needs to support C++20)
+- [LLVM Compiler](https://github.com/llvm/llvm-project/tree/main) (So it supports `std::execution` which is not available in normal g++/gcc on MacOS)
+
+## Install LLVM for Mac Users
+
+Just use homebrew
+
+```sh
+brew install llvm
+```
+
+LLVM binaries installed via brew can be located from `$(brew --prefix llvm)/bin`
 
 ## Pre-run
 
@@ -58,18 +67,16 @@ done
 
 ## Build & Run
 
-Just Cmake it with C++ 20 compiler
+Just CMake it with LLVM Clang compiler.
+
+> NOTE: For Mac user, coroutines are supported since C++20 onwards [https://developer.apple.com/xcode/cpp/]
 
 ```sh
 # Optional, cmake will overwrite the compiled binary anyways
 mkdir -p bin
-if [ -d bin ]; then
-  rm -rf bin/*
-fi
-
 cd bin
-cmake -DCMAKE_CXX_COMPILER=$(which g++) \
-      -DCMAKE_CXX_FLAGS="-std=c++20 -Wall -g -O1" -LAH ..
+cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
+      -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1" -LAH ..
 make
 ```
 
@@ -86,3 +93,9 @@ The program forks `N` processes which each of them will run the following in par
 - Randomly run `M` IO-bounded tasks or CPU-bounded tasks. These tasks are run in multi threading.
 - For IO-bounded tasks, it reads all .txt files in the directory (with async future).
 - For CPU-bounded tasks, it runs **coroutines**.
+
+## References
+
+- Check which compilers on which platforms support parallel execution from [https://en.cppreference.com/w/cpp/compiler_support/17#C.2B.2B17_library_features]
+- Check what C++ features are supported by LLVM Clang compiler from [https://clang.llvm.org/cxx_status.html]
+
