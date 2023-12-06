@@ -72,11 +72,25 @@ Just CMake it with LLVM Clang compiler.
 
 > NOTE: For Mac user, coroutines are supported since C++20 onwards [https://developer.apple.com/xcode/cpp/]
 
+### a) Intel
+
 ```sh
-# Optional, cmake will overwrite the compiled binary anyways
 mkdir -p bin
 cd bin
+LLVM_ROOT=$(brew --prefix llvm) # for cmakelist
 cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
+      -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1" -LAH ..
+make
+```
+
+### b) Apple M1
+
+```sh
+mkdir -p bin
+cd bin
+LLVM_ROOT=$(brew --prefix llvm) # for cmakelist
+cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
+      -DCMAKE_OSX_ARCHITECTURES='arm64' \
       -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1" -LAH ..
 make
 ```

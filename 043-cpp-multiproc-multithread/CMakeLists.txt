@@ -5,7 +5,9 @@ cmake_minimum_required(VERSION 3.8)
 include_directories(/usr/local/opt/llvm/include)
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/hpp")
 # link_directories(/usr/local/lib)
-link_directories(//usr/local/opt/llvm/lib)
+link_directories($ENV{LLVM_ROOT}/lib)
+
+# taotodo: how to use ENV var in cmakelist?
 
 # Project
 project("043" CXX C)
