@@ -57,6 +57,7 @@ do
   LENGTH=$((MIN+RANDOM%(MAX-MIN+1)))
 
   # Generate LINES lines of random text and write them to the file
+  echo "Writing data file $FILENAME"
   for (( j=1; j<=LINES; j++ ))
   do
     RANDOM_STRING=$(openssl rand -base64 $LENGTH | tr -dc 'a-zA-Z0-9' | head -c $LENGTH)
