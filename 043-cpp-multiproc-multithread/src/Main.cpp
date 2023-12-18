@@ -44,10 +44,8 @@ int runCPUBoundTask(std::mt19937& gen, int n)
 {
   std::cout << "[PID: " << getpid() << "] Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
 
-  // Create n Coroutines (lightweight thread, deferred)
+  // Create N subtasks
   runTasks(gen, getpid(), n);
-
-  // Wait for coroutines to all finish
 
   // taotodo
 }
