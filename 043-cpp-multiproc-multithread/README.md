@@ -70,7 +70,7 @@ done
 
 Just CMake it with LLVM Clang compiler.
 
-> NOTE: For Mac user, coroutines are supported since C++20 onwards [https://developer.apple.com/xcode/cpp/]
+> NOTE: For Mac user, coroutines are supported since C++20 onwards [https://developer.apple.com/xcode/cpp/]. Make sure you have configured PATHS for LLVM, by following the instructions in `brew info llvm`, if it is installed via Homebrew.
 
 ### a) Intel
 

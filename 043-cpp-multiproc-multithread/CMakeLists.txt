@@ -1,4 +1,7 @@
-cmake_minimum_required(VERSION 3.8)
+# NOTE: minimum CMake which supports ARM on MacOS is 3.19
+cmake_minimum_required(VERSION 3.27)
+
+find_package(LLVM REQUIRED)
 
 # Dependencies
 include_directories($ENV{LLVM_ROOT}/include/)
@@ -27,7 +30,12 @@ set_target_properties(${TARGET_APP} PROPERTIES
   OUTPUT_NAME "m43"
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
 
-# Link lib
-target_link_libraries( ${TARGET_APP} ${BUILD_DEPENDENCIES})
+# Find LLVM libraries for linker
+llvm_map_components_to_libnames(llvm_libs support core)
+
+# Link with LLVM libraries
+# NOTE: Typical:
+# target_link_libraries( ${TARGET_APP} ${BUILD_DEPENDENCIES})
+target_link_libraries( ${TARGET_APP} ${llvm_libs})
 
 message(STATUS "Build output : ${CMAKE_BINARY_DIR}")
