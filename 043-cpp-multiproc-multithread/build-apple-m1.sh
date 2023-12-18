@@ -3,7 +3,7 @@
 mkdir -p bin
 cd bin
 LLVM_ROOT=$(brew --prefix llvm) # for cmakelist
-cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
+cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang++ \
       -DDEFAULT_SYSROOT=$(xcrun --show-sdk-path) \
       -DCMAKE_OSX_ARCHITECTURES='arm64' \
       -DLLVM_TARGETS_TO_BUILD='AArch64' \
