@@ -75,24 +75,23 @@ Just CMake it with LLVM Clang compiler.
 ### a) Intel
 
 ```sh
-mkdir -p bin
-cd bin
-LLVM_ROOT=$(brew --prefix llvm) # for cmakelist
-cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
-      -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1" -LAH ..
-make
+./build-apple-x86.sh
 ```
 
 ### b) Apple M1
 
+The clang compiler for ARM won't recognise `-stdlib=libc++`. Also for ARM, we need to compile a fat binary.
+
+Before proceeding, you can check the XCode SDK path with:
+
 ```sh
-mkdir -p bin
-cd bin
-LLVM_ROOT=$(brew --prefix llvm) # for cmakelist
-cmake -DCMAKE_CXX_COMPILER=$(brew --prefix llvm)/bin/clang \
-      -DCMAKE_OSX_ARCHITECTURES='arm64' \
-      -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1" -LAH ..
-make
+xcrun --show-sdk-path
+```
+
+Then compile on ARM with:
+
+```sh
+./build-apple-m1.sh
 ```
 
 Then it is recommended to **run from root dir**.
