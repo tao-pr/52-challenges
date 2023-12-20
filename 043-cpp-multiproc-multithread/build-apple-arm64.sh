@@ -19,7 +19,7 @@ cmake -DCMAKE_C_COMPILER=$(brew --prefix llvm@16)/bin/clang \
       -DCMAKE_BUILD_TYPE=Release \
       -DLLVM_BUILD_RUNTIME=Off \
       -DLLVM_INCLUDE_TESTS=Off \
-      -DCMAKE_CXX_FLAGS="-std=c++20 -stdlib=libc++ -Wall -g -O1 -isysroot $(xcrun --show-sdk-path)" ..
+      -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -g -O1 -isysroot $(xcrun --show-sdk-path)" ..
 make
 
 # To include extra projects, use below
