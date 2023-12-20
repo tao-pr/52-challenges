@@ -18,8 +18,25 @@ Playground of C++ features like following. Some are since 11.
 
 Make sure you have the following in place.
 
+- Latest XCode Commandline Tools
 - CMake
 - [LLVM Compiler](https://github.com/llvm/llvm-project/tree/main) (So it supports `std::execution` which is not available in normal g++/gcc on MacOS)
+
+## Install Latest Commandline Tools
+
+Check first if XCode commandline tools are available for updates via
+
+```sh
+softwareupdate --list
+```
+
+If you find XCode commandline tools there, copy the label and install via
+
+```sh
+softwareupdate -i <label>
+
+# eg softwareupdate -i "Command Line Tools for Xcode-15.1"
+```
 
 ## Install LLVM for Mac Users
 

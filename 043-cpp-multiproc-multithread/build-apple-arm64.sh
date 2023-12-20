@@ -6,12 +6,13 @@
 
 mkdir -p bin
 cd bin
-LLVM_LIB_DIR=$(llvm-config --libdir)
-LLVM_INCLUDE_DIR=$(llvm-config --includedir)
+LLVM_LIB_DIR="$(llvm-config --libdir) $(llvm-config --libdir)/c++"
+LLVM_INCLUDE_DIR=$(llvm-config --includedir)/c++/v1
 LLVM_ROOT=$(brew --prefix llvm@16) # for cmakelist
 cmake -DCMAKE_C_COMPILER=$(brew --prefix llvm@16)/bin/clang \
       -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++ \
       -DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path) \
+      -DCMAKE_OSX_ARCHIECTURES='arm64' \
       -DDEFAULT_SYSROOT=$(xcrun --show-sdk-path) \
       -DCMAKE_OSX_ARCHITECTURES='arm64' \
       -DLLVM_TARGETS_TO_BUILD='aarch64' \
@@ -19,8 +20,5 @@ cmake -DCMAKE_C_COMPILER=$(brew --prefix llvm@16)/bin/clang \
       -DCMAKE_BUILD_TYPE=Release \
       -DLLVM_BUILD_RUNTIME=Off \
       -DLLVM_INCLUDE_TESTS=Off \
-      -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -g -O1 -isysroot $(xcrun --show-sdk-path)" ..
+      -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -g -O1" ..
 make
-
-# To include extra projects, use below
-# -DLLVM_ENABLE_PROJECTS='clang;clang-tools-extra;libcxx' \

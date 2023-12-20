@@ -18,9 +18,9 @@ message(STATUS "Including headers from: ${LLVM_INCLUDE_DIRS}")
 message(STATUS "Linking libraries from: ${LLVM_LIBRARY_DIRS}")
 
 # Dependencies
-# include_directories($ENV{LLVM_INCLUDE_DIR})
+include_directories($ENV{LLVM_INCLUDE_DIR})
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/hpp")
-# link_directories($ENV{LLVM_LIBRARY_DIRS})
+link_directories($ENV{LLVM_LIB_DIR})
 
 # Source files
 message("Including source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
