@@ -26,10 +26,10 @@ Make sure you have the following in place.
 Just use homebrew
 
 ```sh
-brew install llvm
+brew install llvm@16
 ```
 
-LLVM binaries installed via brew can be located from `$(brew --prefix llvm)/bin`.
+LLVM binaries installed via brew can be located from `$(brew --prefix llvm@16)/bin`.
 
 Make sure your LLVM  installed the right one for your architecture. The example shows the output printed from `cmake++` on Apple Silicon M1 machine
 
@@ -39,7 +39,7 @@ $ clang++ --version
 Homebrew clang version 17.0.6
 Target: arm64-apple-darwin23.0.0
 Thread model: posix
-InstalledDir: /opt/homebrew/opt/llvm/bi
+InstalledDir: /opt/homebrew/opt/llvm/bin
 ```
 
 ## Pre-run

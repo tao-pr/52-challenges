@@ -38,13 +38,13 @@ void runTasks(std::mt19937 &gen, int pid, int num)
   std::cout << "[PID: " << pid << "] generating " << num << " tasks: " << vecStr.str() << std::endl;
 
   // Now run M parallel tasks on the vector
-  std::for_each(
-      std::execution::par,
-      data.begin(),
-      data.end(),
-      [](int &n)
-      {
-        std::cout << "CPU task computing element: " << n << std::endl;
-        // taotodo
-      });
+  // std::for_each(
+  //     std::execution::par,
+  //     data.begin(),
+  //     data.end(),
+  //     [](int &n)
+  //     {
+  //       std::cout << "CPU task computing element: " << n << std::endl;
+  //       // taotodo
+  //     });
 }

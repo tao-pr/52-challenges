@@ -17,7 +17,7 @@ struct Shareable
   std::vector<int> data;
   int fromPid;
 
-  Shareable(std::vector<int> data, int fromPid) : data(data), fromPid(fromPid), ts(std::time(nullptr)) {}
+  Shareable(std::vector<int> data, int fromPid) : ts(std::time(nullptr)), data(data), fromPid(fromPid) {}
 
   // Thread-safely add an element to [data]
   void add(const int d, std::mutex& m)
