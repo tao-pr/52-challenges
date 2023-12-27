@@ -58,6 +58,7 @@ List of challenges are collected below.
 | 040 | Monte Carlo with Haskell                 | Haskell          | ?? | IO Monad |
 | 041 | gRPC with background process             | Python           | 7 hrs | gRPC, asyncio |
 | 042 | Cloud native patterns                    | Kubernetes       | ??? | Kubernetes |
+| 043 | C++ Multiproc/Multithreading             | C++17 LLVM       | 7 hrs | LLVM, TBB |
 
 ## Licence
 
