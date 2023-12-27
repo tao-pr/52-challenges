@@ -19,15 +19,28 @@
 
 #include "Const.hpp"
 
+struct TaskInfo
+{
+  int pid;
+  int n;
+};
+
 class CPUTask
 {
 public:
-
   // Follow the signature from the OneTBB example usage of `parallel_for_each`
-  void operator()(int n, oneapi::tbb::feeder<int> &feeder) const
+  void operator()(TaskInfo ti, oneapi::tbb::feeder<TaskInfo> &feeder) const
   {
-    std::cout << "CPU task computing element: " << n << std::endl;
-    // taotodo
+    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << RESET << " CPU task computing element: " << ti.n << std::endl;
+
+    // count from 1 to n*10^6
+    unsigned int sum{};
+    for (auto i = 1; i < ti.n * 1000000; i++)
+    {
+      sum += i;
+    }
+
+    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << GREEN << " CPU task DONE with element: " << ti.n << RESET << std::endl;
   };
 };
 
@@ -37,19 +50,22 @@ public:
 void runTasks(std::mt19937 &gen, int pid, int num)
 {
   std::vector<std::thread> threads;
-  std::vector<std::future<int>> futures;
+  std::vector<std::future<TaskInfo>> futures;
 
   // Randomly generating M inputs
   auto unif = std::uniform_int_distribution<>(0, 10);
-  std::vector<int> data{};
+  std::vector<TaskInfo> data{};
   std::ostringstream vecStr;
   for (int n = 0; n < num; n++)
   {
     auto d = unif(gen);
-    data.push_back(d);
+    data.push_back(TaskInfo{pid, d});
     vecStr << d << ", ";
   }
-  std::cout << "[PID " << pid << " ] CPU task generated data: " << vecStr.str() << std::endl;
+  std::cout << MAGENTA << "[PID " << pid << " ]" << RESET << "CPU task generated data: " << vecStr.str() << std::endl;
+
+  // More about `tbb::parallel_for_each`
+  // https://spec.oneapi.io/versions/latest/elements/oneTBB/source/algorithms/functions/parallel_for_each_func.html
 
   // `parallel_for_each` expects constant iterator
   oneapi::tbb::parallel_for_each(
@@ -57,5 +73,5 @@ void runTasks(std::mt19937 &gen, int pid, int num)
       data.cend(),
       CPUTask());
 
-  // taotodo how to wait for all results?
+  std::cout << MAGENTA << "[PID " << pid << " ] " << GREEN << "All CPU tasks are done." << RESET << NL;
 }

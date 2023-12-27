@@ -23,7 +23,7 @@ try
 {
   auto tid = std::this_thread::get_id();
   if (verbose)
-    std::cout << "[PID:" << pid << " | ThreadID : " << tid << "] Reading file: " << path << std::endl;
+    std::cout << BLUE << "[PID:" << pid << " | ThreadID : " << tid << "] " << RESET << " Reading file: " << path << std::endl;
   std::ifstream file(path);
   std::vector<std::string> lines;
 
@@ -31,12 +31,12 @@ try
   for (std::string ln; std::getline(file, ln);)
     lines.push_back(ln);
 
-  std::cout << "[PID:" << pid << " | ThreadID : " << tid << "] Done reading" << std::endl;
+  std::cout << BLUE << "[PID:" << pid << " | ThreadID : " << tid << "] " << GREEN << "Done reading" << RESET << std::endl;
   return lines;
 }
 catch (...)
 {
-  std::cout << RED << "[PID:" << pid << "] Unable to read file " << path << RESET << std::endl;
+  std::cout << BLUE << "[PID:" << pid << "] " << RED << "Unable to read file " << path << RESET << std::endl;
   return std::monostate{};
 }
 

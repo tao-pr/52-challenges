@@ -23,6 +23,8 @@ int runIOBoundTask()
   int nFinished{};
   for (auto &f : futures)
   {
+    // In fact, this following block waits and blocks CPU time
+    // until it receives the result from each future sequentially.
     auto v = f.get();
     if (std::holds_alternative<std::vector<std::string>>(v))
     {
@@ -42,12 +44,11 @@ int runIOBoundTask()
 
 int runCPUBoundTask(std::mt19937& gen, int n)
 {
-  std::cout << "[PID: " << getpid() << "] Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
+  std::cout << MAGENTA << "[PID: " << getpid() << "] " << RESET << "Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
 
   // Create N subtasks
-  runTasks(gen, getpid(), n);
-
-  // taotodo
+  const int arraySize = n*3+1;
+  runTasks(gen, getpid(), arraySize);
 }
 
 /**
@@ -73,7 +74,7 @@ int forkProcess(int i)
   else if (pid == 0)
   {
     // This block is executed by the child process
-    std::cout << BLUE << "Forked process: " << RESET << "Child process created. PID: " << getpid() << NL;
+    std::cout << "Forked process: " << "Child process created. PID: " << getpid() << NL;
 
     // Run multiple threads
     auto unif = std::uniform_real_distribution<>(0.0, 1.0);
