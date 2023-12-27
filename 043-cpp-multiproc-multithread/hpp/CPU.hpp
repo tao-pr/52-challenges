@@ -31,7 +31,7 @@ public:
   // Follow the signature from the OneTBB example usage of `parallel_for_each`
   void operator()(TaskInfo ti, oneapi::tbb::feeder<TaskInfo> &feeder) const
   {
-    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << RESET << " CPU task computing element: " << ti.n << std::endl;
+    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << RESET << " CPU task computing #" << ti.n << std::endl;
 
     // count from 1 to n*10^6
     unsigned int sum{};
@@ -40,7 +40,7 @@ public:
       sum += i;
     }
 
-    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << GREEN << " CPU task DONE with element: " << ti.n << RESET << std::endl;
+    std::cout << MAGENTA << "[PID " << ti.pid << " ]" << GREEN << " CPU task DONE #" << ti.n << RESET << std::endl;
   };
 };
 
@@ -55,14 +55,12 @@ void runTasks(std::mt19937 &gen, int pid, int num)
   // Randomly generating M inputs
   auto unif = std::uniform_int_distribution<>(0, 10);
   std::vector<TaskInfo> data{};
-  std::ostringstream vecStr;
+
   for (int n = 0; n < num; n++)
   {
     auto d = unif(gen);
     data.push_back(TaskInfo{pid, d});
-    vecStr << d << ", ";
   }
-  std::cout << MAGENTA << "[PID " << pid << " ]" << RESET << "CPU task generated data: " << vecStr.str() << std::endl;
 
   // More about `tbb::parallel_for_each`
   // https://spec.oneapi.io/versions/latest/elements/oneTBB/source/algorithms/functions/parallel_for_each_func.html
@@ -73,5 +71,5 @@ void runTasks(std::mt19937 &gen, int pid, int num)
       data.cend(),
       CPUTask());
 
-  std::cout << MAGENTA << "[PID " << pid << " ] " << GREEN << "All CPU tasks are done." << RESET << NL;
+  std::cout << MAGENTA << "[PID " << pid << " ] " << GREEN << "All " << NUM_CPU_TASKS  << " CPU tasks are done." << RESET << NL;
 }

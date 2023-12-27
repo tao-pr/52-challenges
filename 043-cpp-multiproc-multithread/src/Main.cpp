@@ -42,13 +42,12 @@ int runIOBoundTask()
   return nFinished;
 }
 
-int runCPUBoundTask(std::mt19937& gen, int n)
+int runCPUBoundTask(std::mt19937& gen)
 {
-  std::cout << MAGENTA << "[PID: " << getpid() << "] " << RESET << "Running CPU bounded task (" << n + 1 << " of " << NUM_CPU_TASKS << ")" << NL;
+  std::cout << MAGENTA << "[PID: " << getpid() << "] " << RESET << "Running CPU bounded task" << NL;
 
   // Create N subtasks
-  const int arraySize = n*3+1;
-  runTasks(gen, getpid(), arraySize);
+  runTasks(gen, getpid(), NUM_CPU_TASKS);
 }
 
 /**
@@ -86,8 +85,7 @@ int forkProcess(int i)
     else
     {
       // Run CPU bounded tasks
-      for (auto n = 0; n < NUM_CPU_TASKS; n++)
-        runCPUBoundTask(gen, n);
+      runCPUBoundTask(gen);
     }
 
     std::cout << "[PID " << getpid() << "] exiting" << NL;
