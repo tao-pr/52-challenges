@@ -10,6 +10,9 @@ set(TARGET_APP "m43")
 
 message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 
+# Turn feature for parallel algorithms on
+set(LIBCXX_ENABLE_PARALLEL_ALGORITHMS ON CACHE BOOL "")
+
 find_package(LLVM REQUIRED CONFIG)
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
@@ -18,9 +21,15 @@ message(STATUS "Including headers from: ${LLVM_INCLUDE_DIRS}")
 message(STATUS "Linking libraries from: ${LLVM_LIBRARY_DIRS}")
 
 # Dependencies
-include_directories($ENV{LLVM_INCLUDE_DIR})
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/hpp")
-link_directories($ENV{LLVM_LIB_DIR})
+include_directories(
+  $ENV{LLVM_INCLUDE_DIR} 
+  $ENV{TBB_INCLUDE_DIR}
+  "${CMAKE_CURRENT_SOURCE_DIR}/hpp"
+)
+link_directories(
+  $ENV{LLVM_LIB_DIR}
+  $ENV{TBB_LIB_DIR}
+)
 
 # Source files
 message("Including source dir: ${CMAKE_CURRENT_SOURCE_DIR}")
@@ -43,6 +52,6 @@ set_target_properties(${TARGET_APP} PROPERTIES
 # NOTE: Typical:
 # target_link_libraries( ${TARGET_APP} ${BUILD_DEPENDENCIES})
 message(STATUS "Linking LLVM libraries: ${llvm_libs}")
-target_link_libraries( ${TARGET_APP} ${llvm_libs})
+target_link_libraries( ${TARGET_APP} ${llvm_libs} libtbb.a)
 
 message(STATUS "Build output : ${CMAKE_BINARY_DIR}")

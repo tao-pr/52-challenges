@@ -20,7 +20,8 @@ Make sure you have the following in place.
 
 - Latest XCode Commandline Tools
 - CMake
-- [LLVM Compiler](https://github.com/llvm/llvm-project/tree/main) (So it supports `std::execution` which is not available in normal g++/gcc on MacOS)
+- [LLVM Compiler](https://github.com/llvm/llvm-project/tree/main)
+- [TBB](https://github.com/oneapi-src/oneTBB)
 
 ## Install Latest Commandline Tools
 
@@ -58,6 +59,15 @@ Target: arm64-apple-darwin23.0.0
 Thread model: posix
 InstalledDir: /opt/homebrew/opt/llvm/bin
 ```
+
+## Install TBB
+
+Just use Homebrew for Mac users
+
+```sh
+brew install tbb
+```
+
 
 ## Pre-run
 
@@ -119,7 +129,7 @@ xcrun --show-sdk-path
 Then compile on ARM with:
 
 ```sh
-./build-apple-m1.sh
+./build-apple-arm64-libc++.sh
 ```
 
 Then it is recommended to **run from root dir**.

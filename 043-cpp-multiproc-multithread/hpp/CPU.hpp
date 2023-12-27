@@ -14,7 +14,22 @@
 #include <execution>
 #include <random>
 
+// https://github.com/oneapi-src/oneTBB/blob/master/examples/parallel_for_each/parallel_preorder/parallel_preorder.cpp
+#include "oneapi/tbb/parallel_for_each.h"
+
 #include "Const.hpp"
+
+class CPUTask
+{
+public:
+
+  // Follow the signature from the OneTBB example usage of `parallel_for_each`
+  void operator()(int n, oneapi::tbb::feeder<int> &feeder) const
+  {
+    std::cout << "CPU task computing element: " << n << std::endl;
+    // taotodo
+  };
+};
 
 /**
  * Generate N coroutines
@@ -34,17 +49,13 @@ void runTasks(std::mt19937 &gen, int pid, int num)
     data.push_back(d);
     vecStr << d << ", ";
   }
+  std::cout << "[PID " << pid << " ] CPU task generated data: " << vecStr.str() << std::endl;
 
-  std::cout << "[PID: " << pid << "] generating " << num << " tasks: " << vecStr.str() << std::endl;
+  // `parallel_for_each` expects constant iterator
+  oneapi::tbb::parallel_for_each(
+      data.cbegin(),
+      data.cend(),
+      CPUTask());
 
-  // Now run M parallel tasks on the vector
-  // std::for_each(
-  //     std::execution::par,
-  //     data.begin(),
-  //     data.end(),
-  //     [](int &n)
-  //     {
-  //       std::cout << "CPU task computing element: " << n << std::endl;
-  //       // taotodo
-  //     });
+  // taotodo how to wait for all results?
 }

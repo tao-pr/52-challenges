@@ -6,9 +6,14 @@
 
 mkdir -p bin
 cd bin
-LLVM_LIB_DIR="$(llvm-config --libdir) $(llvm-config --libdir)/c++"
-LLVM_INCLUDE_DIR=$(llvm-config --includedir)/c++/v1
-LLVM_ROOT=$(brew --prefix llvm@16) # for cmakelist
+
+export LLVM_LIB_DIR="$(llvm-config --libdir) $(llvm-config --libdir)/c++"
+export LLVM_INCLUDE_DIR=$(llvm-config --includedir)/c++/v1
+export LLVM_ROOT=$(brew --prefix llvm@16) # for cmakelist
+
+export TBB_LIB_DIR="$(brew --prefix tbb)/lib"
+export TBB_INCLUDE_DIR="$(brew --prefix tbb)/include"
+
 cmake -DCMAKE_C_COMPILER=$(brew --prefix llvm@16)/bin/clang \
       -DCMAKE_CXX_COMPILER=$(brew --prefix llvm@16)/bin/clang++ \
       -DCMAKE_OSX_SYSROOT=$(xcrun --show-sdk-path) \
@@ -22,3 +27,7 @@ cmake -DCMAKE_C_COMPILER=$(brew --prefix llvm@16)/bin/clang \
       -DLLVM_INCLUDE_TESTS=Off \
       -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -g -O1" ..
 make
+
+# NOTE: using `libc++` as standard LLVM Clang++ library
+
+# An alternative is `libstdc++` which uses GNU C++ library
