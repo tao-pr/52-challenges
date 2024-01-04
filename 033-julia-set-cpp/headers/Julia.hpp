@@ -18,14 +18,13 @@ protected:
   int nMaxIters;
   double bound;
   Complex<double> c;
-  int convergence(Complex<double>& z, int nIter=0) const;
+  int convergence(Complex<double> &z, int nIter = 0) const;
 
 public:
-  JuliaSet(Complex<double>& c, int nMaxIters=10, double bound=2);
-  ~JuliaSet() {};
+  JuliaSet(Complex<double> &c, int nMaxIters = 10, double bound = 2);
+  ~JuliaSet(){};
 
   void render(double reMin, double reMax, double imMin, double imMax, double resolution) const;
 };
-
 
 #endif
