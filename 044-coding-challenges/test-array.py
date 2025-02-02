@@ -333,3 +333,32 @@ def test_zeroes_to_zeroes_with_minimal_flights():
         [5, 2, 1, 1],
         [0, 1, 3, 5]
     ]) == [0,1,2,3,0]
+
+
+def test_inverse_lego():
+    """
+    Given a sorted array,
+    locate total number of missing elements
+
+    eg
+    [1,2,6,7,9] => missing 3,5,8 => 3 numbers
+    """
+
+    def missing(arr):
+        if len(arr) <= 1:
+            return 0
+        
+        num_miss = 0
+        prev, arr = arr[0], arr[1:]
+        while len(arr)>0:
+            if prev+1 < arr[0]:
+                num_miss += arr[0] - prev - 1
+            prev, arr = arr[0], arr[1:]
+        return num_miss
+    
+    assert missing([]) == 0
+    assert missing([1]) == 0
+    assert missing([1,2,3,4,5]) == 0
+    assert missing([1,1,2,6]) == 3
+    assert missing([5,6,9,11,16,27,29]) == 18
+
