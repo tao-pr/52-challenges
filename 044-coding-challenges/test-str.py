@@ -150,34 +150,31 @@ def test_longest_palindrome_substr():
     def lps(s):
 
         if len(s) <= 1:
-            return s
+            return ''
 
         longest = s[0]
         for i in range(len(s)):
+            print(f'Iter @{i}')
             # check if s[i] is a centre of a palindrome
-
-            if len(s) - i < len(longest):
-                # give up if no way to find longer palindrome from the rest
-                break
 
             # [1] with centre
             d = 1
             pal = s[i]
-            while i-d > 0 and i+d < len(s):
-                if s[i-d] == s[i+d]:
-                    pal = s[i-d] + pal + s[i+d]
-                    if len(pal) > len(longest):
-                        longest = pal
+            while i-d >= 0 and i+d < len(s) and s[i-d] == s[i+d]:
+                pal = s[i-d] + pal + s[i+d]
+                if len(pal) > len(longest):
+                    longest = pal
+                    print(f'Found new longest with centre: {longest}')
                 d += 1
 
             # [2] without centre
             d = 0
             pal = ''
-            while i-d > 0 and i+d+1 < len(s):
-                if s[i-d] == s[i+d+1]:
-                    pal = s[i-d] + pal + s[i+d]
-                    if len(pal) > len(longest):
-                        longest = pal
+            while i-d > 0 and i+d+1 < len(s) and s[i-d] == s[i+d+1]:
+                pal = s[i-d] + pal + s[i+d+1]
+                if len(pal) > len(longest):
+                    longest = pal
+                    print(f'Found new longest without centre: {longest}')
                 d += 1
 
         return longest if len(longest) > 1 else ''
@@ -186,6 +183,6 @@ def test_longest_palindrome_substr():
     assert lps('aaa') == 'aaa'
     assert lps('abcd') == ''
     assert lps('p') == ''
-    assert lps('p1115l315p') == '51315'
+    assert lps('p11151315p') == '51315'
     assert lps('uabccbaabccba7aaa') == 'abccbaabccba' # palindrome in palindrome
 
