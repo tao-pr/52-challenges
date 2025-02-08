@@ -1,4 +1,5 @@
 import heapq
+from collections import defaultdict
 
 def test_warmup_find_longest_chain():
     """
@@ -102,4 +103,60 @@ def test_find_all_meeting_crashes():
         (730, 800)
     ]) == {(900, 1130), (930, 1145)}
 
+
+def test_longest_ascending_path_matrix():
+    """
+    Given a matrix of depth values,
+    find the longest ascending path
+    """
+
+    def lap(mat):
+        # create dict of connected values : O(NxM)
+        G = defaultdict(set)
+        for n in range(len(mat)):
+            for m in range(len(mat[0])):
+                v = mat[n][m]
+                # add edges to neighbour ascending values
+                for dx, dy in [[0,-1], [1,0], [0,1], [-1,0]]:
+                    if dx+n >= 0 and dx+n < len(mat) and dy+m >= 0 and dy+m < len(mat[0]):
+                        if mat[n+dx][m+dy] > v:
+                            G[(n, m)].add((n+dx, m+dy))
+        
+        # now iterate DFS
+        longest = []
+        for n, m in G:
+            path = find_longest(G, (n, m), [(n, m)])
+            longest = longest if len(longest) > len(path) else path
+
+        print(G)
+        return [mat[n][m] for n,m in longest]
+
+    
+    def find_longest(G, _from, prev):
+        # DFS
+        longest = prev
+        if _from in G:
+            for n, m in G[_from]:
+                path = find_longest(G, (n, m), prev + [(n, m)])
+                longest = longest if len(longest) > len(path) else path
+        # end of route
+        return longest
+
+    assert lap([
+        [0,0,0],
+        [0,0,0],
+        [0,0,0]
+    ]) == []
+
+    assert lap([
+        [0,0,0],
+        [1,2,3],
+        [0,0,0]
+    ]) == [0,1,2,3]
+
+    assert lap([
+        [2,0,0,0],
+        [1,3,0,0],
+        [0,0,0,5]
+    ]) == [0,1,2]
 
