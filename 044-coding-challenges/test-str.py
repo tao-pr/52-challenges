@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, deque
 
 def test_warmup_longest_common_prefixes():
     """
@@ -185,4 +185,52 @@ def test_longest_palindrome_substr():
     assert lps('p') == ''
     assert lps('p11151315p') == '51315'
     assert lps('uabccbaabccba7aaa') == 'abccbaabccba' # palindrome in palindrome
+
+
+def test_minimum_swap_to_make_palindrom():
+    """
+    Do minimum number of letter swaps, 
+    so that the final string becomes a palindrome
+    """
+
+    def make_pal(ss) -> int:
+        """
+        iterate left to right until reach centre, and swap out-of-place tokens
+        """
+        return count_swap(deque(ss))
+        
+
+    def count_swap(ss):
+        if len(ss)>1:
+            left = ss.popleft()
+            right = ss.pop()
+            if left != right:
+                # find a sub
+                for i, v in enumerate(ss):
+                    # dont swap elements which are alreay in place
+                    if v == right and ss[len(ss)-i-1] != v:
+                        # swap here
+                        ss[i] = left
+                        return 1 + count_swap(ss)
+                
+                # if right is unique, no duplicates anywhere to swap with
+                # then try swapping right with centre
+                print(f'Cant find {right} from {ss}, try centre {ss[len(ss)//2]}')
+                if len(ss)%2 == 1 and ss[len(ss)//2] == left:
+                    ss[len(ss)//2] = right
+                    return 1 + count_swap(ss)
+                else:
+                    # not possible to make it a panlimdrom
+                    return 0
+            return count_swap(ss)
+        else:
+            return 0
+
+
+                
+    assert make_pal('aaa') == 0
+    assert make_pal('aba') == 0
+    assert make_pal('gbaagb') == 1
+    assert make_pal('tkktkk') == 1
+    assert make_pal('ababk') == 1
 
