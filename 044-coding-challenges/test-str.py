@@ -234,3 +234,33 @@ def test_minimum_swap_to_make_palindrom():
     assert make_pal('tkktkk') == 1
     assert make_pal('ababk') == 1
 
+
+def find_palindrome_words():
+    """
+    Given a string with white spaces,
+    find a word which is a palindrome
+    """
+
+    def find_pal(ss):
+        # tokenise words
+        return next((w for w in ss.split(' ') \
+                    if is_pal(deque(w))), '')
+    
+
+    def is_pal(word: deque):
+        # Complexity: O(N)
+        while word > '':
+            if word.pop() != word.popleft():
+                return False
+        return True
+    
+    """
+    Total time complexity = O(L + W*N)
+    """
+    
+
+    assert find_pal('his cat is nun') == 'nun'
+    assert find_pal('the aaa battery is so good') == 'aaa'
+    assert find_pal('a cookie is rotten') == ''
+    assert find_pal('can hza uuuk hbhbh nac') == 'hbhbh'
+

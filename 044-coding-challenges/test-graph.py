@@ -63,3 +63,43 @@ def test_warmup_find_longest_chain():
     ]) == 68 # 3 -> 1 -> 0 = 7+61 = 68
 
 
+def test_find_all_meeting_crashes():
+    """
+    Given a list of meeting time (begin - end),
+    find all overlapping meetings
+    """
+
+    def find_crashes(meetings):
+        times = sorted(meetings, key=lambda x: x[0]) # O(N log N)
+        crashes = set()
+        clock = times[0][0] # earliest time
+        prev = None
+        while len(times) > 0:
+            t = times[0]
+            if t[0] < clock:
+                # crashes
+                crashes.add(t)
+                crashes.add(prev)
+            
+            clock = max(t[1], clock) # keep tracking the furthest `to`
+            times = times[1:]
+            prev = t
+
+        return crashes
+
+
+    assert find_crashes([
+        (1100, 1159),
+        (1200, 1330),
+        (1520, 1550),
+        (1525, 1600)
+    ]) == {(1520, 1550), (1525, 1600)}
+
+    assert find_crashes([
+        (830, 900),
+        (900, 1130),
+        (930, 1145),
+        (730, 800)
+    ]) == {(900, 1130), (930, 1145)}
+
+
