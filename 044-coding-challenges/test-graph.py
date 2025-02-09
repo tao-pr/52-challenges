@@ -160,3 +160,77 @@ def test_longest_ascending_path_matrix():
         [0,0,0,5]
     ]) == [0,1,2]
 
+
+def test_sharing_candies_to_neighbours():
+    """
+    Given a matrix containing number of candies each person 
+    in a cell has, if each round everyone shares his/her candy 
+    to their neighbours whose candies are fewer than them,
+    after N rounds, find out how many candies each person have
+    """
+
+    def share(M, N, G = None):
+        """
+        1 - Make graph G : O(N^2)
+        2 - iterate vertices O(V)
+        """
+
+        if N <= 0:
+            return M
+
+        if G is None:
+            G = defaultdict(set)
+            for a in range(len(M)):
+                for b in range(len(M[0])):
+                    if M[a][b] == 0:
+                        continue
+
+                    for aa, bb in [[0,-1], [1,0], [0,1], [-1,0]]:
+                        if 0 <= aa+a < len(M) and 0 <= bb+b < len(M[0]):
+                            if M[aa+a][bb+b] > 0:
+                                G[(a,b)].add((aa+a, bb+b))
+        
+        # Iterate vertices
+        changes = defaultdict(int)
+        for a1,b1 in G:
+            # (a1,b1) has enough to share
+            recipients = [(u,v) for u,v in G[(a1,b1)] if M[u][v] < M[a1][b1]]
+            if M[a1][b1] < len(recipients):
+                continue
+            
+            # Share to neighbours with less candies
+            for a2,b2 in recipients:
+                if M[a1][b1] > M[a2][b2]:
+                    changes[(a2, b2)] += 1
+                    changes[(a1, b1)] -= 1
+                    
+
+        # apply changes
+        for (a,b), v in changes.items():
+            print(f'{(a,b)} -> changes = {v}')
+            M[a][b] += v
+
+        print(M)
+
+        return share(M, N-1)
+    
+
+    assert share([
+        [0, 0, 1, 0],
+        [1, 8, 3, 5],
+        [2, 16, 15, 1]
+    ], 1) == [
+        [0, 0, 2, 0],
+        [3, 7, 5, 3],
+        [2, 13, 14, 3]
+    ]
+
+    assert share([
+        [0, 0, 1, 0],
+        [1, 8, 3, 5],
+        [2, 16, 15, 1]
+    ], 2) == [
+        [0, 0, 3, 0],
+        [3, 6, 5, 4],
+        [4, 12, 11, 4]
+    ]
