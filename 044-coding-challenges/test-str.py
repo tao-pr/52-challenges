@@ -264,3 +264,65 @@ def find_palindrome_words():
     assert find_pal('a cookie is rotten') == ''
     assert find_pal('can hza uuuk hbhbh nac') == 'hbhbh'
 
+def test_evaluate_math_expr():
+    """
+    Given a string containing mathemetical expression,
+    calculate the output
+    """
+
+    def eval(expr):
+        # convert expr string into tokens: O(L)
+        tokens = []
+        while len(expr) > 0:
+            # iterate until find an operator
+            d = int(expr[0])
+            expr = expr[1:]
+            while len(expr) > 0 and expr[0] not in {'x','+','-','/'}:
+                d *= 10
+                d += int(expr[0])
+                expr = expr[1:]
+            
+            tokens.append(d)
+            # take an operator
+            if len(expr)>0:
+                tokens.append(expr[0])
+            expr = expr[1:]
+
+        # Evaluate tokens
+        return compute(tokens)
+        
+    def compute(tokens):
+        # put operands and operators in brackets,
+        # prioritised by operator
+        op = []
+        num = []
+        while len(tokens)>0:
+            if isinstance(tokens[0], int):
+                num.append(tokens[0])
+                tokens = tokens[1:]
+            elif tokens[0] == '/': # highest prio
+                op = num.pop()
+                op2 = tokens[1]
+                num.append(op/op2)
+                tokens = tokens[2:]
+            elif tokens[0] == 'x': # high prio
+                op = num.pop()
+                op2 = tokens[1]
+                num.append(op*op2)
+                tokens = tokens[2:]
+            else:
+                op = num.pop()
+                action = tokens[0]
+                op2 = tokens[1]
+                if action == '+':
+                    num.append(op+op2)
+                elif action == '-':
+                    num.append(op-op2)
+                tokens = tokens[2:]
+        return num[-1]
+    
+    assert eval('1+1') == 2
+    assert eval('2x3') == 6
+    assert eval('16-5+3') == 14
+    assert eval('4/2+5') == 7
+    assert eval('0+13x2-16') == 10
