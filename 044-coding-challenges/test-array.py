@@ -396,3 +396,48 @@ def test_merge_intervals():
     assert merge([1,15],[2,5],[7,10],[12,15]) == [[1,15]]
     assert merge([1,7],[7,9],[10,11],[10,25]) == [[1,9],[10,25]]
     assert merge([0,0],[4,5],[3,5],[8,10]) == [[0,0],[3,5],[8,10]]
+
+
+def test_median_of_dedup_arrays():
+    """
+    Given a list of sorted arrays,
+    find the median of these arrays combined after deduplications!
+    """
+
+    def median(arrs):
+
+        # O(N) -> iterate all arrays, combine, and dedup
+        combined = []
+        for arr in arrs:
+            for a in arr:
+                if len(combined) == 0:
+                    combined.append(a)
+                elif combined[-1] < a:
+                    combined.append(a)
+        
+        # Now find median
+        if len(combined) == 1:
+            return combined[0]
+        elif len(combined) % 2 == 0:
+            print(combined)
+            return (combined[len(combined)//2] + combined[len(combined)//2 - 1])/2.0
+        else:
+            return combined[len(combined)//2]
+
+    assert median([
+        [1,1,1],
+        [1,1]
+    ]) == 1
+
+    assert median([ # 1,5,16,50 -> 5+16 / 2 = 10.5
+        [1,1,1,5],
+        [1,16,50]
+    ]) == 10.5
+
+    assert median([ # 1,3,5,7,15 -> 5
+        [1],
+        [3,3,5,7],
+        [3,5,15],
+        [1,1,7]
+    ])
+
