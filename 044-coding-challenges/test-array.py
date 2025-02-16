@@ -441,3 +441,38 @@ def test_median_of_dedup_arrays():
         [1,1,7]
     ])
 
+
+def test_wait_warmer_temp():
+    """
+    Given an array of daily temperatures (int),
+    return an array containing number of days to wait
+    until the weather is warmer
+    """
+
+    def wait(dailies):
+        still_waits = set()
+        daywait = [0 for _ in range(len(dailies))] # materialized 
+        for index, temp in enumerate(dailies):
+            if len(still_waits)>0:
+                # check prev days stil waiting
+                buff = set()
+                for wait_index in still_waits:
+                    daywait[wait_index] += 1
+                    if dailies[wait_index] >= temp:
+                        # still wait more
+                        buff.add(wait_index)
+                still_waits = buff
+            still_waits.add(index)
+
+        # replace still waits with zeros
+        for i in still_waits:
+            daywait[i] = 0
+
+        return daywait
+         
+
+    assert wait([30,40,50,60]) == [1,1,1,0]
+    assert wait([15,15,15,15]) == [0,0,0,0]
+    assert wait([0,1,1,5]) == [1,2,1,0]
+    assert wait([73,74,75,71,69,72,76,73]) == [1,1,4,2,1,1,0,0]
+    
