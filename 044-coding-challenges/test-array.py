@@ -509,3 +509,30 @@ def test_product_of_arrays_except_self():
     assert product([0,0,15,1]) == [0,0,0,0]
     assert product([1,3,3,5,1]) == [45,15,15,9,45]
     
+
+def test_largest_sliding_window_with_largest_sum():
+    """
+    Given an array of integers,
+    find the largest sliding window which yields a largest sum amongs all
+    """
+
+    def lsum(arr):
+        longest = []
+        sum_longest = -999
+        # 0 1 2 3 (L-1=4)
+        for n in range(len(arr)):
+            for m in range(1,len(arr)+1):
+                part = arr[n:m]
+                sum_part = sum(part)
+                if sum_part > sum_longest or (sum_part == sum_longest and len(longest) < m-n):
+                    longest = arr[n:m]
+                    sum_longest = sum_part
+        return longest
+    
+
+    assert lsum([1,-1,-5,0,3,5,25,-1,25,-29]) == [0,3,5,25,-1,25]
+    assert lsum([3,5,6]) == [3,5,6]
+    assert lsum([-10,3,-20,5,3,50,-5,10,0,-1]) == [5,3,50,-5,10,0]
+    assert lsum([7,0,7,-6,5,3,-1]) == [7,0,7,-6,5,3]
+    assert lsum([3,3,3,-9,5,2,-6,1]) == [3,3,3]
+    
