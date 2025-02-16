@@ -362,3 +362,37 @@ def test_inverse_lego():
     assert missing([1,1,2,6]) == 3
     assert missing([5,6,9,11,16,27,29]) == 18
 
+
+def test_merge_intervals():
+    """
+    Given a list of intervals, merge them
+    """
+
+    def merge(*intervals):
+        merged = []
+        # O(NlogN)
+        intervals = sorted(intervals, key=lambda x: x[0])
+        # + O(N)
+        for a,b in intervals:
+            if len(merged) == 0:
+                merged.append([a,b])
+            else:
+                # Check if this interval [a,b] overlaps with last merged interval
+                # [m0,   m1]
+                #    ..b]
+                #     a ....b]
+                m0 = merged[-1][0]
+                m1 = merged[-1][1]
+                
+                if a<=m1: # mergeable
+                    merged[-1] = [m0, max(m1,b)]
+                else: # not mergable
+                    merged.append([a,b])
+                
+        return merged
+
+
+    assert merge([1,15],[1,15]) == [[1,15]]
+    assert merge([1,15],[2,5],[7,10],[12,15]) == [[1,15]]
+    assert merge([1,7],[7,9],[10,11],[10,25]) == [[1,9],[10,25]]
+    assert merge([0,0],[4,5],[3,5],[8,10]) == [[0,0],[3,5],[8,10]]

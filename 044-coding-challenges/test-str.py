@@ -326,3 +326,44 @@ def test_evaluate_math_expr():
     assert eval('16-5+3') == 14
     assert eval('4/2+5') == 7
     assert eval('0+13x2-16') == 10
+
+def test_bracket_parser():
+    """
+    Given a string containg nested brackets,
+    convert it into nested array.
+
+    example:
+        "{a{b{c}d}{e}} -> [a,[b,[c], d], [e]]
+    """
+
+    # O(N)
+    def parse(ss):
+        stack = [] # last element is the inner-most layer
+        while len(ss)>0:
+            if ss[0] == '{':
+                # create a new empty list
+                stack.append([])
+            elif ss[0] == '}':
+                # list finishes
+                inner = stack.pop()
+                # append it to the previous layer
+                if len(stack)>0:
+                    stack[-1].append(inner)
+                else:
+                    stack.append(inner)
+            else:
+                # add it to the last element (inner-most)
+                stack[-1].append(ss[0])
+            
+            ss = ss[1:]
+        return stack.pop()
+        
+
+    assert parse('{}') == []
+    assert parse('{c}') == ['c']
+    assert parse('{e{}}') == ['e',[]]
+    assert parse('{{{e}}}') == [[['e']]]
+    assert parse('{{}{a}{b}}') == [[],['a'],['b']]
+    assert parse('{a{bcd}{e}}') == ['a',['b','c','d'],['e']]
+    assert parse('{a{b{c}d}{e}}') == ['a',['b',['c'],'d'],['e']]
+
