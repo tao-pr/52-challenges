@@ -475,4 +475,37 @@ def test_wait_warmer_temp():
     assert wait([15,15,15,15]) == [0,0,0,0]
     assert wait([0,1,1,5]) == [1,2,1,0]
     assert wait([73,74,75,71,69,72,76,73]) == [1,1,4,2,1,1,0,0]
+
+def test_product_of_arrays_except_self():
+    """
+    Given an array of integers, can have duplicates
+    find an array of products of all other elements except self
+    """
+
+    def product(arr):
+        if len(arr)==1:
+            return [0]
+
+        # find product of all elements (except zeros)
+        p = 1
+        zeros = set()
+        for i, a in enumerate(arr):# O(N)
+            if a == 0:
+                zeros.add(i)
+            else:
+                p *= a
+
+        if len(zeros)>1:
+            return [0 for _ in range(len(arr))]
+        
+        if len(zeros)==1:
+            return [0 if i not in zeros else p  for i, a in enumerate(arr)]
+
+        return [p//a for i, a in enumerate(arr)]
+    
+    assert product([1,15,3]) == [45,3,15]
+    assert product([1]) == [0]
+    assert product([25,0,5]) == [0,125,0]
+    assert product([0,0,15,1]) == [0,0,0,0]
+    assert product([1,3,3,5,1]) == [45,15,15,9,45]
     
