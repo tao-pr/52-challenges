@@ -480,3 +480,99 @@ def test_edit_distance():
     assert edit("aa", "abab") == 2
     assert edit("abc","1abc") == 1
     assert edit("abc", "jjj") == 3
+
+
+def test_bracketize_expression():
+    """
+    Given a string of mathematical expression
+        eg. 1+15/25/5+1*4
+
+    Put a bracket by priority of operations / > * > + -
+    """
+
+    def bracket(expr):
+        """
+        1+1*5+1
+
+        [1] +1*5
+        [1,+,] 1*5
+        [1,+,1] *5
+        [1,+,] [1*] 5
+        [1,+,] [1*5] +1
+        [1,+,] [[1*5]+ ] 1
+        [1,+,] [[1*5]+1 ] 
+
+        then parse from right to left (inner to outer shell)
+        """
+
+        stack = []
+        prio = {
+            None: 0,
+            '+': 0,
+            '-': 0,
+            '*': 1,
+            '/': 2
+        }
+
+        def append_stack(s):
+            if len(stack)==0:
+                stack.append([s])
+            else:
+                stack[-1].append(s)
+
+        def get_last_op():
+            if len(stack)==0:
+                return 0
+            else:
+                n = -1
+                # iterate from the back of stack,
+                # until we find the last op
+                op = next((a for a in stack[-1] if isinstance(a,str) and a in prio), None)
+                print(f'prev op = {op}')
+                return prio[op]
+
+        for e in expr:
+            if e.isnumeric():
+                append_stack(e)
+            else:
+                # operator
+                # check if last element in stack already has operator?
+                prev_op = get_last_op()
+                if prio[e] > prev_op: # find a higher prio op, take the last operand out
+                    last_operand = stack[-1].pop()
+                    stack.append([last_operand, e])
+                elif prio[e] < prev_op: # time to enclose last expression block
+                    stack[-1] = [stack[-1]] # enclose last expression with bracket
+                    stack[-1].append(e)
+                else:
+                    stack[-1].append(e)
+
+        # now parse the stack
+        print(expr)
+        print(stack)
+        return render(stack)
+    
+    def render(stack):
+        #[[], [['1', '*', '5'], '+', '2', '+'], ['5', '/', '3']]
+        r = ""
+        for block in stack[::-1]: # render rightmost first (as innermost)
+            br = render_block(block)
+            # ['5', '/', '3'] --> "5/3"
+            r = br + "{" + r + "}" if r > "" else br
+        return r
+    
+    def render_block(block):
+        br = ""
+        for el in block:
+            if isinstance(el, list):
+                br += "{" + render_block(el) + "}"
+            else:
+                br += el
+        return br
+
+    assert bracket("1+1") == "1+1"
+    assert bracket("1+5+3") == "1+5+3"
+    assert bracket("1*5+2+5/3") == "{{1*5}+2+{5/3}}"
+    assert bracket("5/4/3/2") == "{5/4/3/2}"
+    assert bracket("5/4/3/2+1") == "{{5/4/3/2}+1}"
+
