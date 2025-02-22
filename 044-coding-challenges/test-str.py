@@ -438,3 +438,45 @@ def test_longest_matched_pattern():
         "ddddda"
     ]) == "aad"
 
+
+def test_edit_distance():
+    """
+    Find the minimum number of edits between 2 strings
+        - insertion
+        - deletion
+        - replacement
+    """
+
+    def edit(str1,str2):
+        # longer first
+        if len(str2)>=len(str1):
+            str1, str2 = str2, str1
+
+        return edistance(str1, str2)
+
+    def edistance(str1, str2):
+        if str2 == '':
+            return len(str1)
+        else:
+            if len(str1)==len(str2):
+                # check how many diff
+                print(f'diff: {str1} v {str2}')
+                return sum(1 if a != b else 0 for a,b in zip(str1, str2))
+            else:
+                # prefix: abcd ~~ bcd
+                if str1[0] != str2[0]:
+                    print(f'prefix: {str1} v {str2}')
+                    return 1 + edistance(str1[1:], str2)
+                # suffix: abcd ~~ abc
+                else:
+                    # iterate until no match
+                    print(f'suffix: {str1} v {str2}')
+                    return edistance(str1[1:], str2[1:])
+
+    assert edit("abc","abc") == 0
+    assert edit("abc", "abbc") == 1
+    assert edit("abc", "acb") == 2
+    assert edit("", "ab") == 2
+    assert edit("aa", "abab") == 2
+    assert edit("abc","1abc") == 1
+    assert edit("abc", "jjj") == 3
