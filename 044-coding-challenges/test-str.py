@@ -367,3 +367,74 @@ def test_bracket_parser():
     assert parse('{a{bcd}{e}}') == ['a',['b','c','d'],['e']]
     assert parse('{a{b{c}d}{e}}') == ['a',['b',['c'],'d'],['e']]
 
+def test_longest_matched_pattern():
+    """
+    Given a pattern string containing * for any letters,
+    find the longest matched strings 
+    """
+
+    def longest_match(pattern, cands):
+
+        if pattern == '*':
+            return max(cands, key=len)
+
+        match = ''
+
+        pattern = pattern.split('*')
+        
+        # check each candidate (stop early if not possible to become a longest)
+        while len(cands)>0:
+            cand = cands[0]
+            if len(cand) < len(match):
+                cands = cands[1:]
+                continue
+
+            # match pattern
+            if is_match(cand, pattern[:]) and len(cand) > len(match):
+                match = cand
+
+            cands = cands[1:]
+
+        return match
+
+    def is_match(cand, pattern):
+        "prune candidate until all pattern parts are matched"
+        # wildcard
+        if pattern == ['']: 
+            return True
+        # all matched
+        if pattern == [] and cand == '':
+            return True
+        # remaining unmatchables
+        if (pattern == [] and cand > '') or (len(pattern) > 0 and cand == ''): 
+            return False
+        if pattern[0] == '':
+            # wildcard, skip until we find next exact match (pattern[1])
+            while cand > '':
+                if cand.startswith(pattern[1]):
+                    return is_match(cand.lstrip(pattern[1]), pattern[2:])
+                cand = cand[1:]
+            # not found a match
+            return False
+
+        else:
+            # exact match
+            if cand.startswith(pattern[0]):
+                return is_match(cand.lstrip(pattern[0]), pattern[1:])
+            else:
+                return False
+            
+    assert longest_match("*", [
+        "abc",
+        "",
+        "ayaaaaaa",
+        "ii"
+    ]) == "ayaaaaaa"
+
+    assert longest_match("*d", [
+        "aaaaaaaaaaaaaaaa",
+        "aad",
+        "d",
+        "ddddda"
+    ]) == "aad"
+

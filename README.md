@@ -10,7 +10,7 @@ The difficulty of the challenge should progress gradually to keep
 the people exciting and motivated to try new techniques, tools, ideas, etc. 
 as solutions to the new challenges.
 
-## Challenges 
+## Challenges
 
 List of challenges are collected below.
 
