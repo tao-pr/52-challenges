@@ -1,5 +1,6 @@
 from typing import Tuple
 from collections import Counter
+from heapq import heappush, heappop
 
 def test_warmup_min_shuffle_sorted():
     """
@@ -536,3 +537,33 @@ def test_largest_sliding_window_with_largest_sum():
     assert lsum([7,0,7,-6,5,3,-1]) == [7,0,7,-6,5,3]
     assert lsum([3,3,3,-9,5,2,-6,1]) == [3,3,3]
     
+
+def test_closest_sum():
+    """
+    Given an set of integer and a target number,
+    find the subset that sums into the closest to the target number
+    """
+
+    def _closest_sum(coll, target, candi=[], chain=[]):
+        coll = coll if isinstance(coll, list) else list(coll)
+        for i in range(len(coll)):
+            c = coll[i]
+            others = coll[:i] + coll[i+1:]
+            diff = abs(target - c)
+            heappush(candi, (diff, [c]+chain))
+            _closest_sum(others, target-c, candi, [c]+chain)
+
+        return candi
+
+    def closest_sum(coll, target):
+        cands = []
+        _closest_sum(coll, target, cands)
+        diff, chain = heappop(cands)
+        print(f'diff = {diff}, chain = {chain}')
+        return set(sorted(chain))
+
+    assert closest_sum(set([1,5,6]), 20) == set([1,5,6])
+    assert closest_sum(set([1,5,6,10]), 16) == set([1,5,10])
+    assert closest_sum(set([1,5,6,10]), 4) == set([5])
+    assert closest_sum(set([1,5,6,10]), 17) == set([1,6,10])
+
