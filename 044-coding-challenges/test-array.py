@@ -2,6 +2,7 @@ from typing import Tuple
 from collections import Counter
 from heapq import heappush, heappop
 
+
 def test_warmup_min_shuffle_sorted():
     """
     Given an array of integers,
@@ -18,14 +19,14 @@ def test_warmup_min_shuffle_sorted():
         orig: [1,5,2,1] -> [1]+[1,2,5] swap1
         orig: [1,5,7,2] -> [1]+[2,7,5] swap1 ->  -> [1,2]+[5,7] swap2
 
-        Time complexity: 
+        Time complexity:
             for N elements: N + (N-1) + (N-2) .. 1 ~= O(N^2)
-        
+
         Space complexity:
             Call stack size = O(N)
         """
 
-        if len(arr)<=1:
+        if len(arr) <= 1:
             return 0, arr
         else:
             # swap smallest to the leftmost and move on
@@ -34,24 +35,23 @@ def test_warmup_min_shuffle_sorted():
             for i, a in enumerate(arr[1:]):
                 if a < smallest:
                     smallest = a
-                    smallest_index = i+1
-            
-            if smallest_index > 0 :
+                    smallest_index = i + 1
+
+            if smallest_index > 0:
                 # swap, and move on
                 arr[smallest_index], arr[0] = arr[0], arr[smallest_index]
                 n, remaining = sortme(arr[1:])
-                return n+1, [arr[0]]+remaining
+                return n + 1, [arr[0]] + remaining
             else:
                 n, remaining = sortme(arr[1:])
-                return n, [arr[0]]+remaining
+                return n, [arr[0]] + remaining
 
-    
     assert sortme([]) == (0, [])
     assert sortme([1]) == (0, [1])
-    assert sortme([2,2,2]) == (0, [2,2,2])
-    assert sortme([1,2,5]) == (0, [1,2,5])
-    assert sortme([1,5,2,5]) == (1, [1,2,5,5]) # 1 swap
-    assert sortme([1,1,2,9,7,7,1]) == (2, [1,1,1,2,7,7,9]) # 2 swaps
+    assert sortme([2, 2, 2]) == (0, [2, 2, 2])
+    assert sortme([1, 2, 5]) == (0, [1, 2, 5])
+    assert sortme([1, 5, 2, 5]) == (1, [1, 2, 5, 5])  # 1 swap
+    assert sortme([1, 1, 2, 9, 7, 7, 1]) == (2, [1, 1, 1, 2, 7, 7, 9])  # 2 swaps
 
 
 def test_warmpup2_find_longest_palyndrome():
@@ -80,20 +80,20 @@ def test_warmpup2_find_longest_palyndrome():
                 but technically it should stops as long as it finds palindrome half the size of array
         """
 
-        longest = [] # left side of longest palindrome
+        longest = []  # left side of longest palindrome
 
-        if len(arr)<=1:
+        if len(arr) <= 1:
             return arr
-        
+
         for i in range(len(arr)):
             # check if i-th is the centre of palindrome
-            
+
             # [1] with arr[i] as centre element
             k = 1
             pal = [arr[i]]
-            while i-k >= 0 and i+k < len(arr) and arr[i-k] == arr[i+k]:
-                pal.append(arr[i+k])
-                pal = [arr[i-k]] + pal
+            while i - k >= 0 and i + k < len(arr) and arr[i - k] == arr[i + k]:
+                pal.append(arr[i + k])
+                pal = [arr[i - k]] + pal
                 k += 1
 
             if len(pal) > 1 and len(longest) < len(pal):
@@ -102,28 +102,26 @@ def test_warmpup2_find_longest_palyndrome():
             # [2] without centre element
             k = 0
             pal = []
-            while i-k>=0 and i+1+k < len(arr) and arr[i-k] == arr[i+1+k]:
-                pal.append(arr[i+1+k])
-                pal = [arr[i-k]] + pal
+            while i - k >= 0 and i + 1 + k < len(arr) and arr[i - k] == arr[i + 1 + k]:
+                pal.append(arr[i + 1 + k])
+                pal = [arr[i - k]] + pal
                 k += 1
-            
+
             if len(pal) > 1 and len(longest) < len(pal):
                 longest = pal
 
             # stop early, no chance to find longer than the longest we spotted so far
-            if len(arr)-i < len(longest):
+            if len(arr) - i < len(longest):
                 return longest
 
         return longest
-            
-    
 
-    assert lpal([1,1]) == [1,1]
-    assert lpal([0,1,2]) == []
-    assert lpal([0,1,0]) == [0,1,0]
-    assert lpal([0,1,0,1]) == [0,1,0]
-    assert lpal([0,1,0,5,3,1]) == [0,1,0]
-    assert lpal([0,1,0,0,1,0,3]) == [0,1,0,0,1,0]
+    assert lpal([1, 1]) == [1, 1]
+    assert lpal([0, 1, 2]) == []
+    assert lpal([0, 1, 0]) == [0, 1, 0]
+    assert lpal([0, 1, 0, 1]) == [0, 1, 0]
+    assert lpal([0, 1, 0, 5, 3, 1]) == [0, 1, 0]
+    assert lpal([0, 1, 0, 0, 1, 0, 3]) == [0, 1, 0, 0, 1, 0]
 
 
 def test_warmup_find_the_triplet_sum_to_zero():
@@ -133,52 +131,51 @@ def test_warmup_find_the_triplet_sum_to_zero():
     """
 
     def zsum(arr):
-
-        if len(arr)<3:
+        if len(arr) < 3:
             return []
 
-        neg = [] # including zeros
+        neg = []  # including zeros
         pos = []
         num_zeros = 0
-        counter = Counter(arr) # O(N)
-        for a in arr: # O(N)
-            if a<=0:
-                if a ==0:
+        counter = Counter(arr)  # O(N)
+        for a in arr:  # O(N)
+            if a <= 0:
+                if a == 0:
                     num_zeros += 1
                 neg.append(a)
             else:
                 pos.append(a)
 
-        if len(neg)==0:
+        if len(neg) == 0:
             return []
         if num_zeros >= 3:
-            return [0,0,0]
-        
+            return [0, 0, 0]
+
         # combinations :  1 neg + 2pos
-        if len(pos)>=2 and len(neg)>0:
+        if len(pos) >= 2 and len(neg) > 0:
             for n in neg:
                 for p in pos:
-                    wanted = -(n+p)
+                    wanted = -(n + p)
                     tick = 1 if wanted == p or wanted == n else 0
-                    if counter[wanted]>tick:
-                        return sorted([n, p, wanted ])
+                    if counter[wanted] > tick:
+                        return sorted([n, p, wanted])
 
         # combinations 2 neg + 1 pos
-        if len(neg) >= 2 and len(pos)>0:
+        if len(neg) >= 2 and len(pos) > 0:
             for i, n1 in enumerate(neg):
                 for j, n2 in enumerate(neg):
                     if i == j:
                         continue
-                    if counter[-(n1+n2)]>0:
-                        return sorted([n1, n2, -(n1+n2)])
-        
+                    if counter[-(n1 + n2)] > 0:
+                        return sorted([n1, n2, -(n1 + n2)])
+
         return []
-    
+
     assert zsum([]) == []
-    assert zsum([1,-1,0]) == [-1,0,1]
-    assert zsum([1,1,5,1]) == []
-    assert zsum([-3,1,6,1]) == []
-    assert zsum([-2,1,0,-1,3]) == [-2,-1,3]
+    assert zsum([1, -1, 0]) == [-1, 0, 1]
+    assert zsum([1, 1, 5, 1]) == []
+    assert zsum([-3, 1, 6, 1]) == []
+    assert zsum([-2, 1, 0, -1, 3]) == [-2, -1, 3]
 
 
 def test_median_of_two_sorted_arrays():
@@ -192,18 +189,17 @@ def test_median_of_two_sorted_arrays():
         Find the position of the median "IF" two arrays combine (mid point)
 
         Only iterate halfway
-        Keep adding smallest leftmost to the stack until 
+        Keep adding smallest leftmost to the stack until
         it reaches the median point.
         Report that last position
         """
-        pos = (len(arr1) + len(arr2))//2
+        pos = (len(arr1) + len(arr2)) // 2
         stacked = []
         while len(stacked) <= pos:
-
-            if len(arr1)==0:
+            if len(arr1) == 0:
                 stacked.append(arr2[0])
                 arr2 = arr2[1:]
-            elif len(arr2)==0:
+            elif len(arr2) == 0:
                 stacked.append(arr1[0])
                 arr1 = arr1[1:]
             elif arr1[0] < arr2[0]:
@@ -215,39 +211,37 @@ def test_median_of_two_sorted_arrays():
 
             print(pos, stacked)
         return stacked[-1]
-    
 
-    assert median([], [1,2,3]) == 2
+    assert median([], [1, 2, 3]) == 2
     assert median([1], [1]) == 1
-    assert median([1,5,5], [1,2,3]) == 3
-    assert median([1,7,9], [1,2,2,2,7]) == 2
+    assert median([1, 5, 5], [1, 2, 3]) == 3
+    assert median([1, 7, 9], [1, 2, 2, 2, 7]) == 2
+
 
 def test_zeroes_to_zeroes_with_minimal_flights():
     """
     Given a matrix of integers denoting the height of terrain,
-    find a path from zeros to zeros which yields 
+    find a path from zeros to zeros which yields
     the minimum flights
     """
 
     def min_flight(mat):
-        
         # find all zeros
         # also generate graph (adjacency mat)
-        zero = [] # indices of zeros
+        zero = []  # indices of zeros
         for i in range(len(mat)):
             for j in range(len(mat[0])):
                 if mat[i][j] == 0:
                     zero.append((i, j))
-        
+
         if len(zero) <= 1:
             return []
-        
 
         best_flight = 1e6
         best = []
         for i in range(len(zero)):
             for j in range(len(zero)):
-                if i==j:
+                if i == j:
                     continue
 
                 # for any pair of zeros,
@@ -256,10 +250,9 @@ def test_zeroes_to_zeroes_with_minimal_flights():
                 if flight < best_flight:
                     best_flight = flight
                     best = path
-        
-        print(f'best = {best}')
-        return [mat[i][j] for i,j in best]
-    
+
+        print(f"best = {best}")
+        return [mat[i][j] for i, j in best]
 
     def walk(pos1, pos2, mat):
         # greedy walk
@@ -268,7 +261,7 @@ def test_zeroes_to_zeroes_with_minimal_flights():
 
         visited = set(pos1)
 
-        print('START')
+        print("START")
 
         # Walks from pos1 until reaches pos2
         rounds = 0
@@ -277,63 +270,45 @@ def test_zeroes_to_zeroes_with_minimal_flights():
             best_step = 1e10
             best = None
             for dx, dy in [[-1, 0], [0, -1], [1, 0], [0, 1]]:
-                
                 # Just finish if can
-                if i0+dx == pos2[0] and j0+dy == pos2[1]:
-                    path.append((i0+dx, j0+dy))
+                if i0 + dx == pos2[0] and j0 + dy == pos2[1]:
+                    path.append((i0 + dx, j0 + dy))
                     return total_climb, path
 
                 # Ignore OOB
-                if (dx==0 and dy==0):
+                if dx == 0 and dy == 0:
                     continue
 
-                if i0+dx < 0 or i0+dx >= len(mat):
+                if i0 + dx < 0 or i0 + dx >= len(mat):
                     continue
 
-                if j0+dy < 0 or j0+dy >= len(mat[0]):
+                if j0 + dy < 0 or j0 + dy >= len(mat[0]):
                     continue
 
                 # ignore visited
-                if (i0+dx, j0+dy) in visited:
+                if (i0 + dx, j0 + dy) in visited:
                     continue
-                
+
                 # choose next cell with least flight climb
-                d = abs(mat[i0][j0] - mat[i0+dx][j0+dy])
+                d = abs(mat[i0][j0] - mat[i0 + dx][j0 + dy])
                 if d < best_step:
                     best_step = d
-                    best = (i0+dx, j0+dy)
-                    visited.add((i0+dx, j0+dy))
-            
+                    best = (i0 + dx, j0 + dy)
+                    visited.add((i0 + dx, j0 + dy))
+
             path.append(best)
             i0, j0 = best
             total_climb += best_step
             print(best)
 
         return total_climb, path
-    
 
-    assert min_flight([
-        [1, 1, 0],
-        [0, 5, 1],
-        [0, 1, 3]
-    ]) == [0,0]
+    assert min_flight([[1, 1, 0], [0, 5, 1], [0, 1, 3]]) == [0, 0]
 
-    assert min_flight([
-        [1, 1, 0],
-        [1, 5, 1],
-        [0, 1, 3]
-    ]) == [0,1,1,1,0]
-    assert min_flight([
-        [1, 3, 0],
-        [5, 2, 1],
-        [2, 1, 3]
-    ]) == []
+    assert min_flight([[1, 1, 0], [1, 5, 1], [0, 1, 3]]) == [0, 1, 1, 1, 0]
+    assert min_flight([[1, 3, 0], [5, 2, 1], [2, 1, 3]]) == []
 
-    assert min_flight([
-        [1, 3, 0, 7],
-        [5, 2, 1, 1],
-        [0, 1, 3, 5]
-    ]) == [0,1,2,3,0]
+    assert min_flight([[1, 3, 0, 7], [5, 2, 1, 1], [0, 1, 3, 5]]) == [0, 1, 2, 3, 0]
 
 
 def test_inverse_lego():
@@ -348,20 +323,20 @@ def test_inverse_lego():
     def missing(arr):
         if len(arr) <= 1:
             return 0
-        
+
         num_miss = 0
         prev, arr = arr[0], arr[1:]
-        while len(arr)>0:
-            if prev+1 < arr[0]:
+        while len(arr) > 0:
+            if prev + 1 < arr[0]:
                 num_miss += arr[0] - prev - 1
             prev, arr = arr[0], arr[1:]
         return num_miss
-    
+
     assert missing([]) == 0
     assert missing([1]) == 0
-    assert missing([1,2,3,4,5]) == 0
-    assert missing([1,1,2,6]) == 3
-    assert missing([5,6,9,11,16,27,29]) == 18
+    assert missing([1, 2, 3, 4, 5]) == 0
+    assert missing([1, 1, 2, 6]) == 3
+    assert missing([5, 6, 9, 11, 16, 27, 29]) == 18
 
 
 def test_merge_intervals():
@@ -374,9 +349,9 @@ def test_merge_intervals():
         # O(NlogN)
         intervals = sorted(intervals, key=lambda x: x[0])
         # + O(N)
-        for a,b in intervals:
+        for a, b in intervals:
             if len(merged) == 0:
-                merged.append([a,b])
+                merged.append([a, b])
             else:
                 # Check if this interval [a,b] overlaps with last merged interval
                 # [m0,   m1]
@@ -384,19 +359,18 @@ def test_merge_intervals():
                 #     a ....b]
                 m0 = merged[-1][0]
                 m1 = merged[-1][1]
-                
-                if a<=m1: # mergeable
-                    merged[-1] = [m0, max(m1,b)]
-                else: # not mergable
-                    merged.append([a,b])
-                
+
+                if a <= m1:  # mergeable
+                    merged[-1] = [m0, max(m1, b)]
+                else:  # not mergable
+                    merged.append([a, b])
+
         return merged
 
-
-    assert merge([1,15],[1,15]) == [[1,15]]
-    assert merge([1,15],[2,5],[7,10],[12,15]) == [[1,15]]
-    assert merge([1,7],[7,9],[10,11],[10,25]) == [[1,9],[10,25]]
-    assert merge([0,0],[4,5],[3,5],[8,10]) == [[0,0],[3,5],[8,10]]
+    assert merge([1, 15], [1, 15]) == [[1, 15]]
+    assert merge([1, 15], [2, 5], [7, 10], [12, 15]) == [[1, 15]]
+    assert merge([1, 7], [7, 9], [10, 11], [10, 25]) == [[1, 9], [10, 25]]
+    assert merge([0, 0], [4, 5], [3, 5], [8, 10]) == [[0, 0], [3, 5], [8, 10]]
 
 
 def test_median_of_dedup_arrays():
@@ -406,7 +380,6 @@ def test_median_of_dedup_arrays():
     """
 
     def median(arrs):
-
         # O(N) -> iterate all arrays, combine, and dedup
         combined = []
         for arr in arrs:
@@ -415,32 +388,38 @@ def test_median_of_dedup_arrays():
                     combined.append(a)
                 elif combined[-1] < a:
                     combined.append(a)
-        
+
         # Now find median
         if len(combined) == 1:
             return combined[0]
         elif len(combined) % 2 == 0:
             print(combined)
-            return (combined[len(combined)//2] + combined[len(combined)//2 - 1])/2.0
+            return (
+                combined[len(combined) // 2] + combined[len(combined) // 2 - 1]
+            ) / 2.0
         else:
-            return combined[len(combined)//2]
+            return combined[len(combined) // 2]
 
-    assert median([
-        [1,1,1],
-        [1,1]
-    ]) == 1
+    assert median([[1, 1, 1], [1, 1]]) == 1
 
-    assert median([ # 1,5,16,50 -> 5+16 / 2 = 10.5
-        [1,1,1,5],
-        [1,16,50]
-    ]) == 10.5
+    assert (
+        median(
+            [  # 1,5,16,50 -> 5+16 / 2 = 10.5
+                [1, 1, 1, 5],
+                [1, 16, 50],
+            ]
+        )
+        == 10.5
+    )
 
-    assert median([ # 1,3,5,7,15 -> 5
-        [1],
-        [3,3,5,7],
-        [3,5,15],
-        [1,1,7]
-    ])
+    assert median(
+        [  # 1,3,5,7,15 -> 5
+            [1],
+            [3, 3, 5, 7],
+            [3, 5, 15],
+            [1, 1, 7],
+        ]
+    )
 
 
 def test_wait_warmer_temp():
@@ -452,9 +431,9 @@ def test_wait_warmer_temp():
 
     def wait(dailies):
         still_waits = set()
-        daywait = [0 for _ in range(len(dailies))] # materialized 
+        daywait = [0 for _ in range(len(dailies))]  # materialized
         for index, temp in enumerate(dailies):
-            if len(still_waits)>0:
+            if len(still_waits) > 0:
                 # check prev days stil waiting
                 buff = set()
                 for wait_index in still_waits:
@@ -470,12 +449,12 @@ def test_wait_warmer_temp():
             daywait[i] = 0
 
         return daywait
-         
 
-    assert wait([30,40,50,60]) == [1,1,1,0]
-    assert wait([15,15,15,15]) == [0,0,0,0]
-    assert wait([0,1,1,5]) == [1,2,1,0]
-    assert wait([73,74,75,71,69,72,76,73]) == [1,1,4,2,1,1,0,0]
+    assert wait([30, 40, 50, 60]) == [1, 1, 1, 0]
+    assert wait([15, 15, 15, 15]) == [0, 0, 0, 0]
+    assert wait([0, 1, 1, 5]) == [1, 2, 1, 0]
+    assert wait([73, 74, 75, 71, 69, 72, 76, 73]) == [1, 1, 4, 2, 1, 1, 0, 0]
+
 
 def test_product_of_arrays_except_self():
     """
@@ -484,32 +463,32 @@ def test_product_of_arrays_except_self():
     """
 
     def product(arr):
-        if len(arr)==1:
+        if len(arr) == 1:
             return [0]
 
         # find product of all elements (except zeros)
         p = 1
         zeros = set()
-        for i, a in enumerate(arr):# O(N)
+        for i, a in enumerate(arr):  # O(N)
             if a == 0:
                 zeros.add(i)
             else:
                 p *= a
 
-        if len(zeros)>1:
+        if len(zeros) > 1:
             return [0 for _ in range(len(arr))]
-        
-        if len(zeros)==1:
-            return [0 if i not in zeros else p  for i, a in enumerate(arr)]
 
-        return [p//a for i, a in enumerate(arr)]
-    
-    assert product([1,15,3]) == [45,3,15]
+        if len(zeros) == 1:
+            return [0 if i not in zeros else p for i, a in enumerate(arr)]
+
+        return [p // a for i, a in enumerate(arr)]
+
+    assert product([1, 15, 3]) == [45, 3, 15]
     assert product([1]) == [0]
-    assert product([25,0,5]) == [0,125,0]
-    assert product([0,0,15,1]) == [0,0,0,0]
-    assert product([1,3,3,5,1]) == [45,15,15,9,45]
-    
+    assert product([25, 0, 5]) == [0, 125, 0]
+    assert product([0, 0, 15, 1]) == [0, 0, 0, 0]
+    assert product([1, 3, 3, 5, 1]) == [45, 15, 15, 9, 45]
+
 
 def test_largest_sliding_window_with_largest_sum():
     """
@@ -522,21 +501,22 @@ def test_largest_sliding_window_with_largest_sum():
         sum_longest = -999
         # 0 1 2 3 (L-1=4)
         for n in range(len(arr)):
-            for m in range(1,len(arr)+1):
+            for m in range(1, len(arr) + 1):
                 part = arr[n:m]
                 sum_part = sum(part)
-                if sum_part > sum_longest or (sum_part == sum_longest and len(longest) < m-n):
+                if sum_part > sum_longest or (
+                    sum_part == sum_longest and len(longest) < m - n
+                ):
                     longest = arr[n:m]
                     sum_longest = sum_part
         return longest
-    
 
-    assert lsum([1,-1,-5,0,3,5,25,-1,25,-29]) == [0,3,5,25,-1,25]
-    assert lsum([3,5,6]) == [3,5,6]
-    assert lsum([-10,3,-20,5,3,50,-5,10,0,-1]) == [5,3,50,-5,10,0]
-    assert lsum([7,0,7,-6,5,3,-1]) == [7,0,7,-6,5,3]
-    assert lsum([3,3,3,-9,5,2,-6,1]) == [3,3,3]
-    
+    assert lsum([1, -1, -5, 0, 3, 5, 25, -1, 25, -29]) == [0, 3, 5, 25, -1, 25]
+    assert lsum([3, 5, 6]) == [3, 5, 6]
+    assert lsum([-10, 3, -20, 5, 3, 50, -5, 10, 0, -1]) == [5, 3, 50, -5, 10, 0]
+    assert lsum([7, 0, 7, -6, 5, 3, -1]) == [7, 0, 7, -6, 5, 3]
+    assert lsum([3, 3, 3, -9, 5, 2, -6, 1]) == [3, 3, 3]
+
 
 def test_closest_sum():
     """
@@ -544,15 +524,16 @@ def test_closest_sum():
     find the subset that sums into the closest to the target number
     """
 
+    # Complexity: O(N!)
     def _closest_sum(coll, target, candi=[], chain=[]):
         coll = coll if isinstance(coll, list) else list(coll)
         for i in range(len(coll)):
             c = coll[i]
-            others = coll[i+1:]
+            others = coll[i + 1 :]
             diff = abs(target - c)
-            heappush(candi, (diff, [c]+chain))
+            heappush(candi, (diff, [c] + chain))
             if diff > 0:
-                _closest_sum(others, target-c, candi, [c]+chain)
+                _closest_sum(others, target - c, candi, [c] + chain)
 
         return candi
 
@@ -560,11 +541,51 @@ def test_closest_sum():
         cands = []
         _closest_sum(coll, target, cands)
         diff, chain = heappop(cands)
-        print(f'diff = {diff}, chain = {chain}')
+        print(f"diff = {diff}, chain = {chain}")
         return set(sorted(chain))
 
-    assert closest_sum(set([1,5,6]), 20) == set([1,5,6])
-    assert closest_sum(set([1,5,6,10]), 16) == set([1,5,10])
-    assert closest_sum(set([1,5,6,10]), 4) == set([5])
-    assert closest_sum(set([1,5,6,10]), 17) == set([1,6,10])
+    assert closest_sum(set([1, 5, 6]), 20) == set([1, 5, 6])
+    assert closest_sum(set([1, 5, 6, 10]), 16) == set([1, 5, 10])
+    assert closest_sum(set([1, 5, 6, 10]), 4) == set([5])
+    assert closest_sum(set([1, 5, 6, 10]), 17) == set([1, 6, 10])
 
+
+# def test_game24():
+#     """
+#     Given an array of integer (more than 4 elements),
+#     solve a way to make it 24 (with +,-,*,/)
+#     """
+
+#     def product(arr, target, chain=[]):
+#         if target == 0:
+#             return chain
+
+#         if len(arr) == 0:  # no more combination we can try
+#             return []
+
+#         for i in range(len(arr)):
+#             a = arr[i]
+#             rest = arr[i + 1 :]
+#             # generate next operations (+,-,*,/)
+#             selection = next(
+#                 (
+#                     k
+#                     for k in [
+#                         product(rest, target - a, chain + ["+", a]),
+#                         product(rest, target + a, chain + ["-", a]),
+#                         product(rest, target / a, chain + ["*", a]),
+#                         product(rest, target * a, chain + ["/", a]),
+#                     ]
+#                     if len(k) > 0
+#                 ),
+#                 [],
+#             )
+#             if len(selection) > 0:
+#                 # found solution
+#                 return selection
+
+#         return []  # no solution
+
+#     assert product([1, 26, 8, 5, 5], 24) == [5, "*", 5, "-", 1]
+#     assert product([1, 4, 4, 9, 1], 24) == [4, "*", 4, "+", 9, "-", 1]
+#     assert product([0, 0, 0], 24) == []
