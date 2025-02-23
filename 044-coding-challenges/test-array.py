@@ -548,10 +548,11 @@ def test_closest_sum():
         coll = coll if isinstance(coll, list) else list(coll)
         for i in range(len(coll)):
             c = coll[i]
-            others = coll[:i] + coll[i+1:]
+            others = coll[i+1:]
             diff = abs(target - c)
             heappush(candi, (diff, [c]+chain))
-            _closest_sum(others, target-c, candi, [c]+chain)
+            if diff > 0:
+                _closest_sum(others, target-c, candi, [c]+chain)
 
         return candi
 
