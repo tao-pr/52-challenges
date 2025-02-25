@@ -550,42 +550,146 @@ def test_closest_sum():
     assert closest_sum(set([1, 5, 6, 10]), 17) == set([1, 6, 10])
 
 
-# def test_game24():
-#     """
-#     Given an array of integer (more than 4 elements),
-#     solve a way to make it 24 (with +,-,*,/)
-#     """
+def test_drop_water():
+    """
+    Given a matrix describing how deep the groun at (i,j) is,
+    find a final matrix if we drop water into (i,j) position until
+    it reaches certain level
+    """
 
-#     def product(arr, target, chain=[]):
-#         if target == 0:
-#             return chain
+    def drop(mat, pos, level):
+        # expand all connectivities from pos (8-directions) until no
+        # level is below {level}
+        visited = set()
+        expand(mat, pos, level, visited)
+        return mat
 
-#         if len(arr) == 0:  # no more combination we can try
-#             return []
+    def expand(mat, pos, level, visited):
+        # iterate 8 directions from pos
+        a, b = pos
+        for i in [-1, 0, 1]:
+            for j in [-1, 0, 1]:
+                if 0 <= a + i < len(mat) and 0 <= b + j < len(mat[0]):
+                    if (
+                        i != j
+                        and (a + i, b + j) not in visited
+                        and mat[a + i][b + j] < level
+                    ):
+                        mat[a + i][b + j] = level
+                        visited.add((a + i, b + j))
+                        # DFS
+                        expand(mat, [a + i, b + j], level, visited)
 
-#         for i in range(len(arr)):
-#             a = arr[i]
-#             rest = arr[i + 1 :]
-#             # generate next operations (+,-,*,/)
-#             selection = next(
-#                 (
-#                     k
-#                     for k in [
-#                         product(rest, target - a, chain + ["+", a]),
-#                         product(rest, target + a, chain + ["-", a]),
-#                         product(rest, target / a, chain + ["*", a]),
-#                         product(rest, target * a, chain + ["/", a]),
-#                     ]
-#                     if len(k) > 0
-#                 ),
-#                 [],
-#             )
-#             if len(selection) > 0:
-#                 # found solution
-#                 return selection
+    assert drop(
+        [[1, 1, 3, 1], [2, 3, 5, 1], [2, 0, 1, 1], [3, 1, 5, 5]], [2, 2], 2
+    ) == [[1, 1, 3, 2], [2, 3, 5, 2], [2, 2, 2, 2], [3, 2, 5, 5]]
 
-#         return []  # no solution
+    assert drop(
+        [[4, 1, 3, 1], [5, 2, 2, 1], [3, 0, 6, 4], [3, 4, 5, 0]], [0, 1], 4
+    ) == [[4, 4, 4, 4], [5, 4, 4, 4], [4, 4, 6, 4], [4, 4, 5, 0]]
 
-#     assert product([1, 26, 8, 5, 5], 24) == [5, "*", 5, "-", 1]
-#     assert product([1, 4, 4, 9, 1], 24) == [4, "*", 4, "+", 9, "-", 1]
-#     assert product([0, 0, 0], 24) == []
+
+def test_phone_number_lookup():
+    """
+    Given a list of telephone numbers,
+    write a fast program to lookup as the user is typing first N letters
+    """
+
+    def build_trie(numbers):
+        trie = {}
+        trie_ptr = trie
+        for num in numbers:
+            print(f'Adding {num} to trie: root keys {trie_ptr.get("0")}')
+            for n in num:
+                if n not in trie_ptr:
+                    trie_ptr[n] = {}
+                trie_ptr = trie_ptr[n]
+            # enclose the number
+            trie_ptr[None] = {}
+            # reset pointer
+            trie_ptr = trie
+        return trie
+
+    def lookup(numbers, initial):
+        """
+        0891112223
+        0915552223
+        0891150000
+        0690000000
+        0950000000
+        """
+
+        trie = build_trie(numbers)
+
+        print(trie)
+
+        # walk the trie until end of typing
+        pt = trie
+        for n in initial:
+            if n in pt:
+                pt = pt[n]
+            else:
+                return [] # no match
+            
+        print(f'initial: {initial}, next keys: {pt.keys()}')
+        
+        # enumerate all children in the current position of trie pointer
+        outcome = []
+        for p in pt:
+            walk_into(pt[p], outcome, initial + p)
+        return outcome
+
+    def walk_into(trie, outcome, prefix):
+        # walk DFS until it hits None key (denotes end of numbers)
+        # {n1: {..}, n2: {...}, None: {}}
+
+        for n in trie:
+            if n:
+                walk_into(trie[n], outcome, prefix + n)
+            else:
+                # end of number
+                outcome.append(prefix)
+
+    assert sorted(lookup([
+        '0891112223',
+        '0915552223',
+        '0891150000',
+        '0690000000',
+        '0950000000'
+    ], '0')) == sorted([
+        '0891112223',
+        '0915552223',
+        '0891150000',
+        '0690000000',
+        '0950000000'
+    ])
+
+    assert sorted(lookup([
+        '0891112223',
+        '0915552223',
+        '0891150000',
+        '0690000000',
+        '0950000000'
+    ], '08')) == sorted([
+        '0891112223',
+        '0891150000',
+    ])
+
+    assert sorted(lookup([
+        '0891112223',
+        '0915552223',
+        '0891150000',
+        '0690000000',
+        '0950000000'
+    ], '099')) == sorted([])
+
+    assert sorted(lookup([
+        '0891112223',
+        '0915552223',
+        '0891150000',
+        '0690000000',
+        '0950000000'
+    ], '0891')) == sorted([
+        '0891112223',
+        '0891150000',
+    ])

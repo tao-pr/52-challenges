@@ -539,14 +539,14 @@ def test_word_break():
             add_to_tree(tree, word)
         print(tree)
         return run_wbreak(tree, text)
-        
+
     def add_to_tree(tree, word):
         if len(word) == 1:
             # add last letter with NULL terminating
             if word[0] in tree:
                 tree[word[0]][None] = None
             else:
-                tree[word[0]] = {None: None} # still needs to remain a dict
+                tree[word[0]] = {None: None}  # still needs to remain a dict
         else:
             if word[0] in tree:
                 add_to_tree(tree[word[0]], word[1:])
@@ -563,7 +563,7 @@ def test_word_break():
             if t in tree_ptr:
                 print(f"{t} in tree")
                 last_cand += t
-                tree_ptr = tree_ptr[t] # iterate deeper into the tree
+                tree_ptr = tree_ptr[t]  # iterate deeper into the tree
             else:
                 # end of word
                 # check if the word is recognised in the tree
@@ -571,14 +571,13 @@ def test_word_break():
                     result.append(last_cand)
 
                 # check if t could be a beginning of a new word?
-                tree_ptr = tree # reset pointer to the root
+                tree_ptr = tree  # reset pointer to the root
                 last_cand = ""
 
                 if t in tree_ptr:
                     last_cand = t
                     tree_ptr = tree_ptr[t]
-                
-        
+
         # check if last word also ends?
         if last_cand > "":
             print(last_cand)
@@ -598,3 +597,34 @@ def test_word_break():
         "ben",
         "ben",
     ]
+
+
+def test_concat_words():
+    """
+    Given a list of untokenised words,
+    find a combination of shortest unique words
+
+    eg.
+    inputs: [ant, anti, santi, eat]
+    output: [anteat]
+
+    inputs: [car, cart, fast, tart, start]
+    output: [carfasttart]
+    """
+
+    def concat(inputs):
+        # sort words, shorter first
+        # ant, eat, anti, santi
+        words = sorted(inputs, key=len) # O(N logN)
+        bag = set()
+        for word in words:
+            # see ant --> check if any existing words already contain ant
+            if any(b for b in bag if b in word):
+                continue
+            bag.add(word)
+        
+        print(bag)
+        return "".join(sorted(bag))
+
+    assert concat(["ant", "anti", "santi", "eat"]) == "anteat"
+    assert concat(["car", "cart", "fast", "scar", "tart", "start"]) == "carfasttart"
