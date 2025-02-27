@@ -1,5 +1,5 @@
 from typing import Tuple
-from collections import Counter
+from collections import Counter, defaultdict
 from heapq import heappush, heappop
 
 
@@ -599,7 +599,7 @@ def test_phone_number_lookup():
         trie = {}
         trie_ptr = trie
         for num in numbers:
-            print(f'Adding {num} to trie: root keys {trie_ptr.get("0")}')
+            print(f"Adding {num} to trie: root keys {trie_ptr.get('0')}")
             for n in num:
                 if n not in trie_ptr:
                     trie_ptr[n] = {}
@@ -629,10 +629,10 @@ def test_phone_number_lookup():
             if n in pt:
                 pt = pt[n]
             else:
-                return [] # no match
-            
-        print(f'initial: {initial}, next keys: {pt.keys()}')
-        
+                return []  # no match
+
+        print(f"initial: {initial}, next keys: {pt.keys()}")
+
         # enumerate all children in the current position of trie pointer
         outcome = []
         for p in pt:
@@ -650,46 +650,105 @@ def test_phone_number_lookup():
                 # end of number
                 outcome.append(prefix)
 
-    assert sorted(lookup([
-        '0891112223',
-        '0915552223',
-        '0891150000',
-        '0690000000',
-        '0950000000'
-    ], '0')) == sorted([
-        '0891112223',
-        '0915552223',
-        '0891150000',
-        '0690000000',
-        '0950000000'
-    ])
+    assert sorted(
+        lookup(
+            ["0891112223", "0915552223", "0891150000", "0690000000", "0950000000"], "0"
+        )
+    ) == sorted(["0891112223", "0915552223", "0891150000", "0690000000", "0950000000"])
 
-    assert sorted(lookup([
-        '0891112223',
-        '0915552223',
-        '0891150000',
-        '0690000000',
-        '0950000000'
-    ], '08')) == sorted([
-        '0891112223',
-        '0891150000',
-    ])
+    assert sorted(
+        lookup(
+            ["0891112223", "0915552223", "0891150000", "0690000000", "0950000000"], "08"
+        )
+    ) == sorted(
+        [
+            "0891112223",
+            "0891150000",
+        ]
+    )
 
-    assert sorted(lookup([
-        '0891112223',
-        '0915552223',
-        '0891150000',
-        '0690000000',
-        '0950000000'
-    ], '099')) == sorted([])
+    assert sorted(
+        lookup(
+            ["0891112223", "0915552223", "0891150000", "0690000000", "0950000000"],
+            "099",
+        )
+    ) == sorted([])
 
-    assert sorted(lookup([
-        '0891112223',
-        '0915552223',
-        '0891150000',
-        '0690000000',
-        '0950000000'
-    ], '0891')) == sorted([
-        '0891112223',
-        '0891150000',
-    ])
+    assert sorted(
+        lookup(
+            ["0891112223", "0915552223", "0891150000", "0690000000", "0950000000"],
+            "0891",
+        )
+    ) == sorted(
+        [
+            "0891112223",
+            "0891150000",
+        ]
+    )
+
+
+def test_pascal_row():
+    """
+    Find all numbers inside the row N of a Pascal triangle
+    """
+
+    cache = defaultdict(int)
+
+    def pascal_row(n):
+        """
+        1
+        1 1
+        1 2 1
+        1 3 3 1 ..... C[n] = C[L-1-n]
+        1 4 6 4 1 .... row=4 ... start mirror from row//2+1
+        ...
+
+        row N = N numbers
+        """
+
+        row = []
+        for i in range(n):
+            row.append(cell(n, i))
+        return row
+    
+    def cell(row, pos):
+        if pos == 0 or pos == row-1:
+            return 1
+        else:
+            if (row,pos) in cache:
+                return cache[(row,pos)]
+            # mirror
+            # R[r][i] = R[r][r-1-i]
+            elif row >=3 and pos >= row//2+1:
+                return cell(row, row-1-pos)
+            else:
+                v = cell(row-1, pos) + cell(row-1, pos-1)
+                cache[(row, pos)] = v
+                return v
+
+    assert pascal_row(1) == [1]
+    assert pascal_row(23) == [
+        1,
+        22,
+        231,
+        1540,
+        7315,
+        26334,
+        74613,
+        170544,
+        319770,
+        497420,
+        646646,
+        705432,
+        646646,
+        497420,
+        319770,
+        170544,
+        74613,
+        26334,
+        7315,
+        1540,
+        231,
+        22,
+        1,
+    ]
