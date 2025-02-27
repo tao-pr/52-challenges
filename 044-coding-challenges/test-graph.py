@@ -234,3 +234,4 @@ def test_sharing_candies_to_neighbours():
         [3, 6, 5, 4],
         [4, 12, 11, 4]
     ]
+

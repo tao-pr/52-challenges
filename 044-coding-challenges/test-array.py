@@ -800,4 +800,44 @@ def test_min_max_sell():
     assert minmax([
         7,7,8,6,6,4,4,3,1,5,3,5,7
     ]) == [8,12]
+
+
+def test_split_array_min_avg():
+    """
+    Split an array so the average value of each subarrays
+    are closest
+    """
+
+    def split(arr):
+        arr1, arr2 = arr[:1], arr[1:]
+        avg1 = arr1[0]
+        avg2 = sum(arr2)/float(len(arr2))
+        smallest_avg = abs(avg1 - avg2)
+        smallest = [arr1, arr2]
+        """
+        arr = [1] [3 5 7]
+        avg = 1 5
+        """
+        while len(arr2)>1:
+            N1 = len(arr1)
+            N2 = len(arr2)
+            v = arr2[0]
+            arr1 = arr1 + [v]
+            arr2 = arr2[1:]
+            # update avg values
+            avg1 = ((avg1 * N1) + v) / (N1 + 1)
+            avg2 = ((avg2 * N2) - v) / (N2 - 1)
+            print(f'{arr1} - {arr2} -> diff avg = {abs(avg1 - avg2)}, min was = {smallest_avg}')
+            if abs(avg1 - avg2) < smallest_avg:
+                print(f'New: {avg1}, {avg2} => {arr1}, {arr2}')
+                smallest_avg = abs(avg1 - avg2)
+                smallest = [arr1, arr2]
+        return smallest
+
+
+    assert split([1,1]) == [[1], [1]]
+    assert split([1,3,5,4]) == [[1,3,5],[4]]
+    assert split([3,3,3,1,11]) == [[3], [3,3,1,11]]
+
     
+

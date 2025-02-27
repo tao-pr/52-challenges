@@ -628,3 +628,62 @@ def test_concat_words():
 
     assert concat(["ant", "anti", "santi", "eat"]) == "anteat"
     assert concat(["car", "cart", "fast", "scar", "tart", "start"]) == "carfasttart"
+
+def test_evaluate_expression():
+    """
+    Given a string of reverse polish notation with brackets,
+    evaluate the value.
+    """
+
+    func = {
+        '+': lambda a,b: a+b,
+        '-': lambda a,b: a-b,
+        '*': lambda a,b: a*b,
+        '/': lambda a,b: a/b
+    }
+
+    def evaluate(expr):
+        """
+        {a,{},+}
+        """
+        stack = []
+
+        ""
+
+        for a in expr:
+            if a == '{': # opening
+                stack.append([])
+            elif a == '}': # EOF
+                last = stack.pop()
+                value = compute(last)
+                # push the computed value back to the last element in stack
+                if len(stack)>0:
+                    print(stack)
+                    stack[-1].append(value)
+                else:
+                    stack.append([value])
+            elif a == ',':
+                continue
+            else:
+                # operands or operator
+                if a.isnumeric():
+                    stack[-1].append(int(a))
+                else:
+                    # [+,3,5]
+                    stack[-1] = [a] + stack[-1]
+        return stack[-1][-1]
+
+    def compute(block):
+        if len(block)==3:
+            # put the operator at front
+            op,a,b = block
+            return func[op](a,b)
+        else:
+            return block[0]
+
+
+    assert evaluate("{1,5,+}") == 6
+    assert evaluate("{{7},5,*}") == 35
+    assert evaluate("{{{5,6,*},2,/}}") == 15
+    assert evaluate("{{{5,6,*},2,/},5,-}") == 10
+
