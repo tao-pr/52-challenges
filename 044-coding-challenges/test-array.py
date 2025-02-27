@@ -752,3 +752,52 @@ def test_pascal_row():
         22,
         1,
     ]
+
+
+def test_min_max_sell():
+    """
+    Given a times-series sequence of stock price,
+    find the best time to buy and sell to maximise the profit.
+    """
+
+    def minmax(seq):
+        # find max possible values to the right 
+        # of every element
+        # [1,5,5,3]
+
+        """
+        3
+        5 -> None
+        5 -> None
+        1 -> 5
+        """
+        n = len(seq)-2
+        mx = seq[-1]
+        index_max = len(seq)-1
+        offset = {}
+        biggest_offset = 0
+        biggest_offset_pair = None
+        while n>=0:
+            if mx > seq[n]:
+                offset[n] = mx - seq[n]
+                if offset[n] > biggest_offset:
+                    biggest_offset = offset[n]
+                    biggest_offset_pair = (n, index_max)
+            if seq[n] > mx:
+                # find a new max
+                mx = seq[n]
+                index_max = n
+            n -= 1
+
+        if biggest_offset_pair:
+            return [biggest_offset_pair[0], biggest_offset_pair[1]]
+
+
+    assert minmax([
+        1,5,5,3,5,4,1,1,5
+    ]) == [7,8]
+
+    assert minmax([
+        7,7,8,6,6,4,4,3,1,5,3,5,7
+    ]) == [8,12]
+    
