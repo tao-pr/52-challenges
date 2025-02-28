@@ -10,7 +10,7 @@ The difficulty of the challenge should progress gradually to keep
 the people exciting and motivated to try new techniques, tools, ideas, etc. 
 as solutions to the new challenges.
 
-## Challenges 
+## Challenges
 
 List of challenges are collected below.
 
@@ -59,6 +59,7 @@ List of challenges are collected below.
 | 041 | gRPC with background process             | Python           | 7 hrs | gRPC, asyncio |
 | 042 | Cloud native patterns                    | Kubernetes       | ??? | Kubernetes |
 | 043 | C++ Multiproc/Multithreading             | C++17 LLVM       | 7 hrs | LLVM, TBB |
+| 044 | Leetcode                                   | Python         | -- | -- |
 
 ## Licence
 
